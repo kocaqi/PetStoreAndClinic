@@ -1,0 +1,4 @@
+{
+  "sideEffects": false,
+  "module": "../esm/tooltip/index.js"
+}

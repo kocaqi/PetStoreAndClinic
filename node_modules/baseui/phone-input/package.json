@@ -1,0 +1,4 @@
+{
+  "sideEffects": false,
+  "module": "../esm/phone-input/index.js"
+}

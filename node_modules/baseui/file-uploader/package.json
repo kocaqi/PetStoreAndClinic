@@ -1,0 +1,4 @@
+{
+  "sideEffects": false,
+  "module": "../esm/file-uploader/index.js"
+}

@@ -15,7 +15,7 @@ export const authenticateUser = async (session_id) => {
     .catch(error => {
         if(session_id === "1111"){
             return {
-                role: "admin",
+                role: "client",
                 LoggedIn: true
             }
         }

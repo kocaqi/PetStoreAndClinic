@@ -14,11 +14,11 @@ function App() {
     <Routes>
 
       <Route path="/" element={
-        <SecureRoute Route = {<Home />} LoggedIn={true} roles={["admin"]} Redirect="/login" />} 
+        <SecureRoute Route = {<Home />} LoggedIn={true} roles={["admin", "client"]} Redirect="/login" />} 
       />
 
       <Route path="/login" element={
-        <SecureRoute Route = {<Login />} LoggedIn={false} roles={["admin", "user"]} Redirect="/" />} 
+        <SecureRoute Route = {<Login />} LoggedIn={false} roles={["admin", "client"]} Redirect="/" />} 
       />
       
       <Route path="/not-authorized" element={<NotAuthorized />} />

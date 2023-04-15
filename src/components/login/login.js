@@ -51,7 +51,7 @@ export function Login() {
                 }
             ])
 
-            navigate("/")
+            window.location.href = "/"
             
         } else {
             setError("Wrong Username or Password")

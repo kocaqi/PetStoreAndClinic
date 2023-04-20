@@ -3,6 +3,8 @@ import { useState } from "react"
 import { useCookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 
+import { HoverButton } from "../commons";
+
 
 
 export function Login() {
@@ -12,7 +14,10 @@ export function Login() {
     //State and cookies
 
     const [error, setError] = useState("");
+    const [buttonDisable, setButtonDisable] = useState(false);
+
     const [cookies, setCookie] = useCookies();
+
 
 
     //Set cookies in batches
@@ -55,12 +60,19 @@ export function Login() {
             
         } else {
             setError("Wrong Username or Password")
+            setButtonDisable(true)
         }
     }
 
+    const clearEvents = () => {
+        setError("")
+        setButtonDisable(false)
+    }
+
+
     const InputOnChange = (e) => {
         formik.handleChange(e)
-        setError("")
+        clearEvents()
     }
 
 
@@ -114,9 +126,8 @@ export function Login() {
     
             <div style={ButtonContainer}>
 
-                <button style={Button} size="large" kind="primary" type="submit">
-                Login
-                </button>
+                <HoverButton disabled={buttonDisable} text="Login" HoverStyle={ButtonHover} DefaultStyle={Button} />
+
             </div>
 
         </form>
@@ -124,7 +135,9 @@ export function Login() {
 }
 
 
-//CSS Styling
+/*************************/
+/*********STYLING*********/
+/*************************/
 
 const LoginForm = {
     "background": "#fff",
@@ -141,8 +154,10 @@ const LoginForm = {
 
 const Header = {
     "padding": "35px 35px 0 35px",
-    "font-weight": "300"
+    "font-weight": "500"
 }
+
+//Input Styling
 
 const OuterInputContainer = {
     "padding": "35px",
@@ -151,11 +166,12 @@ const OuterInputContainer = {
 }
 
 const InputContainer = {
-    "padding": "12px 5px"
+    "padding": "12px 5px",
+    
 }
 
 const Input = {
-    "font-size": "16px",
+    "font-size": "14px",
     "display": "block",
     "font-family": "'Rubik', sans-serif",
     "width": "100%",
@@ -163,9 +179,9 @@ const Input = {
     "border": "0",
     "border-bottom": "1px solid #747474",
     "outline": "none",
-    "-webkit-transition": "all .2s",
-    "transition": "all .2s",
 }
+
+//Button Styling
 
 const ButtonContainer = {
     "display": "-webkit-box",
@@ -182,8 +198,9 @@ const Button = {
     "font-family": "'Rubik', sans-serif",
     "cursor": "pointer",
     "text-transform": "uppercase",
-    "background": "#e8e9ec",
-    "color": "#777",
+    "font-weight": "550",
+    "background": "#2d3b55",
+    "color": "#fff",
     "border-bottom-left-radius": "4px",
     "border-bottom-right-radius": "0",
     "letter-spacing": "0.2px",
@@ -192,18 +209,30 @@ const Button = {
     "transition": "all .3s",
 }
 
+const ButtonHover = {
+    
+    "background": "#3c4d6d",
+
+}
+
+
+//Error Styling
+
 const ErrorContainer = {
     "margin-left": "25px",
     "margin-right": "25px",
 }
 
 const Error = {
-    "background": "red",
+    "background": "#D13C1D",
     "padding": "15px",
     "margin": "0px",
     "border-radius": "10px",
     "color": "white",
+    "font-weight": "550",
+    "font-family": "'Rubik', sans-serif",
     "text-align": "center",
-    "box-shadow": "0 2px 10px rgba(0, 0, 0, 0.2)"
+    "box-shadow": "0 2px 10px rgba(0, 0, 0, 0.2)",
+    "-webkit-transition": "all .3s",
+    "transition": "all .3s",
 }
-

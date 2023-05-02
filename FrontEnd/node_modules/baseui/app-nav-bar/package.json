@@ -1,0 +1,4 @@
+{
+  "sideEffects": false,
+  "module": "../esm/app-nav-bar/index.js"
+}

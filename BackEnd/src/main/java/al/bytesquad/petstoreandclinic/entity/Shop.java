@@ -10,35 +10,26 @@ import org.hibernate.Hibernate;
 import java.util.Objects;
 
 @Table
-@Entity(name = "receptionist")
+@Entity(name = "shop")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Receptionist {
+public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "password")
-    private String password;
+    @Column(name = "location")
+    private String location;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Receptionist that = (Receptionist) o;
-        return id != null && Objects.equals(id, that.id);
+        Shop shop = (Shop) o;
+        return id != null && Objects.equals(id, shop.id);
     }
 
     @Override

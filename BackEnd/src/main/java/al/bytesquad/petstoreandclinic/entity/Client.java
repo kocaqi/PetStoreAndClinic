@@ -1,21 +1,20 @@
 package al.bytesquad.petstoreandclinic.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
 
 @Table
-@Entity(name = "receptionist")
+@Entity(name = "client")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Receptionist {
+public class Client {
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -37,8 +36,8 @@ public class Receptionist {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Receptionist that = (Receptionist) o;
-        return id != null && Objects.equals(id, that.id);
+        Client client = (Client) o;
+        return id != null && Objects.equals(id, client.id);
     }
 
     @Override

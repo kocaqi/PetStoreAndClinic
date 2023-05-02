@@ -10,12 +10,12 @@ import org.hibernate.Hibernate;
 import java.util.Objects;
 
 @Table
-@Entity(name = "receptionist")
+@Entity(name = "manager")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Receptionist {
+public class Manager {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -37,8 +37,8 @@ public class Receptionist {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Receptionist that = (Receptionist) o;
-        return id != null && Objects.equals(id, that.id);
+        Manager manager = (Manager) o;
+        return id != null && Objects.equals(id, manager.id);
     }
 
     @Override

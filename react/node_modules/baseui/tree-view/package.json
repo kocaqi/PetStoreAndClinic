@@ -1,4 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/tree-view/index.js"
-}

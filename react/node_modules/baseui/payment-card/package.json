@@ -1,4 +1,0 @@
-{
-  "sideEffects": false,
-  "module": "../esm/payment-card/index.js"
-}

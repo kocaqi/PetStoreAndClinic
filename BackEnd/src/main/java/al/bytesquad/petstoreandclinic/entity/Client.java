@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.util.List;
 import java.util.Objects;
 
 @Table
@@ -31,6 +32,9 @@ public class Client {
 
     @Column(name = "password")
     private String password;
+
+    @OneToMany
+    private List<Pet> pets;
 
     @Override
     public boolean equals(Object o) {

@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import java.util.List;
 import java.util.Objects;
 
 @Table
@@ -21,8 +22,21 @@ public class Shop {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "location")
     private String location;
+
+    @OneToMany
+    private List<Doctor> doctors;
+
+    @OneToOne
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
+
+    @OneToMany
+    private List<Receptionist> receptionists;
 
     @Override
     public boolean equals(Object o) {

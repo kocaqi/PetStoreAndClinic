@@ -33,6 +33,10 @@ public class Doctor {
     @Column(name = "password")
     private String password;
 
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

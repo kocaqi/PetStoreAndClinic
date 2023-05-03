@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Table
@@ -23,6 +24,41 @@ public class Pet {
 
     @Column(name = "name")
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private Client owner;
+
+    enum Species{
+        FELINE,
+        CANINE
+    }
+
+    @Column(name = "species")
+    private Species species;
+
+    enum Breed{
+        MIXED,
+        SCOTTISH_FOLD,
+        BRITISH_SHORTHAIR
+    }
+
+    @Column(name = "breed")
+    private Breed breed;
+
+    enum Gender{
+        MALE,
+        FEMALE
+    }
+
+    @Column(name = "gender")
+    private Gender gender;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @Column(name = "colour")
+    private String colour;
 
     @Override
     public boolean equals(Object o) {

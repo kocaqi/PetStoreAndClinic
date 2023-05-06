@@ -27,6 +27,9 @@ public class Bill {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
+    @Column(name = "amount")
+    private double amount;
+
     @ManyToMany
     private List<Product> products;
 

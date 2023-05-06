@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Table
@@ -59,6 +60,9 @@ public class Pet {
 
     @Column(name = "colour")
     private String colour;
+
+    @OneToMany
+    private List<Bill> bills;
 
     @Override
     public boolean equals(Object o) {

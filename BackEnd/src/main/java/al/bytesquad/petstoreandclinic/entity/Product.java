@@ -8,43 +8,43 @@ import java.util.List;
 import java.util.Objects;
 
 @Table
-@Entity(name = "client")
+@Entity(name = "product")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Client {
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "price_per_unit")
+    private double pricePerUnit;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "stock")
+    private double stock;
 
-    @Column(name = "password")
-    private String password;
+    enum Type{
+        MEDICAL,
+        NON_MEDICAL
+    }
 
-    @OneToMany
-    private List<Pet> pets;
+    @Column(name = "type")
+    private Type type;
 
-    @OneToMany
+    @ManyToMany
     private List<Bill> bills;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Client client = (Client) o;
-        return id != null && Objects.equals(id, client.id);
+        Product product = (Product) o;
+        return id != null && Objects.equals(id, product.id);
     }
 
     @Override

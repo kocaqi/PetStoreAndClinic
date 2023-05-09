@@ -64,6 +64,9 @@ public class Pet {
     @OneToMany
     private List<Bill> bills;
 
+    @OneToMany
+    private List<Appointment> appointments;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

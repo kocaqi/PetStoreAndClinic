@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import java.util.List;
 import java.util.Objects;
 
 @Table
@@ -36,6 +37,9 @@ public class Doctor {
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
+    @OneToMany
+    private List<Appointment> appointments;
 
     @Override
     public boolean equals(Object o) {

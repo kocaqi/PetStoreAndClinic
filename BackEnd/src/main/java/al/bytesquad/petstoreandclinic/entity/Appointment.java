@@ -4,16 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import java.util.List;
 import java.util.Objects;
 
 @Table
-@Entity(name = "client")
+@Entity(name = "appointment")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Client {
+public class Appointment {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @Id
@@ -21,33 +20,24 @@ public class Client {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
-    @Column(name = "last_name")
-    private String lastName;
+    @ManyToOne
+    @JoinColumn(name = "pet_id")
+    private Pet pet;
 
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "password")
-    private String password;
-
-    @OneToMany
-    private List<Pet> pets;
-
-    @OneToMany
-    private List<Bill> bills;
-
-    @OneToMany
-    private List<Appointment> appointments;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Client client = (Client) o;
-        return id != null && Objects.equals(id, client.id);
+        Appointment that = (Appointment) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override

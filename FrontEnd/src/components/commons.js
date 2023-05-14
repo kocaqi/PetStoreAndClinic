@@ -17,3 +17,22 @@ export const HoverButton = (props) => {
     )
 }
 
+
+export const Container = ({children}) => {
+
+    return (
+        <div style={ContainerStyle}>
+            {children}
+        </div>
+    )
+
+}
+
+
+
+const ContainerStyle = {
+    "margin": "auto",
+    "height": "100vh",
+    "width": "80%",
+    "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+}

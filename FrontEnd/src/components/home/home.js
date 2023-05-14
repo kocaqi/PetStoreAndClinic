@@ -2,6 +2,7 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 
 import { Menu } from '../menu/menu';
+import { Container } from '../commons';
 
 
 
@@ -27,11 +28,9 @@ export function Home() {
 
       return (
             <div>
-                  <h1>Welcome {cookies.user.role}</h1>
-
-                  <button onClick={handleSignOut}>Signout</button>
-
-                  <Menu />
+                  <Container>
+                        <Menu />
+                  </Container>
             
             </div>
       );

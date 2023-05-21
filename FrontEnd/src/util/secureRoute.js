@@ -23,13 +23,13 @@ export function SecureRoute(props){
 
         //Update User info
 
-        setCookie("user", userInfo, {
+        setCookie("user", userInfo.userData, {
             path: "/"
         });
 
         /******************************* */
 
-        if(userInfo.LoggedIn && !props.roles.includes(userInfo.role)){ //User is logged in but it's role doesn't match the specified ones
+        if(userInfo.LoggedIn && !props.roles.includes(userInfo.userData.role)){ //User is logged in but it's role doesn't match the specified ones
             navigate("/not-authorized")
         }
 

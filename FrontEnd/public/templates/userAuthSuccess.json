@@ -1,0 +1,9 @@
+{
+    "LoggedIn": true,
+    "userData": {
+        "role": "admin",
+        "name": "albi ceci"    
+    },
+    "session_id": "session_id_template",
+    "access_token": "access_token_template"
+}

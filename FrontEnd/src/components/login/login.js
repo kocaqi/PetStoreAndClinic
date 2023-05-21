@@ -3,7 +3,10 @@ import { useState } from "react"
 import { useCookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 
+
 import { HoverButton } from "../commons";
+
+import axios from 'axios';
 
 
 
@@ -42,26 +45,30 @@ export function Login() {
 
     const onSubmit = async () => {
         setError("");
-        if (formik.values.username === "admin" && formik.values.password === "admin") {
+
+        var login_data = await axios.get("./templates/userLoginSuccess.json") //template request
+            
+        if(login_data.data.status == 200){
 
             handleCookies([{
                     cookie_name: "access_token",
-                    cookie_value: "asdasdasdasdasdasd",
+                    cookie_value: login_data.data.access_token,
                     cookie_path: "/"
                 },
                 {
                     cookie_name: "session_id",
-                    cookie_value: "1111",
+                    cookie_value: login_data.data.session_id,
                     cookie_path: "/"
                 }
             ])
-
-            window.location.href = "/"
             
-        } else {
-            setError("Wrong Username or Password")
+            window.location.href = "/"
+        }
+        else if(login_data.data.status){
+            setError(login_data.data.message)
             setButtonDisable(true)
         }
+
     }
 
     const clearEvents = () => {

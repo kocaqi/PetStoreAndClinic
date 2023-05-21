@@ -8,22 +8,24 @@ import axios from 'axios';
 
 export const authenticateUser = async (session_id) => {
 
-    return axios.get("http://localhost:3000/404") //template request
-    .then(data => {
-        //
-    })
-    .catch(error => {
-        if(session_id === "1111"){
-            return {
-                role: "admin",
-                LoggedIn: true
-            }
-        }
-        else{
-            return {
-                LoggedIn: false
-            }
-        }
-    });
+    if(session_id=="session_id_template"){
+
+        return axios.get("./templates/userAuthSuccess.json") //template request
+        .then(data => {
+            return data.data
+        })
+        .catch(error => {
+            alert(error.message)
+        });
+    }
+    else{
+        return axios.get("./templates/userAuthFail.json") //template request
+        .then(data => {
+            return data.data
+        })
+        .catch(error => {
+            alert(error.message)
+        });
+    }
 
 }

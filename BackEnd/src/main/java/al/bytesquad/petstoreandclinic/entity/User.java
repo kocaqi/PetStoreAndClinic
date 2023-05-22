@@ -8,24 +8,16 @@ import java.util.List;
 import java.util.Objects;
 
 @Table
-@Entity(name = "client")
+@Entity(name = "user")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Client {
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
 
     @Column(name = "email")
     private String email;
@@ -34,23 +26,14 @@ public class Client {
     private String password;
 
     @OneToMany
-    private List<Pet> pets;
-
-    @OneToMany
-    private List<Bill> bills;
-
-    @OneToMany
-    private List<Appointment> appointments;
-
-    @OneToMany
-    private List<Feedback> feedbacks;
+    private List<Role> roles;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Client client = (Client) o;
-        return id != null && Objects.equals(id, client.id);
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
     }
 
     @Override

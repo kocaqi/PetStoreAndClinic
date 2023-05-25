@@ -37,6 +37,7 @@ public class Product {
     private Type type;
 
     @ManyToMany
+    @ToString.Exclude
     private List<Bill> bills;
 
     @Override

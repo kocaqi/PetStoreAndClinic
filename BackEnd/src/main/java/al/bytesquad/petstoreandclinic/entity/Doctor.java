@@ -39,6 +39,7 @@ public class Doctor {
     private Shop shop;
 
     @OneToMany
+    @ToString.Exclude
     private List<Appointment> appointments;
 
     @Override

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Table
@@ -31,6 +32,12 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
+
+    @Column(name = "start_time")
+    private Date startTime;
+
+    @Column(name = "finish_Time")
+    private Date finishTime;
 
     @Override
     public boolean equals(Object o) {

@@ -62,9 +62,11 @@ public class Pet {
     private String colour;
 
     @OneToMany
+    @ToString.Exclude
     private List<Bill> bills;
 
     @OneToMany
+    @ToString.Exclude
     private List<Appointment> appointments;
 
     @Override

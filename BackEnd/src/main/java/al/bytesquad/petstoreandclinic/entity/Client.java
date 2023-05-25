@@ -34,15 +34,19 @@ public class Client {
     private String password;
 
     @OneToMany
+    @ToString.Exclude
     private List<Pet> pets;
 
     @OneToMany
+    @ToString.Exclude
     private List<Bill> bills;
 
     @OneToMany
+    @ToString.Exclude
     private List<Appointment> appointments;
 
     @OneToMany
+    @ToString.Exclude
     private List<Feedback> feedbacks;
 
     @Override

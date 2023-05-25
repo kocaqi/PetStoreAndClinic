@@ -31,6 +31,7 @@ public class Bill {
     private double amount;
 
     @ManyToMany
+    @ToString.Exclude
     private List<Product> products;
 
     @Override

@@ -29,6 +29,7 @@ public class Shop {
     private String location;
 
     @OneToMany
+    @ToString.Exclude
     private List<Doctor> doctors;
 
     @OneToOne
@@ -36,6 +37,7 @@ public class Shop {
     private Manager manager;
 
     @OneToMany
+    @ToString.Exclude
     private List<Receptionist> receptionists;
 
     @Override

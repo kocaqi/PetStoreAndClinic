@@ -26,6 +26,7 @@ public class User {
     private String password;
 
     @OneToMany
+    @ToString.Exclude
     private List<Role> roles;
 
     @Override

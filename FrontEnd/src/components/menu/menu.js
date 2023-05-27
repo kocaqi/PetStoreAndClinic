@@ -47,7 +47,7 @@ const MenuOuterContainer = {
 }
 
 const MenuInnerContainer = {
-    "width": "800px",
+    "width": "730px",
     "height": "fit-content",
     "vertical-align": "middle",
 }

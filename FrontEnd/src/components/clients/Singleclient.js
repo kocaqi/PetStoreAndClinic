@@ -10,7 +10,7 @@ import { MdFilterListAlt } from "react-icons/md";
 
 
 
-export function SingleClient() {
+export function SingleClient(props) {
 
     const [hover, setHover] = useState(false);
 
@@ -31,7 +31,7 @@ export function SingleClient() {
               <div>
                 <div>
                   <div>
-                    <h5 style={name}><a href="#" style={{"text-decoration": "none", "color": "#2d3b55"}}>Brooke Kelly</a></h5>
+                    <h5 style={name}><a href="#" onClick={props.onOpenUserForm} style={{"text-decoration": "none", "color": "#2d3b55"}}>Brooke Kelly</a></h5>
                   </div>
                   <div>
                     <ul style={list}>
@@ -47,9 +47,9 @@ export function SingleClient() {
             </td>
             <td style={actions}>
               <ul style={actionList}>
-                <li style={actionListItem}><a href="#" style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
-                <li style={actionListItem}><a href="#" style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li>
-                <li style={actionListItem}><a href="#" style={{"color": "#D13C1D"}}><AiFillDelete size="25"/></a></li>
+                <li style={actionListItem}><a href="#" onClick={props.onOpenUserForm} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
+                <li style={actionListItem}><a href="#" onClick={() => props.onOpenUserForm(this, "edit")} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li>
+                <li style={actionListItem}><a style={{"color": "#D13C1D"}}><AiFillDelete size="25"/></a></li>
               </ul>
             </td>
           </tr>
@@ -147,7 +147,7 @@ const actionListItem = {
 
 
 const client = {
-    "width": "1250px",
+    "width": "100%",
     "background": "#ffffff",
     "borderBottom": "1px solid #eeeeee",
     "-webkit-box-align": "center",

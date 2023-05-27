@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { SingleClient } from './Singleclient';
 
-export function ClientsListing() {
+export function ClientsListing(props) {
 
 
       
@@ -11,17 +11,10 @@ export function ClientsListing() {
         <div style={container1}>
             <div style={container2}>
                 <table style={table}>
-                <thead style={headers}>
-                    <tr>
-                        <td style={mainheader}>Candidate Name</td>
-                        <td style={header}>Status</td>
-                        <td style={header}>Action</td>
-                    </tr>
-                </thead>
                 <tbody>
                     
                     {[1, 2, 3,4,5,6,7,8,9,10,11,12].map(i => {
-                        return <SingleClient key={i}/>;
+                        return <SingleClient key={i} onOpenUserForm={props.onOpenUserForm}/>;
                     })}
                 
                 </tbody>
@@ -32,7 +25,7 @@ export function ClientsListing() {
 }
 
 const container1 = {
-    "width": "1250px",
+    "width": "95%",
     "height": "80vh",
     "overflow-y": "hidden",
     "overflow-x": "hidden",
@@ -40,26 +33,14 @@ const container1 = {
 }
 
 const container2 = {
-    "width": "1250px",
+    "width": "100%",
     "height": "80vh",
     "overflow-y": "scroll",
     "overflow-x": "hidden",
-    "padding-right": "20px",
+    "padding-right": "22px",
 }
 
 const table = {
-    "width": "1250px",
+    "width": "100%",
     "height": "80vh",
-}
-
-const mainheader = {
-}
-
-const header = {
-    "text-align": "center",
-}
-
-const headers = {
-    "height": "40px",
-    "border": "1px solid #eeeeee"
 }

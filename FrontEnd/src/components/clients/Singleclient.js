@@ -26,29 +26,29 @@ export function SingleClient(props) {
           <tr style={hover ? {...client, ...clientHover} : client} onMouseOver={MouseOver} onMouseOut={MouseOut}>
             <td style={title}>
               <div style={thumbnail}>
-                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" style={thumbnailImage}/>
+                <img src={props.user_data.ImageURL+(props.custom_key+1)+".png"} alt="" style={thumbnailImage}/>
               </div>
               <div>
                 <div>
                   <div>
-                    <h5 style={name}><a href="#" onClick={props.onOpenUserForm} style={{"text-decoration": "none", "color": "#2d3b55"}}>Brooke Kelly</a></h5>
+                    <h5 style={name}><a href="#" onClick={props.onOpenUserForm} user_id = {props.user_data.user_id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.Name}</a></h5>
                   </div>
                   <div>
                     <ul style={list}>
-                      <li style={listItem}><MdFilterListAlt size="15"/>Information Technology</li>
-                      <li style={listItem}><MdLocationOn size="15" />Rolling Meadows, IL 60008</li>
+                      <li style={listItem}><MdFilterListAlt size="15"/>{props.user_data.Occupation}</li>
+                      <li style={listItem}><MdLocationOn size="15" />{props.user_data.Address}</li>
                     </ul>
                   </div>
                 </div>
               </div>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>Shortlisted</span>
+              <span style={textFieldText}>{props.user_data.Status}</span>
             </td>
             <td style={actions}>
               <ul style={actionList}>
-                <li style={actionListItem}><a href="#" onClick={props.onOpenUserForm} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
-                <li style={actionListItem}><a href="#" onClick={() => props.onOpenUserForm(this, "edit")} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li>
+                <li style={actionListItem}><a href="#" onClick={props.onOpenUserForm} user_id = {props.user_data.user_id} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
+                <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, "edit")} user_id = {props.user_data.user_id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li>
                 <li style={actionListItem}><a style={{"color": "#D13C1D"}}><AiFillDelete size="25"/></a></li>
               </ul>
             </td>

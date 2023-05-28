@@ -13,8 +13,8 @@ export function ClientsListing(props) {
                 <table style={table}>
                 <tbody>
                     
-                    {[1, 2, 3,4,5,6,7,8,9,10,11,12].map(i => {
-                        return <SingleClient key={i} onOpenUserForm={props.onOpenUserForm}/>;
+                    {props.data.map((user, index) => {
+                        return <SingleClient key={index} custom_key={index} onOpenUserForm={props.onOpenUserForm} user_data={user}/>;
                     })}
                 
                 </tbody>
@@ -26,7 +26,7 @@ export function ClientsListing(props) {
 
 const container1 = {
     "width": "95%",
-    "height": "80vh",
+    "height": "90vh",
     "overflow-y": "hidden",
     "overflow-x": "hidden",
     "margin": "auto",
@@ -34,7 +34,7 @@ const container1 = {
 
 const container2 = {
     "width": "100%",
-    "height": "80vh",
+    "height": "90vh",
     "overflow-y": "scroll",
     "overflow-x": "hidden",
     "padding-right": "22px",
@@ -42,5 +42,5 @@ const container2 = {
 
 const table = {
     "width": "100%",
-    "height": "80vh",
+    "height": "90vh",
 }

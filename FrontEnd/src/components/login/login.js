@@ -87,7 +87,7 @@ export function Login() {
 
     const formik = useFormik({
         initialValues: {
-            username: "123",
+            username: "",
             password: "",
         },
         onSubmit,

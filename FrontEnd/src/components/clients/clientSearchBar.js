@@ -9,6 +9,7 @@ export function ClientSearchBar(props) {
       return (
             <div style={outerContainer}>
                   <div style={actionButtonContainer}>
+                  <HoverButton text="BACK" HoverStyle={{...ActionButtonHover, "background": "#962B14"}} DefaultStyle={{...ActionButton, "background": "#D13C1D"}} onClick={() => window.location.href="/"} />
                   <HoverButton text="ADD" HoverStyle={ActionButtonHover} DefaultStyle={ActionButton} onClick={props.onAddClick} />
                   </div>
                   <div style={searchNavContainer}>
@@ -51,6 +52,7 @@ const ActionButton = {
     "padding": "18px",
     "padding-top": "10px",
     "padding-bottom": "10px",
+    "margin-right": "15px",
     "font-family": "'Rubik', sans-serif",
     "cursor": "pointer",
     "text-transform": "uppercase",
@@ -58,7 +60,7 @@ const ActionButton = {
     "background": "#2d3b55",
     "color": "#fff",
     "border-bottom-left-radius": "4px",
-    "border-bottom-right-radius": "0",
+    "border-bottom-right-radius": "4px",
     "letter-spacing": "0.2px",
     "outline": "0",
     "-webkit-transition": "all .3s",
@@ -85,7 +87,7 @@ const SearchButton = {
     "background": "#2d3b55",
     "color": "#fff",
     "border-bottom-left-radius": "4px",
-    "border-bottom-right-radius": "0",
+    "border-bottom-right-radius": "4px",
     "letter-spacing": "0.2px",
     "outline": "0",
     "-webkit-transition": "all .3s",

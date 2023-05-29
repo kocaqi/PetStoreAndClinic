@@ -6,8 +6,8 @@ import { useEffect, useState, useRef } from "react"
 import { Container } from '../commons';
 import { ClientsListing } from './clientsListing';
 import { ClientSearchBar } from './clientSearchBar';
-import { AddClientForm } from './addClientForm';
-import { ViewClientForm } from './viewClientForm';
+import { AddClientForm } from './clientForm/addClientForm';
+import { ViewClientForm } from './clientForm/viewClientForm';
 import { getUserList } from './js/getUserList';
 
 

@@ -13,7 +13,7 @@ export const HoverButton = (props) => {
     }
 
     return(
-        <button style={hover ? {...props.DefaultStyle, ...props.HoverStyle} : props.DefaultStyle} onMouseOver={MouseOver} onMouseOut={MouseOut} disabled={props.disabled} onClick={props.onClick}>{props.text}</button>
+        <button type="button" style={hover ? {...props.DefaultStyle, ...props.HoverStyle} : props.DefaultStyle} onMouseOver={MouseOver} onMouseOut={MouseOut} disabled={props.disabled} onClick={props.onClick}>{props.text}</button>
     )
 }
 

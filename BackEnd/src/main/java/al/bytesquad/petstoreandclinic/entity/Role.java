@@ -1,8 +1,12 @@
 package al.bytesquad.petstoreandclinic.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
@@ -20,6 +24,11 @@ public class Role {
 
     @Column(name = "name")
     private String name;
+
+    @Autowired
+    public Role(String name){
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {

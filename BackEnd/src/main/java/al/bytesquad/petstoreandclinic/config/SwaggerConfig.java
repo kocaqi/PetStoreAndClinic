@@ -12,7 +12,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

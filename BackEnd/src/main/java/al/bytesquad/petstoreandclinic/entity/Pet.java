@@ -61,6 +61,9 @@ public class Pet {
     @Column(name = "colour")
     private String colour;
 
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
     @OneToMany
     @ToString.Exclude
     private List<Bill> bills;

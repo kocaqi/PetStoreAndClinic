@@ -28,6 +28,9 @@ public class Shop {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
     @OneToMany
     @ToString.Exclude
     private List<Doctor> doctors;

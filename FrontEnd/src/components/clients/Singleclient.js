@@ -8,17 +8,32 @@ import { AiFillDelete } from 'react-icons/ai';
 import { MdLocationOn } from "react-icons/md";
 import { MdFilterListAlt } from "react-icons/md";
 
-
+import { ConfirmationPage } from '../commons';
 
 export function SingleClient(props) {
 
     const [hover, setHover] = useState(false);
+    const [cookies, setCookie] = useCookies();
+
 
     function MouseOver(event) {
         setHover(true)
     }
     function MouseOut(event){
         setHover(false)
+    }
+
+    function onDeleteConfirm(){
+      props.closeOverlay()
+    }
+
+    function onDeleteDecline(){
+      props.closeOverlay()
+    }
+
+
+    function onDeleteClick(){
+      props.openCustomOverlay(null , <div style={Overlay}><div style={Container}><ConfirmationPage onAccept={onDeleteConfirm} onDecline={onDeleteDecline}/></div></div>)
     }
 
       
@@ -31,7 +46,7 @@ export function SingleClient(props) {
               <div>
                 <div>
                   <div>
-                    <h5 style={name}><a href="#" onClick={props.onOpenUserForm} user_id = {props.user_data.user_id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.Name}</a></h5>
+                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id)} user_id = {props.user_data.user_id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.Name}</a></h5>
                   </div>
                   <div>
                     <ul style={list}>
@@ -47,15 +62,43 @@ export function SingleClient(props) {
             </td>
             <td style={actions}>
               <ul style={actionList}>
-                <li style={actionListItem}><a href="#" onClick={props.onOpenUserForm} user_id = {props.user_data.user_id} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
-                <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, "edit")} user_id = {props.user_data.user_id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li>
-                <li style={actionListItem}><a style={{"color": "#D13C1D"}}><AiFillDelete size="25"/></a></li>
+                <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id)} user_id = {props.user_data.user_id} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
+                {cookies.user.role=="admin" || cookies.user.role=="reception" ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id, "edit")} user_id = {props.user_data.user_id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
+                {cookies.user.role=="admin" || cookies.user.role=="reception" ? <li style={actionListItem}><a href="#"style={{"color": "#D13C1D"}} onClick={onDeleteClick}><AiFillDelete size="25"/></a></li> : ""}
               </ul>
             </td>
           </tr>
       );
 }
 
+
+const Overlay = {
+  "position": 'fixed',
+  "display": 'block',
+  "width": '100%',
+  "height": '100%',
+  "top": 0,
+  "left": 0,
+  "right": 0,
+  "bottom": 0,
+  "background-color": "rgba(0,0,0,0.5)",
+  "z-index": '4',
+}
+
+const Container = {
+  "background-color": "white",
+  "position": 'fixed',
+  "height": "20%",
+  "width": "40%",
+  "z-index": '5',
+  "margin-left": "25%",
+  "margin-top": "5%",
+  "border-radius": "10px",
+  "padding": "30px",
+  "padding-top": "0px",
+  "font-family": "Open Sans, sans-serif",
+  "overflow": "auto"
+}
 
 const thumbnail = {
     "margin-right": "25px",

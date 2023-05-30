@@ -12,7 +12,7 @@ function MainPage(props){
 
             <PetListing type={props.props.type} onPageChange={props.onPageChange} onClose={props.onClose}/>
 
-            {props.props.type=="edit" 
+            {props.props.type=="edit" || props.props.type=="self"
             ? <div style={actionButtonContainer}>
               <HoverButton text="ADD" HoverStyle={ActionButtonHover} DefaultStyle={ActionButton} onClick={(e) => props.onPageChange(e, <AddPetForm onClose={props.onClose} user_id={props.props.user_id}/>)}/>
             </div>

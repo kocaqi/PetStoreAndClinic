@@ -1,0 +1,69 @@
+{
+    "user_id": 555,
+    "Billing History": [
+        {
+            "id": 123123,
+            "product_id": 12,
+            "Product Name": "Paracetamol",
+            "Product Price": 10,
+            "Quantity": 2,
+            "Total": 20,
+            "Status": 1
+        },
+        {
+            "id": 123123,
+            "product_id": 12,
+            "Product Name": "Paracetamol",
+            "Product Price": 10,
+            "Quantity": 2,
+            "Total": 20,
+            "Status": 1
+        },
+        {
+            "id": 123123,
+            "product_id": 12,
+            "Product Name": "Paracetamol",
+            "Product Price": 10,
+            "Quantity": 2,
+            "Total": 20,
+            "Status": 1
+        },
+        {
+            "id": 123123,
+            "product_id": 12,
+            "Product Name": "Paracetamol",
+            "Product Price": 10,
+            "Quantity": 2,
+            "Total": 20,
+            "Status": 1
+        },
+        {
+            "id": 123123,
+            "product_id": 12,
+            "Product Name": "Paracetamol",
+            "Product Price": 10,
+            "Quantity": 2,
+            "Total": 20,
+            "Status": 1
+        },
+        {
+            "id": 123123,
+            "product_id": 12,
+            "Product Name": "Paracetamol",
+            "Product Price": 10,
+            "Quantity": 2,
+            "Total": 20,
+            "Status": 1
+        },
+        {
+            "id": 123123,
+            "product_id": 12,
+            "Product Name": "Paracetamol",
+            "Product Price": 10,
+            "Quantity": 2,
+            "Total": 20,
+            "Status": 0
+        }
+    ],
+    "Balance": 20
+}

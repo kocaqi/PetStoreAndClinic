@@ -77,7 +77,7 @@ export function PetForm(props) {
                                 {
                                     props.type=="view"
                                     ? <input type="text" name="Owner Name"  placeholder={"Owner Name"} value={formik.values['Owner Name']} onChange={formik.handleChange} style={FormInput} readonly="true" />
-                                    : <input type="text" name="Owner Name"  placeholder={"Owner Name"} value={formik.values['Owner Name']} onChange={formik.handleChange} style={FormInput} />
+                                    : <input type="text" name="Owner Name"  placeholder={"Owner Name"} value={formik.values['Owner Name']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
                                 }
                             </div>
                         </div>
@@ -99,7 +99,7 @@ export function PetForm(props) {
                                 {
                                     props.type=="view"
                                     ? <input name="owner_id" type="text" placeholder="owner_id" value={formik.values['owner_id']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
-                                    : <input name="owner_id" type="text" placeholder="owner_id" value={formik.values['owner_id']} onChange={formik.handleChange} style={FormInput} />
+                                    : <input name="owner_id" type="text" placeholder="owner_id" value={formik.values['owner_id']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
                                 }
                             </div>
                         </div>
@@ -138,7 +138,7 @@ export function PetForm(props) {
                         <div style={FormInputContainer}>
                             <label style={InputLabel}>Medical Info</label>
                             {
-                                props.type=="edit" && cookies.user.role=="doctor"
+                                cookies.user.role=="doctor"
                                 ? <textarea name="Medical Info" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['Medical Info']} onChange={formik.handleChange}></textarea>
                                 : <textarea name="Medical Info" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['Medical Info']} onChange={formik.handleChange} readonly="true"></textarea>
                             }
@@ -147,7 +147,7 @@ export function PetForm(props) {
                 </div>
 
                 {
-                    props.type=="edit"
+                    props.type=="edit" || props.type=="self"
                     ? (<div style={FormBlock}>
                             <div style={SaveButtonContainer}>
                                 <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} />

@@ -6,47 +6,22 @@ import { useEffect, useState, useRef } from "react"
 import { useFormik } from "formik";
 
 import { HoverButton } from '../../../commons';
-import { getUserData } from '../../js/getUserData';
 
 
-export function AddPetForm(props) {
+export function AddBillForm(props) {
 
 
     const [cookies, setCookie] = useCookies();
 
     const effectRan = useRef(false)
 
-    async function setUserData(user_id){
-
-        const userData = await getUserData(user_id)
-        
-        formik.setFieldValue("Owner Name", userData["First Name"]+" "+userData["Last Name"], false)
-
-        
-    }
-
-
-    useEffect(() => {
-
-        if(!effectRan.current){
-
-            setUserData(props.user_id)
-        
-            effectRan.current = true
-        }
-    }, [])
-
 
     
     const formik = useFormik({
         initialValues: {
-            "Pet Name": "",
-            "Owner Name": "",
-            "pet_id": "",
-            "owner_id": props.user_id,
-            "Type": "",
-            "Breed": "",
-            "Medical Info": ""
+            "user_id": props.user_id,
+            "product_id": "",
+            "Quantity": "",
         },
     });
 
@@ -56,22 +31,15 @@ export function AddPetForm(props) {
         <HoverButton text="BACK" HoverStyle={{...ActionButtonHover, "background": "#962B14"}} DefaultStyle={{...ActionButton, "background": "#D13C1D"}} onClick={props.onClose} />
             <div>
             <form>
-                <h6 style={BlockHeader}>Pet Information</h6>
+                <h6 style={BlockHeader}>Bill Information</h6>
                 <div style={FormBlock}>
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel} >Pet Name</label>
-                                <input type="text" placeholder="Pet Name" name="Pet Name" value={formik.values['Pet Name']} onChange={formik.handleChange} style={FormInput} />
+                                <label style={InputLabel} >user_id</label>
+                                <input type="text" placeholder="user_id" name="user_id" value={formik.values['user_id']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
                                 
                     
-                            </div>
-                        </div>
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel}>Owner Name</label>
-                                <input type="text" name="Owner Name"  placeholder={"Owner Name"} value={formik.values['Owner Name']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
-                                
                             </div>
                         </div>
                     </div>
@@ -79,43 +47,21 @@ export function AddPetForm(props) {
                        
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel}>owner_id</label>
-                                <input name="owner_id" type="text" placeholder="owner_id" value={formik.values['owner_id']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                <label style={InputLabel}>product_id</label>
+                                <input name="product_id" type="text" placeholder="product_id" value={formik.values['product_id']} onChange={formik.handleChange} style={FormInput}/>
+                                
+                            </div>
+                        </div>
+                        <div style={FormInputContainer}>
+                            <div>
+                                <label style={InputLabel}>Quantity</label>
+                                <input name="Quantity" type="text" placeholder="Quantity" value={formik.values['Quantity']} onChange={formik.handleChange} style={FormInput}/>
                                 
                             </div>
                         </div>
                     </div>
                 </div>
                 <hr />
-                <div style={FormBlock}>
-                    <div style={FormRow}>
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel}>Type</label>
-                                <input name="Type" placeholder="Type" value={formik.values.Type} onChange={formik.handleChange} type="text" style={FormInput} />
-                                
-                            </div>
-                        </div>
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel}>Breed</label>
-                                <input name="Breed" type="text" placeholder="Breed" value={formik.values.Breed} onChange={formik.handleChange} style={FormInput} />
-                                
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                <hr />
-                <h6 style={BlockHeader}>Medical Information</h6>
-                <div style={FormBlock}>
-                    <div style={FormRow}>
-                        <div style={FormInputContainer}>
-                            <label style={InputLabel}>Medical Info</label>
-                            <textarea name="Medical Info" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['Medical Info']} onChange={formik.handleChange} readonly="true"></textarea>
-                        </div>
-                    </div>
-                </div>
 
                 
                 <div style={FormBlock}>

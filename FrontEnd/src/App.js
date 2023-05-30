@@ -23,7 +23,7 @@ function App() {
       />
 
       <Route path="/clients" element={
-        <SecureRoute Route = {<Clients />} LoggedIn={true} roles={["reception", "manager", "admin"]} Redirect="/" />} 
+        <SecureRoute Route = {<Clients />} LoggedIn={true} roles={["reception", "manager", "admin", "doctor"]} Redirect="/" />} 
       />
       
       <Route path="/not-authorized" element={<NotAuthorized />} />

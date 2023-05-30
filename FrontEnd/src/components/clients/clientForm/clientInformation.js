@@ -179,7 +179,7 @@ export function ClientInformation(props) {
                     </div>
                 </div>
                 {
-                    props.type=="edit"
+                    props.type=="edit" || props.type=="self"
                     ? (<div style={FormBlock}>
                             <div style={SaveButtonContainer}>
                                 <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} />

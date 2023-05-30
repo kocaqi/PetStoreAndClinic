@@ -12,7 +12,10 @@ import { HoverButton } from '../../commons';
 
 export function AddClientForm(props) {
 
-
+    async function addUser(){
+        props.onClose()
+        await props.refresh()
+    }
     
     const formik = useFormik({
         initialValues: {
@@ -139,7 +142,7 @@ export function AddClientForm(props) {
                         </div>
                         <div style={FormBlock}>
                             <div style={SaveButtonContainer}>
-                                <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} onClick={() => alert("In Progress")}/>
+                                <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} onClick={addUser}/>
                             </div>
                         </div>
                     </form>

@@ -135,7 +135,7 @@ export function Login() {
     
             <div style={ButtonContainer}>
 
-                <HoverButton disabled={buttonDisable} text="Login" HoverStyle={ButtonHover} DefaultStyle={Button} />
+                <HoverButton type="submit" disabled={buttonDisable} text="Login" HoverStyle={ButtonHover} DefaultStyle={Button} />
 
             </div>
 

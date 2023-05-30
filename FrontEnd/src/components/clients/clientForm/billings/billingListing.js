@@ -2,19 +2,19 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react"
 
-import { SinglePet } from './Singlepet';
-import { getPetList } from './getPetList';
+import { getBillingList } from './getBillingList';
+import { SingleBill } from './SingleBill';
 
 
-export function PetListing(props) {
+export function BillingListing(props) {
 
-    const [PetList, setPetListState] = useState([]);
+    const [BillingList, setBillingListState] = useState({"Billing History": []});
 
     const effectRan = useRef(false)
 
-    async function setPetList(){
+    async function setBillingList(){
 
-        setPetListState(await getPetList())
+        setBillingListState(await getBillingList(props.user_id))
     }
 
 
@@ -22,7 +22,7 @@ export function PetListing(props) {
 
         if(!effectRan.current){
 
-            setPetList() 
+            setBillingList() 
         
             effectRan.current = true
         }
@@ -30,17 +30,21 @@ export function PetListing(props) {
       
       return (
         <div style={container1}>
+            
+            <div style={Balance}>{BillingList.Balance ? `Balance: $${BillingList.Balance}` : ""}</div>
+
             <div style={container2}>
                 <table style={table}>
                 <tbody>
                     
-                    {PetList.map((user, index) => {
-                        return <SinglePet key={index} custom_key={index} pet_data={user} type={props.type} onPageChange={props.onPageChange} onClose={props.onClose} refresh={setPetList}/>;
+                    {BillingList["Billing History"].map((bill, index) => {
+                        return <SingleBill key={index} bill_data={bill} type={props.type} refresh={setBillingList} onClose={props.onClose} onPageChange={props.onPageChange}/>;
                     })}
                 
                 </tbody>
                 </table>
             </div>
+            
         </div>
       );
 }
@@ -64,4 +68,16 @@ const container2 = {
 const table = {
     "width": "100%",
     "height": "100%"
+}
+
+const Balance = {
+    "display": "block",
+    "width": "fit-content",
+    "margin": "10px auto",
+    "font-size": "18px",
+    "font-weight": "bold",
+    "color": "white",
+    "background": "#2d3b55",
+    "padding": "5px",
+    "border-radius": "10%"
 }

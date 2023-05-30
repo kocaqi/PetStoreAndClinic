@@ -17,16 +17,21 @@ export function Clients() {
       const [UserList, setUserListState] = useState([]);
 
       var onAddClick = () => {
-            setcurrentOverlay(<AddClientForm onClose={closeOverlay}/>)
+            setcurrentOverlay(<AddClientForm onClose={closeOverlay} refresh={setUserList}/>)
       }
 
-      var onOpenUserForm = (e, type="view") => {
+      var onOpenUserForm = (e, user_id, type="view") => {
 
-            setcurrentOverlay(<ViewClientForm onClose={closeOverlay} type={type} user_id={e.currentTarget.getAttribute("user_id")}/>)
+            setcurrentOverlay(<ViewClientForm onClose={closeOverlay} type={type} user_id={user_id}/>)
       }
 
       var closeOverlay = () => {
             setcurrentOverlay("")
+            setUserList("")
+      }
+
+      var openCustomOverlay = (e, component) => {
+            setcurrentOverlay(component)
       }
 
 
@@ -59,7 +64,7 @@ export function Clients() {
                   <div>{currentOverlay}</div>
                   <Container>
                     <ClientSearchBar onAddClick={onAddClick}/>
-                    <ClientsListing onOpenUserForm={onOpenUserForm} data={UserList}/>
+                    <ClientsListing openCustomOverlay={openCustomOverlay} closeOverlay={closeOverlay} onOpenUserForm={onOpenUserForm} data={UserList}/>
                   </Container>
             
             </div>

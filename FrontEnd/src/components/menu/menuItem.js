@@ -12,9 +12,9 @@ export function MenuItem(props) {
     }
 
     return (
-            <div style={hover ? {...MenuItemContainer, ...HoverMenuItemContainer, ...props.style} : {...MenuItemContainer, ...props.style}} onMouseOver={MouseOver} onMouseOut={MouseOut} >
+            <div style={hover ? {...MenuItemContainer, ...HoverMenuItemContainer, ...props.style} : {...MenuItemContainer, ...props.style}} onMouseOver={MouseOver} onMouseOut={MouseOut} onClick = {props.onClick ? props.onClick : ()=>{}}>
                 
-                <a  style={props.display!==false ? ContentContainer :{...ContentContainer, ...{"visibility":"hidden"}}} href={props.url}>
+                <a  style={props.display!==false ? ContentContainer :{...ContentContainer, ...{"visibility":"hidden"}}} href={props.url} >
                     
                     <span style={InnerContentContainer}>
 

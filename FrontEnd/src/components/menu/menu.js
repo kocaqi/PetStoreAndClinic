@@ -1,9 +1,50 @@
 import { useCookies } from 'react-cookie';
 import { MenuItem } from './menuItem';
 
-export function Menu() {
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react"
 
+
+import { ViewClientForm } from '../clients/clientForm/viewClientForm';
+import { authenticateUser } from '../../util/authenticateUser'
+
+
+
+export function Menu(props) {
+    
+    const effectRan = useRef(false)
+
+    //State and cookies
+
+    const [ userData, setuserData] = useState({})
     const [cookies, setCookie] = useCookies();
+
+    
+    const checkUser = async () => {
+
+        const userInfo = await authenticateUser(cookies.session_id)
+
+        setuserData(userInfo.userData)
+
+
+    }
+    
+    /* 
+    * Plays at component load
+    * 
+    * Check user login status and role
+    */
+
+    useEffect(() => {
+
+        if(!effectRan.current){
+
+            checkUser()
+        
+            effectRan.current = true
+        }
+    }, [])
+
 
     if(cookies.user.role=="admin"){
         return(
@@ -15,24 +56,26 @@ export function Menu() {
                     <MenuItem name="Clients" url="/clients" />
                     <MenuItem name="Clients" url="/clients" style={SecondRow} />
                     <MenuItem name="Clients" url="/clients" style={SecondRow} />
-                    <MenuItem name="Clients" url="/clients" style={SecondRow} />
+                    <MenuItem name="My Info" url="#" style={SecondRow} />
                 </div>
             </div>
         )
     }
     else if(cookies.user.role=="client"){
         return(
-            <div style={MenuOuterContainer}>
-                <div style={MenuInnerContainer}>
-                    <MenuItem name="Clients" url="/clients" style={FirstItem}/>
-                    <MenuItem name="Clients" url="/clients" />
-                    <MenuItem name="Clients" url="/clients" display={false}/>
-                    <MenuItem name="Clients" url="/clients" />
-                    <MenuItem name="Clients" url="/clients" style={SecondRow} />
-                    <MenuItem name="Clients" url="/clients" style={SecondRow} />
-                    <MenuItem name="Clients" url="/clients" style={SecondRow} />
+                <div style={MenuOuterContainer}>
+                    <div style={MenuInnerContainer}>
+                        <MenuItem name="Clients" url="/clients" style={FirstItem}/>
+                        <MenuItem name="Clients" url="/clients" />
+                        <MenuItem name="Clients" url="/clients" display={false}/>
+                        <MenuItem name="Clients" url="/clients" />
+                        <MenuItem name="Clients" url="/clients" style={SecondRow} />
+                        <MenuItem name="Clients" url="/clients" style={SecondRow} />
+                        <MenuItem name="My Info" url="#" style={SecondRow} onClick={(e) => {
+                            props.onOpenProfile(e, <ViewClientForm onClose={props.onClose} type={"self"} user_id={userData.user_id}/>)
+                        }}/>
+                    </div>
                 </div>
-            </div>
         )
     }
 }

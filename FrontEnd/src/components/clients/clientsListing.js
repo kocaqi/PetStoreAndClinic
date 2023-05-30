@@ -14,7 +14,7 @@ export function ClientsListing(props) {
                 <tbody>
                     
                     {props.data.map((user, index) => {
-                        return <SingleClient key={index} custom_key={index} onOpenUserForm={props.onOpenUserForm} user_data={user}/>;
+                        return <SingleClient key={index} custom_key={index} openCustomOverlay={props.openCustomOverlay} closeOverlay={props.closeOverlay} onOpenUserForm={props.onOpenUserForm} user_data={user} />;
                     })}
                 
                 </tbody>

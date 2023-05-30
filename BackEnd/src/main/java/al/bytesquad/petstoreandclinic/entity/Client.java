@@ -33,6 +33,10 @@ public class Client{
     @Column(name = "password")
     private String password;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     @OneToMany
     @ToString.Exclude
     private List<Pet> pets;

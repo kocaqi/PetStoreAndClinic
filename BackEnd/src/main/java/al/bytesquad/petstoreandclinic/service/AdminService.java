@@ -100,8 +100,6 @@ public class AdminService {
         admin.setLastName(adminSaveDTO.getLastName());
         admin.setEmail(adminSaveDTO.getEmail());
         admin.setPassword(passwordEncoder.encode(adminSaveDTO.getPassword()));
-        Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN");
-        admin.setRole(adminRole);
         Admin updatedAdmin = adminRepository.save(admin);
         return modelMapper.map(updatedAdmin, AdminDTO.class);
     }

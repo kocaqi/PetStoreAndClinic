@@ -36,6 +36,10 @@ public class Receptionist {
     private boolean enabled = true;
 
     @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
 

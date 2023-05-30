@@ -2,9 +2,7 @@ package al.bytesquad.petstoreandclinic.service;
 
 import al.bytesquad.petstoreandclinic.entity.*;
 import al.bytesquad.petstoreandclinic.payload.Response;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.ClientDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
-import al.bytesquad.petstoreandclinic.payload.saveDTO.ClientSaveDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.DoctorRepository;
 import al.bytesquad.petstoreandclinic.repository.ManagerRepository;
@@ -20,10 +18,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.Doc;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,23 +35,39 @@ public class DoctorService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ManagerRepository managerRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public DoctorService(DoctorRepository doctorRepository, ModelMapper modelMapper,
                          UserRepository userRepository,
                          RoleRepository roleRepository,
-                         ManagerRepository managerRepository) {
+                         ManagerRepository managerRepository, PasswordEncoder passwordEncoder) {
         this.doctorRepository = doctorRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.managerRepository = managerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public DoctorDTO create(DoctorSaveDTO doctorSaveDTO) {
         //convert DTO to entity
         Doctor doctor = modelMapper.map(doctorSaveDTO, Doctor.class);
+        doctor.setPassword((passwordEncoder.encode(doctorSaveDTO.getPassword())));
+        Role doctorRole = roleRepository.findRoleByName("ROLE_DOCTOR");
+        doctor.setRole(doctorRole);
         Doctor newDoctor = doctorRepository.save(doctor);
+
+        User user = new User();
+        user.setFirstName(doctorSaveDTO.getFirstName());
+        user.setLastName(doctorSaveDTO.getLastName());
+        user.setEmail(doctorSaveDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(doctorSaveDTO.getPassword()));
+        List<Role> roles = new ArrayList<>();
+        roles.add(doctorRole);
+        user.setRoles(roles);
+        userRepository.save(user);
 
         //convert entity to DTO
         return modelMapper.map(newDoctor, DoctorDTO.class);
@@ -86,15 +102,15 @@ public class DoctorService {
 
         List<DoctorDTO> content = doctorList.stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
 
-        Response<DoctorDTO> postResponse = new Response<>();
-        postResponse.setContent(content);
-        postResponse.setPageNo(doctors.getNumber());
-        postResponse.setPageSize(doctors.getSize());
-        postResponse.setTotalElements(doctors.getTotalElements());
-        postResponse.setTotalPages(doctors.getTotalPages());
-        postResponse.setLast(doctors.isLast());
+        Response<DoctorDTO> response = new Response<>();
+        response.setContent(content);
+        response.setPageNo(doctors.getNumber());
+        response.setPageSize(doctors.getSize());
+        response.setTotalElements(doctors.getTotalElements());
+        response.setTotalPages(doctors.getTotalPages());
+        response.setLast(doctors.isLast());
 
-        return postResponse;
+        return response;
     }
 
     public DoctorDTO getById(long id) {
@@ -107,6 +123,7 @@ public class DoctorService {
         doctor.setFirstName(doctorSaveDTO.getFirstName());
         doctor.setLastName(doctorSaveDTO.getLastName());
         doctor.setEmail(doctorSaveDTO.getEmail());
+        doctor.setPassword(passwordEncoder.encode(doctorSaveDTO.getPassword()));
         Doctor updatedDoctor = doctorRepository.save(doctor);
         return modelMapper.map(updatedDoctor, DoctorDTO.class);
     }

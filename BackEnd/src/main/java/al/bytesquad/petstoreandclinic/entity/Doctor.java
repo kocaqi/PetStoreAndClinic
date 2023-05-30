@@ -40,6 +40,10 @@ public class Doctor {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     @OneToMany
     @ToString.Exclude
     private List<Appointment> appointments;

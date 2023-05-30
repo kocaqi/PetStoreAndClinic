@@ -25,6 +25,10 @@ public class Feedback {
     @JoinColumn(name = "client_id")
     private Client client;
 
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
+
     @Column(name = "message")
     private String message;
 

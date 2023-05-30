@@ -49,13 +49,13 @@ public class DoctorController {
         return doctorService.searchBy(keyword);
     }
 
-    //get client by id
+    //get doctor by id
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getById(@PathVariable(name = "id") long id){
         return new ResponseEntity<>(doctorService.getById(id), HttpStatus.OK);
     }
 
-    //update client
+    //update doctor
     @PutMapping("/update/{id}")
     public ResponseEntity<DoctorDTO> update(@Valid @RequestBody DoctorSaveDTO doctorSaveDTO, @PathVariable(name = "id") long id){
         return new ResponseEntity<>(doctorService.update(doctorSaveDTO, id), HttpStatus.OK);

@@ -43,6 +43,10 @@ public class Shop {
     @ToString.Exclude
     private List<Receptionist> receptionists;
 
+    @OneToMany
+    @ToString.Exclude
+    private List<Feedback> feedbacks;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

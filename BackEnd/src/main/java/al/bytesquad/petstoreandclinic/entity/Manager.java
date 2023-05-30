@@ -1,10 +1,7 @@
 package al.bytesquad.petstoreandclinic.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
@@ -16,6 +13,8 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 public class Manager {
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -32,6 +31,13 @@ public class Manager {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @OneToOne
     @JoinColumn(name = "shop_id")

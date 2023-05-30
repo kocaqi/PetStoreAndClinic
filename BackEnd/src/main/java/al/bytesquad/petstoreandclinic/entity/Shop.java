@@ -28,6 +28,9 @@ public class Shop {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
     @OneToMany
     @ToString.Exclude
     private List<Doctor> doctors;
@@ -39,6 +42,10 @@ public class Shop {
     @OneToMany
     @ToString.Exclude
     private List<Receptionist> receptionists;
+
+    @OneToMany
+    @ToString.Exclude
+    private List<Feedback> feedbacks;
 
     @Override
     public boolean equals(Object o) {

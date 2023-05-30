@@ -32,6 +32,13 @@ public class Admin {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

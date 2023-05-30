@@ -1,7 +1,10 @@
 package al.bytesquad.petstoreandclinic.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import java.util.List;
@@ -35,6 +38,9 @@ public class Product {
 
     @Column(name = "type")
     private Type type;
+
+    @Column(name = "enabled")
+    private boolean enabled = true;
 
     @ManyToMany
     @ToString.Exclude

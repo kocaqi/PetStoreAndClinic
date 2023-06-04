@@ -10,7 +10,7 @@ import { MdFilterListAlt } from "react-icons/md";
 
 import { ConfirmationPage } from '../commons';
 
-export function SingleClient(props) {
+export function SingleDoctor(props) {
 
     const [hover, setHover] = useState(false);
     const [cookies, setCookie] = useCookies();
@@ -38,7 +38,7 @@ export function SingleClient(props) {
 
       
       return (
-          <tr style={hover ? {...client, ...clientHover} : client} onMouseOver={MouseOver} onMouseOut={MouseOut}>
+          <tr style={hover ? {...doctor, ...doctorHover} : doctor} onMouseOver={MouseOver} onMouseOut={MouseOut}>
             <td style={title}>
               <div style={thumbnail}>
                 <img src={props.user_data.ImageURL+(props.custom_key+1)+".png"} alt="" style={thumbnailImage}/>
@@ -46,25 +46,25 @@ export function SingleClient(props) {
               <div>
                 <div>
                   <div>
-                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id)} user_id = {props.user_data.user_id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.Name}</a></h5>
+                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id)} user_id = {props.user_data.user_id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.fullName}</a></h5>
                   </div>
                   <div>
                     <ul style={list}>
-                      <li style={listItem}><MdFilterListAlt size="15"/>{props.user_data.Occupation}</li>
-                      <li style={listItem}><MdLocationOn size="15" />{props.user_data.Address}</li>
+                      <li style={listItem}><MdFilterListAlt size="15"/>{props.user_data.specialisation}</li>
+                      <li style={listItem}><MdLocationOn size="15" />{props.user_data.email}</li>
                     </ul>
                   </div>
                 </div>
               </div>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>{props.user_data.Status}</span>
+              <span style={textFieldText}>{props.user_data.status}</span>
             </td>
             <td style={actions}>
               <ul style={actionList}>
                 <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id)} user_id = {props.user_data.user_id} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
-                {cookies.user.role.id==1 || cookies.user.role.id==4 ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id, "edit")} user_id = {props.user_data.user_id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
-                {cookies.user.role.id==1 || cookies.user.role.id==4 ? <li style={actionListItem}><a href="#"style={{"color": "#D13C1D"}} onClick={onDeleteClick}><AiFillDelete size="25"/></a></li> : ""}
+                {cookies.user.role.id==1 || cookies.user.role.id==2 ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id, "edit")} user_id = {props.user_data.user_id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
+                {cookies.user.role.id==1 || cookies.user.role.id==2 ? <li style={actionListItem}><a href="#"style={{"color": "#D13C1D"}} onClick={onDeleteClick}><AiFillDelete size="25"/></a></li> : ""}
               </ul>
             </td>
           </tr>
@@ -189,7 +189,7 @@ const actionListItem = {
 }
 
 
-const client = {
+const doctor = {
     "width": "100%",
     "background": "#ffffff",
     "borderBottom": "1px solid #eeeeee",
@@ -201,7 +201,7 @@ const client = {
     "transition": "all 0.3s ease-in-out",
 }
 
-const clientHover = {
+const doctorHover = {
     "-webkit-box-shadow": "0px 0px 34px 4px rgba(33, 37, 41, 0.06)",
     "box-shadow": "0px 0px 34px 4px rgba(33, 37, 41, 0.06)",
     "position": "relative",

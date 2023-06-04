@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { HoverButton } from '../commons';
 
-export function ClientSearchBar(props) {
+export function DoctorSearchBar(props) {
     const [cookies, setCookie] = useCookies();
 
 
@@ -11,7 +11,7 @@ export function ClientSearchBar(props) {
             <div style={outerContainer}>
                   <div style={actionButtonContainer}>
                   <HoverButton text="BACK" HoverStyle={{...ActionButtonHover, "background": "#962B14"}} DefaultStyle={{...ActionButton, "background": "#D13C1D"}} onClick={() => window.location.href="/"} />
-                  {cookies.user.role.id==1 || cookies.user.role.id==4 ? <HoverButton text="ADD" HoverStyle={ActionButtonHover} DefaultStyle={ActionButton} onClick={props.onAddClick} /> : ""}
+                  {cookies.user.role.id==1 || cookies.user.role.id==2 ? <HoverButton text="ADD" HoverStyle={ActionButtonHover} DefaultStyle={ActionButton} onClick={props.onAddClick} /> : ""}
                   </div>
                   <div style={searchNavContainer}>
                     <input placeholder='First Name or Last Name' style={Input}/>

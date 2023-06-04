@@ -46,12 +46,12 @@ export function Menu(props) {
     }, [])
 
 
-    if(cookies.user.role=="admin"){
+    if(cookies.user.role.id==1){
         return(
             <div style={MenuOuterContainer}>
                 <div style={MenuInnerContainer}>
                     <MenuItem name="Clients" url="/clients" style={FirstItem}/>
-                    <MenuItem name="Clients" url="/clients" />
+                    <MenuItem name="Doctors" url="/doctors" />
                     <MenuItem name="Clients" url="/clients" />
                     <MenuItem name="Clients" url="/clients" />
                     <MenuItem name="Clients" url="/clients" style={SecondRow} />

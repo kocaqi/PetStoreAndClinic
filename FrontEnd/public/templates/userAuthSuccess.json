@@ -1,7 +1,9 @@
 {
     "LoggedIn": true,
     "userData": {
-        "role": "admin",
+        "role": {
+            "id": 1
+        },
         "name": "albi ceci",
         "user_id" : "555"   
     },

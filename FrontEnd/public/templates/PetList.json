@@ -16,5 +16,11 @@
         "Name": "Albi Bosi",
         "Type": "Dog",
         "ImageURL": "https://bootdey.com/img/Content/avatar/avatar"
+    },
+    {
+        "pet_id": 555,
+        "Name": "Albi Bosi",
+        "Type": "Dog",
+        "ImageURL": "https://bootdey.com/img/Content/avatar/avatar"
     }
 ]

@@ -1,0 +1,15 @@
+{
+    "user_id": 222,
+    "firstName": "Albi",
+    "lastName": "Bosi",
+    "fullName": "Albi Bosi",
+    "email": "abosi@123.com",
+    "specialisation": "Dogs",
+    "address": "address template",
+    "city": "city template",
+    "country": "country template",
+    "phone": "123",
+    "status": "active",
+    "ImageURL": "https://bootdey.com/img/Content/avatar/avatar",
+    "shop_id": 0
+}

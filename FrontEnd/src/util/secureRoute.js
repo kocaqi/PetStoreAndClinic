@@ -29,7 +29,7 @@ export function SecureRoute(props){
 
         /******************************* */
 
-        if(userInfo.LoggedIn && !props.roles.includes(userInfo.userData.role)){ //User is logged in but it's role doesn't match the specified ones
+        if(userInfo.LoggedIn && !props.roles.includes(userInfo.userData.role.id)){ //User is logged in but it's role doesn't match the specified ones
             navigate("/not-authorized")
         }
 

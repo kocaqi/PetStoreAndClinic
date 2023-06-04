@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Home } from "./components/home/home";
 import { Clients } from "./components/clients/clients";
+import { Doctors } from "./components/doctors/doctors";
 import { Login } from "./components/login/login";
 import { SecureRoute } from "./util/secureRoute"; //Custom secure route
 import { NotAuthorized } from "./components/notAuthorized/notAuthorized";
@@ -15,15 +16,19 @@ function App() {
     <Routes>
 
       <Route path="/" element={
-        <SecureRoute Route = {<Home />} LoggedIn={true} roles={["client", "reception", "manager", "doctor", "admin"]} Redirect="/login" />} 
+        <SecureRoute Route = {<Home />} LoggedIn={true} roles={[5, 4, 3, 2, 1]} Redirect="/login" />} 
       />
 
       <Route path="/login" element={
-        <SecureRoute Route = {<Login />} LoggedIn={false} roles={["client", "reception", "manager", "doctor", "admin"]} Redirect="/" />} 
+        <SecureRoute Route = {<Login />} LoggedIn={false} roles={[5, 4, 3, 2, 1]} Redirect="/" />} 
       />
 
       <Route path="/clients" element={
-        <SecureRoute Route = {<Clients />} LoggedIn={true} roles={["reception", "manager", "admin", "doctor"]} Redirect="/" />} 
+        <SecureRoute Route = {<Clients />} LoggedIn={true} roles={[ 4, 3, 2, 1]} Redirect="/" />} 
+      />
+
+      <Route path="/doctors" element={
+        <SecureRoute Route = {<Doctors />} LoggedIn={true} roles={[5, 2, 1]} Redirect="/" />} 
       />
       
       <Route path="/not-authorized" element={<NotAuthorized />} />

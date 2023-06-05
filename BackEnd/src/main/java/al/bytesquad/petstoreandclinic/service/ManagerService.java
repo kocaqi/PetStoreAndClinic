@@ -1,10 +1,9 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.*;
+import al.bytesquad.petstoreandclinic.entity.Manager;
+import al.bytesquad.petstoreandclinic.entity.Role;
+import al.bytesquad.petstoreandclinic.entity.User;
 import al.bytesquad.petstoreandclinic.payload.Response;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.ClientDTO;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.FeedbackDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ManagerDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ManagerSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ManagerRepository;

@@ -26,19 +26,19 @@ public class AppointmentController {
     public Response<AppointmentDTO> getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                                            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
                                            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-                                           @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir){
+                                           @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
         return appointmentService.getAll(pageNo, pageSize, sortBy, sortDir);
     }
 
     //book appointment
     @PostMapping("/bookAppointment")
-    public ResponseEntity<AppointmentDTO> book(@Valid @RequestBody AppointmentSaveDTO appointmentSaveDTO, Principal principal){
+    public ResponseEntity<AppointmentDTO> book(@Valid @RequestBody AppointmentSaveDTO appointmentSaveDTO, Principal principal) {
         return new ResponseEntity<>(appointmentService.book(appointmentSaveDTO, principal), HttpStatus.CREATED);
     }
 
     //delete appointment
     @DeleteMapping("/deleteAppointment/{id}")
-    public void delete(@PathVariable(name = "id")long id, Principal principal){
+    public void delete(@PathVariable(name = "id") long id, Principal principal) {
         appointmentService.delete(id, principal);
     }
 }

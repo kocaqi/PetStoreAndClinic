@@ -1,5 +1,8 @@
 package al.bytesquad.petstoreandclinic.entity;
 
+import al.bytesquad.petstoreandclinic.entity.petAttributes.Breed;
+import al.bytesquad.petstoreandclinic.entity.petAttributes.Gender;
+import al.bytesquad.petstoreandclinic.entity.petAttributes.Species;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,27 +33,11 @@ public class Pet {
     @JoinColumn(name = "owner_id")
     private Client owner;
 
-    enum Species{
-        FELINE,
-        CANINE
-    }
-
     @Column(name = "species")
     private Species species;
 
-    enum Breed{
-        MIXED,
-        SCOTTISH_FOLD,
-        BRITISH_SHORTHAIR
-    }
-
     @Column(name = "breed")
     private Breed breed;
-
-    enum Gender{
-        MALE,
-        FEMALE
-    }
 
     @Column(name = "gender")
     private Gender gender;

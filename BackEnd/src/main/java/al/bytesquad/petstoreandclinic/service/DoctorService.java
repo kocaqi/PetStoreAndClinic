@@ -4,24 +4,19 @@ import al.bytesquad.petstoreandclinic.entity.*;
 import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
-import al.bytesquad.petstoreandclinic.repository.DoctorRepository;
-import al.bytesquad.petstoreandclinic.repository.ManagerRepository;
-import al.bytesquad.petstoreandclinic.repository.RoleRepository;
-import al.bytesquad.petstoreandclinic.repository.UserRepository;
+import al.bytesquad.petstoreandclinic.repository.*;
 import al.bytesquad.petstoreandclinic.search.MySpecification;
 import al.bytesquad.petstoreandclinic.search.SearchCriteria;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.print.Doc;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +31,21 @@ public class DoctorService {
     private final RoleRepository roleRepository;
     private final ManagerRepository managerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ShopRepository shopRepository;
 
     @Autowired
     public DoctorService(DoctorRepository doctorRepository, ModelMapper modelMapper,
                          UserRepository userRepository,
                          RoleRepository roleRepository,
-                         ManagerRepository managerRepository, PasswordEncoder passwordEncoder) {
+                         ManagerRepository managerRepository, PasswordEncoder passwordEncoder,
+                         ShopRepository shopRepository) {
         this.doctorRepository = doctorRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.managerRepository = managerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.shopRepository = shopRepository;
     }
 
     @Transactional
@@ -85,17 +83,22 @@ public class DoctorService {
         List<Role> roles = loggedInUser.getRoles();
         Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN");
 
-        if(roles.contains(adminRole)){
-            if(shopId==-1){
+        if (roles.contains(adminRole)) {
+            if (shopId == -1) {
                 doctors = doctorRepository.findAll(pageable);
             } else {
-                doctors = doctorRepository.findAllByShop(pageable, shopId);
+                long finalShopId = shopId;
+                Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", finalShopId));
+                List<Doctor> doctorList = doctorRepository.findAllByShop(shop);
+                doctors = new PageImpl<>(doctorList, pageable, doctorList.size());
             }
-        }
-        else{
+        } else {
             Manager manager = managerRepository.findByEmail(loggedInEmail);
             shopId = manager.getShop().getId();
-            doctors = doctorRepository.findAllByShop(pageable, shopId);
+            long finalShopId = shopId;
+            Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", finalShopId));
+            List<Doctor> doctorList = doctorRepository.findAllByShop(shop);
+            doctors = new PageImpl<>(doctorList, pageable, doctorList.size());
         }
 
         List<Doctor> doctorList = doctors.getContent();
@@ -128,13 +131,25 @@ public class DoctorService {
         return modelMapper.map(updatedDoctor, DoctorDTO.class);
     }
 
-    public List<DoctorDTO> searchBy(String keyword) {
+    public List<DoctorDTO> searchBy(String keyword, Principal principal) {
         MySpecification<Doctor> specifyByFirstName = new MySpecification<>(new SearchCriteria("firstName", ":", keyword));
         MySpecification<Doctor> specifyByLastName = new MySpecification<>(new SearchCriteria("lastName", ":", keyword));
         MySpecification<Doctor> specifyByEmail = new MySpecification<>(new SearchCriteria("email", ":", keyword));
 
-        List<Doctor> doctors = doctorRepository.findAll(Specification
-                .where(specifyByFirstName).and(specifyByLastName).and(specifyByEmail));
+        String loggedInEmail = principal.getName();
+        User loggedInUser = userRepository.findByEmail(loggedInEmail);
+        Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN");
+        List<Doctor> doctors;
+
+        if (loggedInUser.getRoles().contains(adminRole))
+            doctors = doctorRepository.findAll(Specification
+                    .where(specifyByFirstName).and(specifyByLastName).and(specifyByEmail));
+        else {
+            Manager manager = managerRepository.findByEmail(loggedInEmail);
+            long shopId = manager.getShop().getId();
+            MySpecification<Doctor> specifyByShop = new MySpecification<>(new SearchCriteria("shop", ":", shopId));
+            doctors = doctorRepository.findAll(Specification.where(specifyByFirstName).and(specifyByLastName).and(specifyByEmail).and(specifyByShop));
+        }
 
         return doctors.stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
     }

@@ -33,35 +33,35 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                    .exceptionHandling()
-                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .authorizeRequests()
-                    .requestMatchers("/**").permitAll()
-                    .requestMatchers("/v2/api-docs/**").permitAll()
-                    .requestMatchers("/swagger-ui/**").permitAll()
-                    .requestMatchers("/swagger-resources/**").permitAll()
-                    .requestMatchers("/swagger-ui.html/**").permitAll()
-                    .requestMatchers("/webjars/**").permitAll()
-                    .anyRequest().authenticated()
+                .authorizeRequests()
+                .requestMatchers("/**").permitAll()
+                .requestMatchers("/v2/api-docs/**").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/swagger-resources/**").permitAll()
+                .requestMatchers("/swagger-ui.html/**").permitAll()
+                .requestMatchers("/webjars/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                    .defaultSuccessUrl("/", true)
+                .formLogin()
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/", true)
                 .and()
-                    .logout()
-                    .logoutSuccessUrl("/login");
+                .logout()
+                .logoutSuccessUrl("/login");
         httpSecurity.addFilterBefore(new JWTAuthenticationFilter(provider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }

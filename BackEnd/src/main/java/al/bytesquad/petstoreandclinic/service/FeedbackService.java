@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FeedbackService {
@@ -66,8 +65,8 @@ public class FeedbackService {
         List<Role> roles = loggedInUser.getRoles();
         Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN");
 
-        if(roles.contains(adminRole)){
-            if(shopId==-1)
+        if (roles.contains(adminRole)) {
+            if (shopId == -1)
                 feedbacks = feedbackRepository.findAll(pageable);
             else
                 feedbacks = feedbackRepository.findAllByShop(pageable, shopId);

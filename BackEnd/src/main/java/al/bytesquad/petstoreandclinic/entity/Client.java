@@ -13,7 +13,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Client{
+public class Client {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     @Id

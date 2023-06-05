@@ -37,7 +37,7 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled = true;
 
-    @OneToMany
+    @ManyToMany
     @ToString.Exclude
     private List<Role> roles;
 

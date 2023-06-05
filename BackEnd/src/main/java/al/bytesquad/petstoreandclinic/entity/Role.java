@@ -26,7 +26,7 @@ public class Role {
     private String name;
 
     @Autowired
-    public Role(String name){
+    public Role(String name) {
         this.name = name;
     }
 

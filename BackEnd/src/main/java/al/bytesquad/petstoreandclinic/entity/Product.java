@@ -1,5 +1,6 @@
 package al.bytesquad.petstoreandclinic.entity;
 
+import al.bytesquad.petstoreandclinic.entity.productAttributes.Type;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,6 @@ public class Product {
 
     @Column(name = "stock")
     private double stock;
-
-    enum Type{
-        MEDICAL,
-        NON_MEDICAL
-    }
 
     @Column(name = "type")
     private Type type;

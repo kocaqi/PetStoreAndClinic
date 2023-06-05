@@ -44,7 +44,7 @@ public class AppointmentService {
     public void delete(long id, Principal principal) {
         String clientEmail = principal.getName();
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Appointment", "id", id));
-        if(clientEmail.equals(appointment.getClient().getEmail())){
+        if (clientEmail.equals(appointment.getClient().getEmail())) {
             appointmentRepository.delete(appointment);
         }
     }

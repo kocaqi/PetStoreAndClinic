@@ -2,7 +2,7 @@ package al.bytesquad.petstoreandclinic.service.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class APIException extends RuntimeException{
+public class APIException extends RuntimeException {
     private final HttpStatus httpStatus;
     private final String message;
 

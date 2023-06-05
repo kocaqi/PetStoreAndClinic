@@ -90,12 +90,12 @@ public class AdminService {
     }
 
     public AdminDTO getById(long id) {
-        Admin admin = adminRepository.findAdminById(id).orElseThrow(()->new ResourceNotFoundException("Admin", "id", id));
+        Admin admin = adminRepository.findAdminById(id).orElseThrow(() -> new ResourceNotFoundException("Admin", "id", id));
         return modelMapper.map(admin, AdminDTO.class);
     }
 
     public AdminDTO update(AdminSaveDTO adminSaveDTO, long id) {
-        Admin admin = adminRepository.findAdminById(id).orElseThrow(()->new ResourceNotFoundException("Admin", "id", id));
+        Admin admin = adminRepository.findAdminById(id).orElseThrow(() -> new ResourceNotFoundException("Admin", "id", id));
         admin.setFirstName(adminSaveDTO.getFirstName());
         admin.setLastName(adminSaveDTO.getLastName());
         admin.setEmail(adminSaveDTO.getEmail());
@@ -117,7 +117,7 @@ public class AdminService {
     }
 
     public void delete(long id) {
-        Admin admin = adminRepository.findAdminById(id).orElseThrow(()->new ResourceNotFoundException("Admin", "id", id));
+        Admin admin = adminRepository.findAdminById(id).orElseThrow(() -> new ResourceNotFoundException("Admin", "id", id));
         admin.setEnabled(false);
         adminRepository.save(admin);
     }

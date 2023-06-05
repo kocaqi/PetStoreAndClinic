@@ -19,12 +19,10 @@ public class MySpecification<T> implements Specification<T> {
         if (criteria.getOperation().equalsIgnoreCase(">")) {
             return criteriaBuilder.greaterThanOrEqualTo(
                     root.get(criteria.getKey()), criteria.getValue().toString());
-        }
-        else if (criteria.getOperation().equalsIgnoreCase("<")) {
+        } else if (criteria.getOperation().equalsIgnoreCase("<")) {
             return criteriaBuilder.lessThanOrEqualTo(
                     root.get(criteria.getKey()), criteria.getValue().toString());
-        }
-        else if (criteria.getOperation().equalsIgnoreCase(":")) {
+        } else if (criteria.getOperation().equalsIgnoreCase(":")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.like(
                         root.get(criteria.getKey()), "%" + criteria.getValue() + "%");

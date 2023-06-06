@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.controller;
 
-import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ManagerDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ManagerSaveDTO;
 import al.bytesquad.petstoreandclinic.service.ManagerService;
@@ -10,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -31,24 +31,21 @@ public class ManagerController {
 
     //get all managers
     @GetMapping
-    public Response<ManagerDTO> getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                       @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                       @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-                                       @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        return managerService.getAll(pageNo, pageSize, sortBy, sortDir);
+    public List<ManagerDTO> getAll(@RequestParam String keyword, Principal principal) {
+        return managerService.getAll(keyword, principal);
     }
 
     //search for managers
-    @GetMapping("/search")
+    /*@GetMapping("/search")
     public List<ManagerDTO> searchBy(@RequestParam String keyword) {
         return managerService.searchBy(keyword);
-    }
+    }*/
 
     //get manager by id
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<ManagerDTO> getById(@PathVariable(name = "id") long id) {
         return new ResponseEntity<>(managerService.getById(id), HttpStatus.OK);
-    }
+    }*/
 
     //update manager
     @PutMapping("/update/{id}")

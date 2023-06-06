@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.controller;
 
-import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.service.DoctorService;
@@ -33,25 +32,20 @@ public class DoctorController {
 
     //get all doctors
     @GetMapping
-    public Response<DoctorDTO> getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                      @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                      @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-                                      @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir,
-                                      @RequestParam(value = "shopId", defaultValue = "-1", required = false) long shopId,
-                                      Principal principal) {
-        return doctorService.getAll(pageNo, pageSize, sortBy, sortDir, shopId, principal);
+    public List<DoctorDTO> getAll(@RequestParam String keyword, Principal principal) {
+        return doctorService.getAll(keyword, principal);
     }
 
-    @GetMapping("/search")
+    /*@GetMapping("/search")
     public List<DoctorDTO> searchBy(@RequestParam String keyword, Principal principal) {
         return doctorService.searchBy(keyword, principal);
-    }
+    }*/
 
     //get doctor by id
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getById(@PathVariable(name = "id") long id) {
         return new ResponseEntity<>(doctorService.getById(id), HttpStatus.OK);
-    }
+    }*/
 
     //update doctor
     @PutMapping("/update/{id}")

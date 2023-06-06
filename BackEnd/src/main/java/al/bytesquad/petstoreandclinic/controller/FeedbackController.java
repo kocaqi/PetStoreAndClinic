@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.controller;
 
-import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.FeedbackDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.FeedbackSaveDTO;
 import al.bytesquad.petstoreandclinic.service.FeedbackService;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/feedback")
@@ -27,21 +27,16 @@ public class FeedbackController {
     }
 
     @GetMapping("/")
-    public Response<FeedbackDTO> getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                        @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                        @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-                                        @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir,
-                                        @RequestParam(value = "shopId", defaultValue = "-1", required = false) long shopId,
-                                        Principal principal) {
-        return feedbackService.getAll(pageNo, pageSize, sortBy, sortDir, shopId, principal);
+    public List<FeedbackDTO> getAll(@RequestParam String keyword, Principal principal) {
+        return feedbackService.getAll(keyword, principal);
     }
 
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<FeedbackDTO> getById(@PathVariable(name = "id") long id) {
         return new ResponseEntity<>(feedbackService.getById(id), HttpStatus.OK);
-    }
+    }*/
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/delete/{id}")
     public void delete(@PathVariable(name = "id") long id) {
         feedbackService.delete(id);
     }

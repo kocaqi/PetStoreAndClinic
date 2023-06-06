@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.controller;
 
-import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ClientDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ClientSaveDTO;
 import al.bytesquad.petstoreandclinic.service.ClientService;
@@ -31,23 +30,20 @@ public class ClientController {
 
     //get all clients
     @GetMapping
-    public Response<ClientDTO> getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                      @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                      @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-                                      @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        return clientService.getAll(pageNo, pageSize, sortBy, sortDir);
+    public List<ClientDTO> getAll(@RequestParam String keyword) {
+        return clientService.getAll(keyword);
     }
 
-    @GetMapping("/search")
+    /*@GetMapping("/search")
     public List<ClientDTO> searchBy(@RequestParam String keyword) {
         return clientService.searchBy(keyword);
-    }
+    }*/
 
     //get client by id
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<ClientDTO> getById(@PathVariable(name = "id") long id) {
         return new ResponseEntity<>(clientService.getById(id), HttpStatus.OK);
-    }
+    }*/
 
     //update client
     @PutMapping("/update/{id}")

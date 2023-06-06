@@ -3,7 +3,6 @@ package al.bytesquad.petstoreandclinic.service;
 import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
-import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.AdminSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.AdminRepository;
@@ -12,12 +11,10 @@ import al.bytesquad.petstoreandclinic.repository.UserRepository;
 import al.bytesquad.petstoreandclinic.search.MySpecification;
 import al.bytesquad.petstoreandclinic.search.SearchCriteria;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,28 +65,6 @@ public class AdminService {
         return modelMapper.map(newAdmin, AdminDTO.class);
     }
 
-    public Response<AdminDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Admin> admins = adminRepository.findEnabledAdmins(pageable);
-
-        List<Admin> adminList = admins.getContent();
-
-        List<AdminDTO> content = adminList.stream().map(admin -> modelMapper.map(admin, AdminDTO.class)).toList();
-
-        Response<AdminDTO> response = new Response<>();
-        response.setContent(content);
-        response.setPageNo(admins.getNumber());
-        response.setPageSize(admins.getSize());
-        response.setTotalElements(admins.getTotalElements());
-        response.setTotalPages(admins.getTotalPages());
-        response.setLast(admins.isLast());
-
-        return response;
-    }
-
     public AdminDTO getById(long id) {
         Admin admin = adminRepository.findAdminById(id).orElseThrow(() -> new ResourceNotFoundException("Admin", "id", id));
         return modelMapper.map(admin, AdminDTO.class);
@@ -120,5 +96,27 @@ public class AdminService {
         Admin admin = adminRepository.findAdminById(id).orElseThrow(() -> new ResourceNotFoundException("Admin", "id", id));
         admin.setEnabled(false);
         adminRepository.save(admin);
+    }
+
+    public List<AdminDTO> getAll(String keyword) {
+        List<String> keyValues = List.of(keyword.split(","));
+        HashMap<String, String> pairs = new HashMap<>();
+        for (String s : keyValues) {
+            String[] strings = s.split(":");
+            pairs.put(strings[0], strings[1]);
+        }
+
+        // Retrieve admins based on the specified criteria
+        List<Admin> admins = adminRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            for (String key : pairs.keySet()) {
+                Path<Object> fieldPath = root.get(key);
+                predicates.add(criteriaBuilder.equal(fieldPath, pairs.get(key)));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        });
+
+        // Convert Admin entities to AdminDTO
+        return admins.stream().map(admin -> modelMapper.map(admin, AdminDTO.class)).collect(Collectors.toList());
     }
 }

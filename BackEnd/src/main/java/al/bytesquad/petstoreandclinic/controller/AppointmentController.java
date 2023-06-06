@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.controller;
 
-import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AppointmentDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.AppointmentSaveDTO;
 import al.bytesquad.petstoreandclinic.service.AppointmentService;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/appointments")
@@ -21,13 +21,10 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
-    //get all my appointments
+    //get all appointments
     @GetMapping("/")
-    public Response<AppointmentDTO> getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                           @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                           @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-                                           @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        return appointmentService.getAll(pageNo, pageSize, sortBy, sortDir);
+    public List<AppointmentDTO> getAll(@RequestParam String keyword, Principal principal) {
+        return appointmentService.getAll(keyword, principal);
     }
 
     //book appointment
@@ -37,7 +34,7 @@ public class AppointmentController {
     }
 
     //delete appointment
-    @DeleteMapping("/deleteAppointment/{id}")
+    @PutMapping("/deleteAppointment/{id}")
     public void delete(@PathVariable(name = "id") long id, Principal principal) {
         appointmentService.delete(id, principal);
     }

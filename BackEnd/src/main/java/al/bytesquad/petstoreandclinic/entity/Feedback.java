@@ -29,6 +29,10 @@ public class Feedback {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
     @Column(name = "message")
     private String message;
 

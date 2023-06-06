@@ -1,24 +1,29 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.*;
-import al.bytesquad.petstoreandclinic.payload.Response;
+import al.bytesquad.petstoreandclinic.entity.Doctor;
+import al.bytesquad.petstoreandclinic.entity.Manager;
+import al.bytesquad.petstoreandclinic.entity.Role;
+import al.bytesquad.petstoreandclinic.entity.User;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
 import al.bytesquad.petstoreandclinic.search.MySpecification;
 import al.bytesquad.petstoreandclinic.search.SearchCriteria;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.Doc;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,49 +76,51 @@ public class DoctorService {
         return modelMapper.map(newDoctor, DoctorDTO.class);
     }
 
-    public Response<DoctorDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir, long shopId, Principal principal) {
-
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Doctor> doctors;
-        String loggedInEmail = principal.getName();
-        User loggedInUser = userRepository.findByEmail(loggedInEmail);
-        List<Role> roles = loggedInUser.getRoles();
-        Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN");
-
-        if (roles.contains(adminRole)) {
-            if (shopId == -1) {
-                doctors = doctorRepository.findAll(pageable);
-            } else {
-                long finalShopId = shopId;
-                Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", finalShopId));
-                List<Doctor> doctorList = doctorRepository.findAllByShop(shop);
-                doctors = new PageImpl<>(doctorList, pageable, doctorList.size());
-            }
-        } else {
-            Manager manager = managerRepository.findByEmail(loggedInEmail);
-            shopId = manager.getShop().getId();
-            long finalShopId = shopId;
-            Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", finalShopId));
-            List<Doctor> doctorList = doctorRepository.findAllByShop(shop);
-            doctors = new PageImpl<>(doctorList, pageable, doctorList.size());
+    public List<DoctorDTO> getAll(String keyword, Principal principal) {
+        List<String> keyValues = List.of(keyword.split(","));
+        HashMap<String, String> pairs = new HashMap<>();
+        for (String s : keyValues) {
+            String[] strings = s.split(":");
+            pairs.put(strings[0], strings[1]);
         }
 
-        List<Doctor> doctorList = doctors.getContent();
+        List<Doctor> doctors = doctorRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            for (String key : pairs.keySet()) {
+                Path<Object> fieldPath = root.get(key);
+                predicates.add(criteriaBuilder.equal(fieldPath, pairs.get(key)));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        });
 
-        List<DoctorDTO> content = doctorList.stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
+        List<Doctor> filteredDoctors;
 
-        Response<DoctorDTO> response = new Response<>();
-        response.setContent(content);
-        response.setPageNo(doctors.getNumber());
-        response.setPageSize(doctors.getSize());
-        response.setTotalElements(doctors.getTotalElements());
-        response.setTotalPages(doctors.getTotalPages());
-        response.setLast(doctors.isLast());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loggedInEmail = principal.getName();
+        User user = userRepository.findByEmail(loggedInEmail);
+        List<String> userRoles = user.getRoles().stream()
+                .map(Role::getName).toList();
 
-        return response;
+        String selectedRole = null;
+
+        if (authentication != null && userRoles.contains(authentication.getAuthorities().iterator().next().getAuthority())) {
+            selectedRole = authentication.getAuthorities().iterator().next().getAuthority();
+            // Assuming the authority is in the format "ROLE_{ROLE_NAME}"
+            selectedRole = selectedRole.substring("ROLE_".length()).toLowerCase();
+        }
+
+        if (selectedRole.equals("manager"))
+            filteredDoctors = doctors.stream()
+                    .filter(doctor -> doctor.getShop().equals(managerRepository.findByEmail(loggedInEmail).getShop()))
+                    .collect(Collectors.toList());
+        else if (selectedRole.equals("admin") || selectedRole.equals("client"))
+            filteredDoctors = doctors;
+        else
+            filteredDoctors = null;
+
+        if (filteredDoctors == null)
+            return null;
+        return filteredDoctors.stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
     }
 
     public DoctorDTO getById(long id) {

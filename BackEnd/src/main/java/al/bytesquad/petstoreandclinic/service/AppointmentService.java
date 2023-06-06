@@ -2,21 +2,24 @@ package al.bytesquad.petstoreandclinic.service;
 
 import al.bytesquad.petstoreandclinic.entity.Appointment;
 import al.bytesquad.petstoreandclinic.entity.Client;
-import al.bytesquad.petstoreandclinic.payload.Response;
+import al.bytesquad.petstoreandclinic.entity.Role;
+import al.bytesquad.petstoreandclinic.entity.User;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AppointmentDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.AppointmentSaveDTO;
-import al.bytesquad.petstoreandclinic.repository.AppointmentRepository;
-import al.bytesquad.petstoreandclinic.repository.ClientRepository;
+import al.bytesquad.petstoreandclinic.repository.*;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -24,12 +27,24 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final ModelMapper modelMapper;
     private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final DoctorRepository doctorRepository;
+    private final ManagerRepository managerRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository, ModelMapper modelMapper,
-                              ClientRepository clientRepository) {
+                              ClientRepository clientRepository,
+                              UserRepository userRepository,
+                              RoleRepository roleRepository,
+                              DoctorRepository doctorRepository,
+                              ManagerRepository managerRepository) {
         this.appointmentRepository = appointmentRepository;
         this.modelMapper = modelMapper;
         this.clientRepository = clientRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.doctorRepository = doctorRepository;
+        this.managerRepository = managerRepository;
     }
 
     public AppointmentDTO book(AppointmentSaveDTO appointmentSaveDTO, Principal principal) {
@@ -49,25 +64,59 @@ public class AppointmentService {
         }
     }
 
-    public Response<AppointmentDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
+    public List<AppointmentDTO> getAll(String keyword, Principal principal) {
+        List<String> keyValues = List.of(keyword.split(","));
+        HashMap<String, String> pairs = new HashMap<>();
+        for (String s : keyValues) {
+            String[] strings = s.split(":");
+            pairs.put(strings[0], strings[1]);
+        }
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Appointment> appointments = appointmentRepository.findAll(pageable);
+        List<Appointment> appointments = appointmentRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            for (String key : pairs.keySet()) {
+                Path<Object> fieldPath = root.get(key);
+                predicates.add(criteriaBuilder.equal(fieldPath, pairs.get(key)));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        });
 
-        List<Appointment> appointmentList = appointments.getContent();
+        List<Appointment> filteredList;
 
-        List<AppointmentDTO> content = appointmentList.stream().map(appointment -> modelMapper.map(appointment, AppointmentDTO.class)).toList();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loggedInEmail = principal.getName();
+        User user = userRepository.findByEmail(loggedInEmail);
+        List<String> userRoles = user.getRoles().stream()
+                .map(Role::getName).toList();
 
-        Response<AppointmentDTO> response = new Response<>();
-        response.setContent(content);
-        response.setPageNo(appointments.getNumber());
-        response.setPageSize(appointments.getSize());
-        response.setTotalElements(appointments.getTotalElements());
-        response.setTotalPages(appointments.getTotalPages());
-        response.setLast(appointments.isLast());
+        String selectedRole = null;
 
-        return response;
+        if (authentication != null && userRoles.contains(authentication.getAuthorities().iterator().next().getAuthority())) {
+            selectedRole = authentication.getAuthorities().iterator().next().getAuthority();
+            // Assuming the authority is in the format "ROLE_{ROLE_NAME}"
+            selectedRole = selectedRole.substring("ROLE_".length()).toLowerCase();
+        }
+
+        if ("client".equals(selectedRole)) {
+            filteredList = appointments.stream()
+                    .filter(appointment -> appointment.getClient().equals(clientRepository.findByEmail(loggedInEmail)))
+                    .collect(Collectors.toList());
+        } else if ("receptionist".equals(selectedRole)) {
+            filteredList = null;
+        } else if ("doctor".equals(selectedRole)) {
+            filteredList = appointments.stream()
+                    .filter(appointment -> appointment.getDoctor().equals(doctorRepository.findByEmail(loggedInEmail)))
+                    .collect(Collectors.toList());
+        } else if ("manager".equals(selectedRole)) {
+            filteredList = appointments.stream()
+                    .filter(appointment -> appointment.getDoctor().getShop().equals(managerRepository.findByEmail(loggedInEmail).getShop()))
+                    .collect(Collectors.toList());
+        } else {
+            filteredList = appointments;
+        }
+
+        if (filteredList == null)
+            return null;
+        return filteredList.stream().map(appointment -> modelMapper.map(appointment, AppointmentDTO.class)).collect(Collectors.toList());
     }
 }

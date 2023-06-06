@@ -1,9 +1,6 @@
 package al.bytesquad.petstoreandclinic.controller;
 
-import al.bytesquad.petstoreandclinic.payload.Response;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.ManagerDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.PetDTO;
-import al.bytesquad.petstoreandclinic.payload.saveDTO.ManagerSaveDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.PetSaveDTO;
 import al.bytesquad.petstoreandclinic.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -33,24 +31,21 @@ public class PetController {
 
     //get all pets
     @GetMapping
-    public Response<PetDTO> getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                       @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                       @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-                                       @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        return petService.getAll(pageNo, pageSize, sortBy, sortDir);
+    public List<PetDTO> getAll(@RequestParam String keyword, Principal principal) {
+        return petService.getAll(keyword, principal);
     }
 
     //search for pets
-    @GetMapping("/search")
+    /*@GetMapping("/search")
     public List<PetDTO> searchBy(@RequestParam String keyword) {
         return petService.searchBy(keyword);
-    }
+    }*/
 
     //get pet by id
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<PetDTO> getById(@PathVariable(name = "id") long id) {
         return new ResponseEntity<>(petService.getById(id), HttpStatus.OK);
-    }
+    }*/
 
     //update pet
     @PutMapping("/update/{id}")

@@ -3,7 +3,6 @@ package al.bytesquad.petstoreandclinic.service;
 import al.bytesquad.petstoreandclinic.entity.Client;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
-import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ClientDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ClientSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ClientRepository;
@@ -12,18 +11,17 @@ import al.bytesquad.petstoreandclinic.repository.UserRepository;
 import al.bytesquad.petstoreandclinic.search.MySpecification;
 import al.bytesquad.petstoreandclinic.search.SearchCriteria;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,27 +68,24 @@ public class ClientService {
         return modelMapper.map(newClient, ClientDTO.class);
     }
 
-    public Response<ClientDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public List<ClientDTO> getAll(String keyword) {
+        List<String> keyValues = List.of(keyword.split(","));
+        HashMap<String, String> pairs = new HashMap<>();
+        for (String s : keyValues) {
+            String[] strings = s.split(":");
+            pairs.put(strings[0], strings[1]);
+        }
 
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
+        List<Client> clients = clientRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            for (String key : pairs.keySet()) {
+                Path<Object> fieldPath = root.get(key);
+                predicates.add(criteriaBuilder.equal(fieldPath, pairs.get(key)));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        });
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Client> clients = clientRepository.findAll(pageable);
-
-        List<Client> clientList = clients.getContent();
-
-        List<ClientDTO> content = clientList.stream().map(client -> modelMapper.map(client, ClientDTO.class)).collect(Collectors.toList());
-
-        Response<ClientDTO> response = new Response<>();
-        response.setContent(content);
-        response.setPageNo(clients.getNumber());
-        response.setPageSize(clients.getSize());
-        response.setTotalElements(clients.getTotalElements());
-        response.setTotalPages(clients.getTotalPages());
-        response.setLast(clients.isLast());
-
-        return response;
+        return clients.stream().map(client -> modelMapper.map(client, ClientDTO.class)).collect(Collectors.toList());
     }
 
     public ClientDTO getById(long id) {

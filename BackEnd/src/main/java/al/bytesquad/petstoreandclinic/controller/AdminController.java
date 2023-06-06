@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.controller;
 
-import al.bytesquad.petstoreandclinic.payload.Response;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.AdminSaveDTO;
 import al.bytesquad.petstoreandclinic.service.AdminService;
@@ -29,20 +28,17 @@ public class AdminController {
         return new ResponseEntity<>(adminService.create(adminSaveDTO), HttpStatus.CREATED);
     }
 
-    //get all admins
+    //get admins
     @GetMapping("/")
-    public Response<AdminDTO> getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                     @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                     @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-                                     @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        return adminService.getAll(pageNo, pageSize, sortBy, sortDir);
+    public List<AdminDTO> getAll(@RequestParam String keyword) {
+        return adminService.getAll(keyword);
     }
 
-    //get admin by id
+    /*//get admin by id
     @GetMapping("/{id}")
     public ResponseEntity<AdminDTO> getById(@PathVariable(name = "id") long id) {
         return new ResponseEntity<>(adminService.getById(id), HttpStatus.OK);
-    }
+    }*/
 
     //update admin
     @PutMapping("/update/{id}")
@@ -50,11 +46,11 @@ public class AdminController {
         return new ResponseEntity<>(adminService.update(adminSaveDTO, id), HttpStatus.OK);
     }
 
-    //search admin
+    /*//search admin
     @GetMapping("/search")
     public List<AdminDTO> searchBy(@RequestParam String keyword) {
         return adminService.searchBy(keyword);
-    }
+    }*/
 
     //"delete" admin
     @PutMapping("/remove/{id}")

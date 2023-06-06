@@ -1,9 +1,11 @@
 package al.bytesquad.petstoreandclinic.service.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
+@Getter
 public class ResourceNotFoundException extends RuntimeException {
     private final String resourceName;
     private final String fieldName;
@@ -14,17 +16,5 @@ public class ResourceNotFoundException extends RuntimeException {
         this.resourceName = resourceName;
         this.fieldName = fieldName;
         this.fieldValue = fieldValue;
-    }
-
-    public String getResourceName() {
-        return resourceName;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public long getFieldValue() {
-        return fieldValue;
     }
 }

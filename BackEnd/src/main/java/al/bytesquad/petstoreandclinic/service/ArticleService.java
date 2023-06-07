@@ -1,13 +1,15 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Admin;
+import al.bytesquad.petstoreandclinic.controller.ArticleController;
 import al.bytesquad.petstoreandclinic.entity.Article;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ArticleDTO;
 import al.bytesquad.petstoreandclinic.repository.ArticleRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
+import java.util.List;
 
 @Service
 public class ArticleService {
@@ -25,5 +27,21 @@ public class ArticleService {
                 map().setId(source.getId());
             }
         });
+    }
+
+    public ArticleDTO create(long clientId, long productId, long petId, double quantity) {
+        return null;
+    }
+
+    public List<ArticleDTO> getAll(String keyword, Principal principal) {
+        return null;
+    }
+
+    public ArticleDTO update(long clientId, long productId, long petId, long id) {
+        return null;
+    }
+
+    public void delete(long id) {
+        System.out.println("...");
     }
 }

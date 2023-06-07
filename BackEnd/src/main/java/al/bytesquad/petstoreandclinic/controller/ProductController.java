@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ProductDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ProductSaveDTO;
 import al.bytesquad.petstoreandclinic.service.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,20 +26,20 @@ public class ProductController {
 
     @PostMapping("/create")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ProductDTO> addNew(@Valid @RequestBody ProductSaveDTO productSaveDTO) {
+    public ResponseEntity<ProductDTO> addNew(@Valid @RequestBody String productSaveDTO) throws JsonProcessingException {
         return new ResponseEntity<>(productService.create(productSaveDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ProductDTO> update(@Valid @RequestBody ProductSaveDTO productSaveDTO, @PathVariable(name = "id") long id) {
+    public ResponseEntity<ProductDTO> update(@Valid @RequestBody String productSaveDTO, @PathVariable(name = "id") long id) throws JsonProcessingException {
         return new ResponseEntity<>(productService.update(productSaveDTO, id), HttpStatus.OK);
     }
 
     @PutMapping("/remove/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public void delete(@PathVariable(name = "id") long id) {
-        productService.delete(id);
+    public String delete(@PathVariable(name = "id") long id) {
+        return productService.delete(id);
     }
 
     @GetMapping

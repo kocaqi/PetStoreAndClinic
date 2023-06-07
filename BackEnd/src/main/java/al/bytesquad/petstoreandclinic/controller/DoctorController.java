@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.service.DoctorService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class DoctorController {
     //create doctor
     @PostMapping("/create")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<DoctorDTO> create(@Valid @RequestBody DoctorSaveDTO doctorSaveDTO) {
+    public ResponseEntity<DoctorDTO> create(@Valid @RequestBody String doctorSaveDTO) throws JsonProcessingException {
         return new ResponseEntity<>(doctorService.create(doctorSaveDTO), HttpStatus.CREATED);
     }
 
@@ -50,17 +51,17 @@ public class DoctorController {
     }*/
 
     //update doctor
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<DoctorDTO> update(@Valid @RequestBody DoctorSaveDTO doctorSaveDTO, @PathVariable(name = "id") long id) {
+    public ResponseEntity<DoctorDTO> update(@Valid @RequestBody String doctorSaveDTO, @PathVariable(name = "id") long id) throws JsonProcessingException {
         return new ResponseEntity<>(doctorService.update(doctorSaveDTO, id), HttpStatus.OK);
     }
 
     //"delete" doctor
-    @PutMapping("/remove/{id}")
+    @GetMapping("/remove/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public void delete(@PathVariable(name = "id") long id) {
-        doctorService.delete(id);
+    public String delete(@PathVariable(name = "id") long id) {
+        return doctorService.delete(id);
     }
 
 }

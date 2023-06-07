@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ClientDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ClientSaveDTO;
 import al.bytesquad.petstoreandclinic.service.ClientService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ClientController {
     //create client
     @PostMapping("/create")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ClientDTO> create(@Valid @RequestBody ClientSaveDTO clientSaveDTO) {
+    public ResponseEntity<ClientDTO> create(@Valid @RequestBody String clientSaveDTO) throws JsonProcessingException {
         return new ResponseEntity<>(clientService.create(clientSaveDTO), HttpStatus.CREATED);
     }
 
@@ -50,9 +51,8 @@ public class ClientController {
     //update client
     @PutMapping("/update/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ClientDTO> update(@Valid @RequestBody ClientSaveDTO clientSaveDTO, @PathVariable(name = "id") long id) {
-        ClientDTO clientResponse = clientService.update(clientSaveDTO, id);
-        return new ResponseEntity<>(clientResponse, HttpStatus.OK);
+    public ResponseEntity<ClientDTO> update(@Valid @RequestBody String clientSaveDTO, @PathVariable(name = "id") long id) throws JsonProcessingException {
+        return new ResponseEntity<>(clientService.update(clientSaveDTO, id), HttpStatus.OK);
     }
 
 }

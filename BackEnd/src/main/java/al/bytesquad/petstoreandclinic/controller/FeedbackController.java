@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.FeedbackDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.FeedbackSaveDTO;
 import al.bytesquad.petstoreandclinic.service.FeedbackService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class FeedbackController {
 
     @PostMapping("/create")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<FeedbackDTO> leaveFeedback(@Valid @RequestBody FeedbackSaveDTO feedbackSaveDTO, Principal principal) {
+    public ResponseEntity<FeedbackDTO> leaveFeedback(@Valid @RequestBody String feedbackSaveDTO, Principal principal) throws JsonProcessingException {
         return new ResponseEntity<>(feedbackService.create(feedbackSaveDTO, principal), HttpStatus.CREATED);
     }
 
@@ -38,9 +39,9 @@ public class FeedbackController {
         return new ResponseEntity<>(feedbackService.getById(id), HttpStatus.OK);
     }*/
 
-    @DeleteMapping("/remove/{id}")
+    @GetMapping("/remove/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public void delete(@PathVariable(name = "id") long id) {
-        feedbackService.delete(id);
+    public String delete(@PathVariable(name = "id") long id) {
+        return feedbackService.delete(id);
     }
 }

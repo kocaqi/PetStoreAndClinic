@@ -1,11 +1,15 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.*;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
+import al.bytesquad.petstoreandclinic.entity.Appointment;
+import al.bytesquad.petstoreandclinic.entity.Client;
+import al.bytesquad.petstoreandclinic.entity.Role;
+import al.bytesquad.petstoreandclinic.entity.User;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AppointmentDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.AppointmentSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
@@ -30,13 +34,14 @@ public class AppointmentService {
     private final RoleRepository roleRepository;
     private final DoctorRepository doctorRepository;
     private final ManagerRepository managerRepository;
+    private final ObjectMapper objectMapper;
 
     public AppointmentService(AppointmentRepository appointmentRepository, ModelMapper modelMapper,
                               ClientRepository clientRepository,
                               UserRepository userRepository,
                               RoleRepository roleRepository,
                               DoctorRepository doctorRepository,
-                              ManagerRepository managerRepository) {
+                              ManagerRepository managerRepository, ObjectMapper objectMapper) {
         this.appointmentRepository = appointmentRepository;
         this.modelMapper = modelMapper;
         this.clientRepository = clientRepository;
@@ -44,6 +49,7 @@ public class AppointmentService {
         this.roleRepository = roleRepository;
         this.doctorRepository = doctorRepository;
         this.managerRepository = managerRepository;
+        this.objectMapper = objectMapper;
 
         modelMapper.addMappings(new PropertyMap<Appointment, AppointmentDTO>() {
             @Override
@@ -53,7 +59,9 @@ public class AppointmentService {
         });
     }
 
-    public AppointmentDTO book(AppointmentSaveDTO appointmentSaveDTO, Principal principal) {
+    public AppointmentDTO book(String jsonString, Principal principal) throws JsonProcessingException {
+        AppointmentSaveDTO appointmentSaveDTO = objectMapper.readValue(jsonString, AppointmentSaveDTO.class);
+
         Appointment appointment = modelMapper.map(appointmentSaveDTO, Appointment.class);
         String email = principal.getName();
         Client client = clientRepository.findByEmail(email);
@@ -62,16 +70,18 @@ public class AppointmentService {
         return modelMapper.map(newAppointment, AppointmentDTO.class);
     }
 
-    public void delete(long id, Principal principal) {
+    public String delete(long id, Principal principal) {
         String clientEmail = principal.getName();
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Appointment", "id", id));
         if (clientEmail.equals(appointment.getClient().getEmail())) {
             appointmentRepository.delete(appointment);
+            return "Appointment deleted successfully!";
         }
+        return "Cannot delete appointment!";
     }
 
     public List<AppointmentDTO> getAll(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return appointmentRepository.findAll().stream().map(appointment -> modelMapper.map(appointment, AppointmentDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));

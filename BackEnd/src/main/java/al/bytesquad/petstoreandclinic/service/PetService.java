@@ -1,16 +1,16 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Pet;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.PetDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.PetSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ClientRepository;
 import al.bytesquad.petstoreandclinic.repository.PetRepository;
 import al.bytesquad.petstoreandclinic.repository.UserRepository;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
@@ -33,14 +33,16 @@ public class PetService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public PetService(PetRepository petRepository, ModelMapper modelMapper, UserRepository userRepository,
-                      ClientRepository clientRepository) {
+                      ClientRepository clientRepository, ObjectMapper objectMapper) {
         this.petRepository = petRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.clientRepository = clientRepository;
+        this.objectMapper = objectMapper;
 
         modelMapper.addMappings(new PropertyMap<Pet, PetDTO>() {
             @Override
@@ -50,12 +52,15 @@ public class PetService {
         });
     }
 
-    public PetDTO create(PetSaveDTO petSaveDTO) {
+    public PetDTO create(String jsonString) throws JsonProcessingException {
+        PetSaveDTO petSaveDTO = objectMapper.readValue(jsonString, PetSaveDTO.class);
         Pet pet = modelMapper.map(petSaveDTO, Pet.class);
         return modelMapper.map(petRepository.save(pet), PetDTO.class);
     }
 
-    public PetDTO update(PetSaveDTO petSaveDTO, long id) {
+    public PetDTO update(String jsonString, long id) throws JsonProcessingException {
+        PetSaveDTO petSaveDTO = objectMapper.readValue(jsonString, PetSaveDTO.class);
+
         Pet pet = petRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pet", "id", id));
         pet.setName(petSaveDTO.getName());
         pet.setOwner(petSaveDTO.getOwner());
@@ -67,10 +72,11 @@ public class PetService {
         return modelMapper.map(petRepository.save(pet), PetDTO.class);
     }
 
-    public void delete(long id) {
+    public String delete(long id) {
         Pet pet = petRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pet", "id", id));
         pet.setEnabled(false);
         petRepository.save(pet);
+        return "Pet Deleted Successfully!";
     }
 
     public List<PetDTO> getAll(String keyword, Principal principal) {

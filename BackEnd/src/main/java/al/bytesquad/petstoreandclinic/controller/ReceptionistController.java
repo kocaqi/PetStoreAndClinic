@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ReceptionistDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ReceptionistSaveDTO;
 import al.bytesquad.petstoreandclinic.service.ReceptionistService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,20 +26,20 @@ public class ReceptionistController {
 
     @PostMapping("/create")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ReceptionistDTO> addNew(@Valid @RequestBody ReceptionistSaveDTO receptionistSaveDTO) {
+    public ResponseEntity<ReceptionistDTO> addNew(@Valid @RequestBody String receptionistSaveDTO) throws JsonProcessingException {
         return new ResponseEntity<>(receptionistService.create(receptionistSaveDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ReceptionistDTO> update(@Valid @RequestBody ReceptionistSaveDTO receptionistSaveDTO, @PathVariable(name = "id") long id) {
+    public ResponseEntity<ReceptionistDTO> update(@Valid @RequestBody String receptionistSaveDTO, @PathVariable(name = "id") long id) throws JsonProcessingException {
         return new ResponseEntity<>(receptionistService.update(receptionistSaveDTO, id), HttpStatus.OK);
     }
 
-    @PutMapping("/remove/{id}")
+    @GetMapping("/remove/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public void delete(@PathVariable(name = "id") long id) {
-        receptionistService.delete(id);
+    public String delete(@PathVariable(name = "id") long id) {
+        return receptionistService.delete(id);
     }
 
     @GetMapping

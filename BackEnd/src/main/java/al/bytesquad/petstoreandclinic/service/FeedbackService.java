@@ -1,11 +1,12 @@
 package al.bytesquad.petstoreandclinic.service;
 
 import al.bytesquad.petstoreandclinic.entity.*;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.FeedbackDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.FeedbackSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
@@ -30,11 +31,12 @@ public class FeedbackService {
     private final RoleRepository roleRepository;
     private final ManagerRepository managerRepository;
     private final DoctorRepository doctorRepository;
+    private final ObjectMapper objectMapper;
 
     public FeedbackService(FeedbackRepository feedbackRepository, ModelMapper modelMapper,
                            ClientRepository clientRepository, UserRepository userRepository, RoleRepository roleRepository,
                            ManagerRepository managerRepository,
-                           DoctorRepository doctorRepository) {
+                           DoctorRepository doctorRepository, ObjectMapper objectMapper) {
         this.feedbackRepository = feedbackRepository;
         this.modelMapper = modelMapper;
         this.clientRepository = clientRepository;
@@ -42,6 +44,7 @@ public class FeedbackService {
         this.roleRepository = roleRepository;
         this.managerRepository = managerRepository;
         this.doctorRepository = doctorRepository;
+        this.objectMapper = objectMapper;
 
         modelMapper.addMappings(new PropertyMap<Feedback, FeedbackDTO>() {
             @Override
@@ -51,7 +54,9 @@ public class FeedbackService {
         });
     }
 
-    public FeedbackDTO create(FeedbackSaveDTO feedbackSaveDTO, Principal principal) {
+    public FeedbackDTO create(String jsonString, Principal principal) throws JsonProcessingException {
+        FeedbackSaveDTO feedbackSaveDTO = objectMapper.readValue(jsonString, FeedbackSaveDTO.class);
+
         Feedback feedback = modelMapper.map(feedbackSaveDTO, Feedback.class);
         String loggedInEmail = principal.getName();
         Client client = clientRepository.findByEmail(loggedInEmail);
@@ -59,9 +64,10 @@ public class FeedbackService {
         return modelMapper.map(feedbackRepository.save(feedback), FeedbackDTO.class);
     }
 
-    public void delete(long id) {
+    public String delete(long id) {
         Feedback feedback = feedbackRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Feedback", "id", id));
         feedbackRepository.delete(feedback);
+        return "Feedback deleted successfully!";
     }
 
     public FeedbackDTO getById(long id) {

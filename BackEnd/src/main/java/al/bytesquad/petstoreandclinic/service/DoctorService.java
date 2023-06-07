@@ -1,13 +1,14 @@
 package al.bytesquad.petstoreandclinic.service;
 
 import al.bytesquad.petstoreandclinic.entity.*;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
 import al.bytesquad.petstoreandclinic.search.MySpecification;
 import al.bytesquad.petstoreandclinic.search.SearchCriteria;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
@@ -36,13 +37,14 @@ public class DoctorService {
     private final ManagerRepository managerRepository;
     private final PasswordEncoder passwordEncoder;
     private final ShopRepository shopRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public DoctorService(DoctorRepository doctorRepository, ModelMapper modelMapper,
                          UserRepository userRepository,
                          RoleRepository roleRepository,
                          ManagerRepository managerRepository, PasswordEncoder passwordEncoder,
-                         ShopRepository shopRepository) {
+                         ShopRepository shopRepository, ObjectMapper objectMapper) {
         this.doctorRepository = doctorRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
@@ -50,6 +52,7 @@ public class DoctorService {
         this.managerRepository = managerRepository;
         this.passwordEncoder = passwordEncoder;
         this.shopRepository = shopRepository;
+        this.objectMapper = objectMapper;
 
         modelMapper.addMappings(new PropertyMap<Doctor, DoctorDTO>() {
             @Override
@@ -60,7 +63,9 @@ public class DoctorService {
     }
 
     @Transactional
-    public DoctorDTO create(DoctorSaveDTO doctorSaveDTO) {
+    public DoctorDTO create(String jsonString) throws JsonProcessingException {
+        DoctorSaveDTO doctorSaveDTO = objectMapper.readValue(jsonString, DoctorSaveDTO.class);
+
         //convert DTO to entity
         Doctor doctor = modelMapper.map(doctorSaveDTO, Doctor.class);
         doctor.setPassword((passwordEncoder.encode(doctorSaveDTO.getPassword())));
@@ -138,13 +143,26 @@ public class DoctorService {
         return modelMapper.map(doctor, DoctorDTO.class);
     }
 
-    public DoctorDTO update(DoctorSaveDTO doctorSaveDTO, long id) {
+    @Transactional
+    public DoctorDTO update(String jsonString, long id) throws JsonProcessingException {
+        DoctorSaveDTO doctorSaveDTO = objectMapper.readValue(jsonString, DoctorSaveDTO.class);
+
         Doctor doctor = doctorRepository.findDoctorById(id).orElseThrow(() -> new ResourceNotFoundException("Doctor", "id", id));
+        String email = doctor.getEmail();
+        String password = doctor.getPassword();
         doctor.setFirstName(doctorSaveDTO.getFirstName());
         doctor.setLastName(doctorSaveDTO.getLastName());
         doctor.setEmail(doctorSaveDTO.getEmail());
-        doctor.setPassword(passwordEncoder.encode(doctorSaveDTO.getPassword()));
+        doctor.setPassword(passwordEncoder.encode(password));
         Doctor updatedDoctor = doctorRepository.save(doctor);
+
+        User user = userRepository.findByEmail(email);
+        user.setFirstName(doctorSaveDTO.getFirstName());
+        user.setLastName(doctorSaveDTO.getLastName());
+        user.setEmail(doctorSaveDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+
         return modelMapper.map(updatedDoctor, DoctorDTO.class);
     }
 
@@ -171,9 +189,14 @@ public class DoctorService {
         return doctors.stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
     }
 
-    public void delete(long id) {
+    @Transactional
+    public String delete(long id) {
         Doctor doctor = doctorRepository.findDoctorById(id).orElseThrow(() -> new ResourceNotFoundException("Doctor", "id", id));
         doctor.setEnabled(false);
         doctorRepository.save(doctor);
+        User user = userRepository.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        user.setEnabled(false);
+        userRepository.save(user);
+        return "User deleted successfully!";
     }
 }

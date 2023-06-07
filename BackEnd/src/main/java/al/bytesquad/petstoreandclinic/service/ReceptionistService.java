@@ -1,10 +1,8 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Receptionist;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ReceptionistDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ReceptionistSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ManagerRepository;
@@ -12,6 +10,8 @@ import al.bytesquad.petstoreandclinic.repository.ReceptionistRepository;
 import al.bytesquad.petstoreandclinic.repository.RoleRepository;
 import al.bytesquad.petstoreandclinic.repository.UserRepository;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -37,17 +38,19 @@ public class ReceptionistService {
     private final UserRepository userRepository;
     private final ManagerRepository managerRepository;
     private final RoleRepository roleRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public ReceptionistService(ReceptionistRepository receptionistRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserRepository userRepository,
                                ManagerRepository managerRepository,
-                               RoleRepository roleRepository) {
+                               RoleRepository roleRepository, ObjectMapper objectMapper) {
         this.receptionistRepository = receptionistRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.managerRepository = managerRepository;
         this.roleRepository = roleRepository;
+        this.objectMapper = objectMapper;
 
         modelMapper.addMappings(new PropertyMap<Receptionist, ReceptionistDTO>() {
             @Override
@@ -57,7 +60,9 @@ public class ReceptionistService {
         });
     }
 
-    public ReceptionistDTO create(ReceptionistSaveDTO receptionistSaveDTO) {
+    public ReceptionistDTO create(String jsonString) throws JsonProcessingException {
+        ReceptionistSaveDTO receptionistSaveDTO = objectMapper.readValue(jsonString, ReceptionistSaveDTO.class);
+
         Receptionist receptionist = modelMapper.map(receptionistSaveDTO, Receptionist.class);
         receptionist.setPassword(passwordEncoder.encode(receptionistSaveDTO.getPassword()));
         Role receptionistRole = roleRepository.findRoleByName("ROLE_RECEPTIONIST");
@@ -76,7 +81,10 @@ public class ReceptionistService {
         return modelMapper.map(receptionistRepository.save(receptionist), ReceptionistDTO.class);
     }
 
-    public ReceptionistDTO update(ReceptionistSaveDTO receptionistSaveDTO, long id) {
+    @Transactional
+    public ReceptionistDTO update(String jsonString, long id) throws JsonProcessingException {
+        ReceptionistSaveDTO receptionistSaveDTO = objectMapper.readValue(jsonString, ReceptionistSaveDTO.class);
+
         Receptionist receptionist = receptionistRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Receptionist", "id", id));
         receptionist.setFirstName(receptionistSaveDTO.getFirstName());
         receptionist.setLastName(receptionistSaveDTO.getLastName());
@@ -84,13 +92,26 @@ public class ReceptionistService {
         receptionist.setPassword(passwordEncoder.encode(receptionistSaveDTO.getPassword()));
         receptionist.setRole(receptionistSaveDTO.getRole());
         receptionist.setShop(receptionistSaveDTO.getShop());
+
+        User user = userRepository.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        user.setFirstName(receptionistSaveDTO.getFirstName());
+        user.setLastName(receptionistSaveDTO.getLastName());
+        user.setEmail(receptionistSaveDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(receptionistSaveDTO.getPassword()));
+        userRepository.save(user);
+
         return modelMapper.map(receptionistRepository.save(receptionist), ReceptionistDTO.class);
     }
 
-    public void delete(long id) {
+    @Transactional
+    public String delete(long id) {
         Receptionist receptionist = receptionistRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Receptionist", "id", id));
         receptionist.setEnabled(false);
         receptionistRepository.save(receptionist);
+        User user = userRepository.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        user.setEnabled(false);
+        userRepository.save(user);
+        return "Receptionist deleted successfully!";
     }
 
     public List<ReceptionistDTO> get(String keyword, Principal principal) {

@@ -1,16 +1,16 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.Shop;
 import al.bytesquad.petstoreandclinic.entity.User;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ShopDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ShopSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ManagerRepository;
 import al.bytesquad.petstoreandclinic.repository.ShopRepository;
 import al.bytesquad.petstoreandclinic.repository.UserRepository;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
@@ -33,13 +33,15 @@ public class ShopService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final ManagerRepository managerRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public ShopService(ShopRepository shopRepository, ModelMapper modelMapper, UserRepository userRepository, ManagerRepository managerRepository) {
+    public ShopService(ShopRepository shopRepository, ModelMapper modelMapper, UserRepository userRepository, ManagerRepository managerRepository, ObjectMapper objectMapper) {
         this.shopRepository = shopRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.managerRepository = managerRepository;
+        this.objectMapper = objectMapper;
 
         modelMapper.addMappings(new PropertyMap<Shop, ShopDTO>() {
             @Override
@@ -49,12 +51,14 @@ public class ShopService {
         });
     }
 
-    public ShopDTO create(ShopSaveDTO shopSaveDTO) {
+    public ShopDTO create(String jsonString) throws JsonProcessingException {
+        ShopSaveDTO shopSaveDTO = objectMapper.readValue(jsonString, ShopSaveDTO.class);
         Shop shop = modelMapper.map(shopSaveDTO, Shop.class);
         return modelMapper.map(shopRepository.save(shop), ShopDTO.class);
     }
 
-    public ShopDTO update(ShopSaveDTO shopSaveDTO, long id) {
+    public ShopDTO update(String jsonString, long id) throws JsonProcessingException {
+        ShopSaveDTO shopSaveDTO = objectMapper.readValue(jsonString, ShopSaveDTO.class);
         Shop shop = shopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", id));
         shop.setName(shopSaveDTO.getName());
         shop.setLocation(shopSaveDTO.getLocation());
@@ -62,10 +66,11 @@ public class ShopService {
         return modelMapper.map(shopRepository.save(shop), ShopDTO.class);
     }
 
-    public void delete(long id) {
+    public String delete(long id) {
         Shop shop = shopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", id));
         shop.setEnabled(false);
         modelMapper.map(shopRepository.save(shop), ShopDTO.class);
+        return "Shop/location deleted successfully!";
     }
 
     public List<ShopDTO> get(String keyword, Principal principal) {

@@ -19,4 +19,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long>, JpaSpecif
     Doctor findById(long id);
 
     Doctor findByEmail(String email);
+
+    List<Doctor> findAllByEnabled(Boolean enabled);
 }

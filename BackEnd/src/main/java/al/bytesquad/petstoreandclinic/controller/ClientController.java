@@ -24,13 +24,15 @@ public class ClientController {
 
     //create client
     @PostMapping("/create")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ClientDTO> create(@Valid @RequestBody ClientSaveDTO clientSaveDTO) {
         return new ResponseEntity<>(clientService.create(clientSaveDTO), HttpStatus.CREATED);
     }
 
     //get all clients
     @GetMapping
-    public List<ClientDTO> getAll(@RequestParam String keyword) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<ClientDTO> getAll(@RequestParam(required = false) String keyword) {
         return clientService.getAll(keyword);
     }
 
@@ -47,6 +49,7 @@ public class ClientController {
 
     //update client
     @PutMapping("/update/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ClientDTO> update(@Valid @RequestBody ClientSaveDTO clientSaveDTO, @PathVariable(name = "id") long id) {
         ClientDTO clientResponse = clientService.update(clientSaveDTO, id);
         return new ResponseEntity<>(clientResponse, HttpStatus.OK);

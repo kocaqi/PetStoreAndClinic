@@ -1,8 +1,10 @@
 package al.bytesquad.petstoreandclinic.service;
 
+import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Manager;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
+import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ManagerDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ManagerSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ManagerRepository;
@@ -14,6 +16,7 @@ import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundExceptio
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
@@ -44,6 +47,13 @@ public class ManagerService {
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+
+        modelMapper.addMappings(new PropertyMap<Manager, ManagerDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     public ManagerDTO create(ManagerSaveDTO managerSaveDTO) {
@@ -67,12 +77,16 @@ public class ManagerService {
     }
 
     public List<ManagerDTO> getAll(String keyword, Principal principal) {
+        if(keyword == null)
+            return managerRepository.findAllByEnabled(true).stream().map(manager -> modelMapper.map(manager, ManagerDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {
             String[] strings = s.split(":");
             pairs.put(strings[0], strings[1]);
         }
+        pairs.put("enabled", "1");
 
         List<Manager> managers = managerRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

@@ -1,18 +1,21 @@
 package al.bytesquad.petstoreandclinic.entity;
 
 import al.bytesquad.petstoreandclinic.entity.productAttributes.Type;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.List;
 import java.util.Objects;
 
-@Table
-@Entity(name = "product")
+@Table(name = "product", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Entity
 @Getter
 @Setter
 @ToString
@@ -40,6 +43,8 @@ public class Product {
 
     @ManyToMany
     @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
     private List<Bill> bills;
 
     @Override

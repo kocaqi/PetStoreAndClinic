@@ -1,8 +1,10 @@
 package al.bytesquad.petstoreandclinic.service;
 
+import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Client;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
+import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ClientDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ClientSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ClientRepository;
@@ -14,6 +16,7 @@ import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundExceptio
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +46,13 @@ public class ClientService {
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+
+        modelMapper.addMappings(new PropertyMap<Client, ClientDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     @Transactional
@@ -69,6 +79,9 @@ public class ClientService {
     }
 
     public List<ClientDTO> getAll(String keyword) {
+        if(keyword == null)
+            return clientRepository.findAll().stream().map(client -> modelMapper.map(client, ClientDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {

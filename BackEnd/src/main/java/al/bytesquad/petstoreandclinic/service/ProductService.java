@@ -1,8 +1,11 @@
 package al.bytesquad.petstoreandclinic.service;
 
+import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Product;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
+import al.bytesquad.petstoreandclinic.entity.productAttributes.Type;
+import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ProductDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ProductSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ProductRepository;
@@ -11,6 +14,7 @@ import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundExceptio
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +38,13 @@ public class ProductService {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
+
+        modelMapper.addMappings(new PropertyMap<Product, ProductDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     public ProductDTO create(ProductSaveDTO productSaveDTO) {
@@ -57,12 +68,16 @@ public class ProductService {
     }
 
     public List<ProductDTO> get(String keyword, Principal principal) {
+        if(keyword == null)
+            return productRepository.findAllByEnabled(true).stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {
             String[] strings = s.split(":");
             pairs.put(strings[0], strings[1]);
         }
+        pairs.put("enabled", "1");
 
         List<Product> products = productRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -89,7 +104,9 @@ public class ProductService {
             selectedRole = selectedRole.substring("ROLE_".length()).toLowerCase();
         }
 
-        if (!selectedRole.equals("client"))
+        if(selectedRole.equals("doctor"))
+            filteredProducts = products.stream().filter(product -> product.getType().equals(Type.MEDICAL)).collect(Collectors.toList());
+        else if (!selectedRole.equals("client"))
             filteredProducts = products;
         else
             filteredProducts = null;

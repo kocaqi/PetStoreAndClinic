@@ -49,37 +49,49 @@ public class PetStoreAndClinicApplication implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-        Role adminRole = new Role("ROLE_ADMIN");
-        roleRepository.save(adminRole);
+        Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN");
+        if (adminRole == null)
+            roleRepository.save(new Role("ROLE_ADMIN"));
 
-        Role managerRole = new Role("ROLE_MANAGER");
-        roleRepository.save(managerRole);
+        Role managerRole = roleRepository.findRoleByName("ROLE_MANAGER");
+        if (managerRole == null)
+            roleRepository.save(new Role("ROLE_MANAGER"));
 
-        Role doctorRole = new Role("ROLE_DOCTOR");
-        roleRepository.save(doctorRole);
+        Role doctorRole = roleRepository.findRoleByName("ROLE_DOCTOR");
+        if (doctorRole == null)
+            roleRepository.save(new Role("ROLE_DOCTOR"));
 
-        Role receptionistRole = new Role("ROLE_RECEPTIONIST");
-        roleRepository.save(receptionistRole);
+        Role receptionistRole = roleRepository.findRoleByName("ROLE_RECEPTIONIST");
+        if (receptionistRole == null)
+            roleRepository.save(new Role("ROLE_RECEPTIONIST"));
 
-        Role clientRole = new Role("ROLE_CLIENT");
-        roleRepository.save(clientRole);
+        Role clientRole = roleRepository.findRoleByName("ROLE_CLIENT");
+        if (clientRole == null)
+            roleRepository.save(new Role("ROLE_CLIENT"));
 
-        User adminUser = new User();
-        adminUser.setFirstName("Admin");
-        adminUser.setLastName("Admin");
-        adminUser.setEmail("admin@gmail.com");
-        adminUser.setPassword(passwordEncoder.encode("admin"));
-        List<Role> roles = new ArrayList<>();
-        roles.add(adminRole);
-        adminUser.setRoles(roles);
-        userRepository.save(adminUser);
 
-        Admin admin = new Admin();
-        admin.setFirstName("Admin");
-        admin.setLastName("Admin");
-        admin.setEmail("admin@gmail.com");
-        admin.setPassword(passwordEncoder.encode("admin"));
-        admin.setRole(adminRole);
-        adminRepository.save(admin);
+        User adminUser = userRepository.findByEmail("admin@gmail.com");
+        if (adminUser == null) {
+            adminUser = new User();
+            adminUser.setFirstName("Admin");
+            adminUser.setLastName("Admin");
+            adminUser.setEmail("admin@gmail.com");
+            adminUser.setPassword(passwordEncoder.encode("admin"));
+            List<Role> roles = new ArrayList<>();
+            roles.add(adminRole);
+            adminUser.setRoles(roles);
+            userRepository.save(adminUser);
+        }
+
+        Admin admin = adminRepository.findAdminByEmail("admin@gmail.com");
+        if (admin == null) {
+            admin = new Admin();
+            admin.setFirstName("Admin");
+            admin.setLastName("Admin");
+            admin.setEmail("admin@gmail.com");
+            admin.setPassword(passwordEncoder.encode("admin"));
+            admin.setRole(adminRole);
+            adminRepository.save(admin);
+        }
     }
 }

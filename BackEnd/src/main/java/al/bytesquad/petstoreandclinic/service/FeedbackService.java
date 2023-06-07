@@ -1,9 +1,7 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Client;
-import al.bytesquad.petstoreandclinic.entity.Feedback;
-import al.bytesquad.petstoreandclinic.entity.Role;
-import al.bytesquad.petstoreandclinic.entity.User;
+import al.bytesquad.petstoreandclinic.entity.*;
+import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.FeedbackDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.FeedbackSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
@@ -11,6 +9,7 @@ import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundExceptio
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,13 @@ public class FeedbackService {
         this.roleRepository = roleRepository;
         this.managerRepository = managerRepository;
         this.doctorRepository = doctorRepository;
+
+        modelMapper.addMappings(new PropertyMap<Feedback, FeedbackDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     public FeedbackDTO create(FeedbackSaveDTO feedbackSaveDTO, Principal principal) {
@@ -64,6 +70,9 @@ public class FeedbackService {
     }
 
     public List<FeedbackDTO> getAll(String keyword, Principal principal) {
+        if(keyword == null)
+            return feedbackRepository.findAll().stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {

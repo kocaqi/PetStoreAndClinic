@@ -25,13 +25,15 @@ public class PetController {
 
     //create pet
     @PostMapping("/create")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<PetDTO> create(@Valid @RequestBody PetSaveDTO petSaveDTO) {
         return new ResponseEntity<>(petService.create(petSaveDTO), HttpStatus.CREATED);
     }
 
     //get all pets
     @GetMapping
-    public List<PetDTO> getAll(@RequestParam String keyword, Principal principal) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<PetDTO> getAll(@RequestParam(required = false) String keyword, Principal principal) {
         return petService.getAll(keyword, principal);
     }
 
@@ -49,12 +51,14 @@ public class PetController {
 
     //update pet
     @PutMapping("/update/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<PetDTO> update(@Valid @RequestBody PetSaveDTO petSaveDTO, @PathVariable(name = "id") long id) {
         return new ResponseEntity<>(petService.update(petSaveDTO, id), HttpStatus.OK);
     }
 
     //"delete" pet
-    @PutMapping("/delete/{id}")
+    @PutMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public void delete(@PathVariable(name = "id") long id) {
         petService.delete(id);
     }

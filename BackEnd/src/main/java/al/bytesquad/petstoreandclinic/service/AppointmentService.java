@@ -1,9 +1,7 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Appointment;
-import al.bytesquad.petstoreandclinic.entity.Client;
-import al.bytesquad.petstoreandclinic.entity.Role;
-import al.bytesquad.petstoreandclinic.entity.User;
+import al.bytesquad.petstoreandclinic.entity.*;
+import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AppointmentDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.AppointmentSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
@@ -11,6 +9,7 @@ import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundExceptio
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -45,6 +44,13 @@ public class AppointmentService {
         this.roleRepository = roleRepository;
         this.doctorRepository = doctorRepository;
         this.managerRepository = managerRepository;
+
+        modelMapper.addMappings(new PropertyMap<Appointment, AppointmentDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     public AppointmentDTO book(AppointmentSaveDTO appointmentSaveDTO, Principal principal) {
@@ -65,6 +71,9 @@ public class AppointmentService {
     }
 
     public List<AppointmentDTO> getAll(String keyword, Principal principal) {
+        if(keyword == null)
+            return appointmentRepository.findAll().stream().map(appointment -> modelMapper.map(appointment, AppointmentDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {

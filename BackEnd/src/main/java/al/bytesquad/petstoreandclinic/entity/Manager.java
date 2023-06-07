@@ -1,13 +1,16 @@
 package al.bytesquad.petstoreandclinic.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.Objects;
 
-@Table
-@Entity(name = "manager")
+@Table(name = "manager", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+@Entity
 @Getter
 @Setter
 @ToString
@@ -41,6 +44,8 @@ public class Manager {
 
     @OneToOne
     @JoinColumn(name = "shop_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
     private Shop shop;
 
     @Override
@@ -54,5 +59,9 @@ public class Manager {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public long getId() {
+        return this.id;
     }
 }

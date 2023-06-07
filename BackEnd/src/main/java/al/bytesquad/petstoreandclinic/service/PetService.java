@@ -1,8 +1,10 @@
 package al.bytesquad.petstoreandclinic.service;
 
+import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Pet;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
+import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.PetDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.PetSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ClientRepository;
@@ -12,6 +14,7 @@ import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundExceptio
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,6 +41,13 @@ public class PetService {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.clientRepository = clientRepository;
+
+        modelMapper.addMappings(new PropertyMap<Pet, PetDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     public PetDTO create(PetSaveDTO petSaveDTO) {
@@ -64,12 +74,16 @@ public class PetService {
     }
 
     public List<PetDTO> getAll(String keyword, Principal principal) {
+        if(keyword == null)
+            return petRepository.findAllByEnabled(true).stream().map(pet -> modelMapper.map(pet, PetDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {
             String[] strings = s.split(":");
             pairs.put(strings[0], strings[1]);
         }
+        pairs.put("enabled", "1");
 
         List<Pet> pets = petRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

@@ -24,13 +24,15 @@ public class AdminController {
 
     //add new admin
     @PostMapping("/create")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<AdminDTO> create(@Valid @RequestBody AdminSaveDTO adminSaveDTO) {
         return new ResponseEntity<>(adminService.create(adminSaveDTO), HttpStatus.CREATED);
     }
 
     //get admins
-    @GetMapping("/")
-    public List<AdminDTO> getAll(@RequestParam String keyword) {
+    @GetMapping
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<AdminDTO> getAll(@RequestParam(required = false) String keyword) {
         return adminService.getAll(keyword);
     }
 
@@ -42,6 +44,7 @@ public class AdminController {
 
     //update admin
     @PutMapping("/update/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<AdminDTO> update(@Valid @RequestBody AdminSaveDTO adminSaveDTO, @PathVariable(name = "id") long id) {
         return new ResponseEntity<>(adminService.update(adminSaveDTO, id), HttpStatus.OK);
     }
@@ -54,6 +57,7 @@ public class AdminController {
 
     //"delete" admin
     @PutMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public void delete(@PathVariable(name = "id") long id) {
         adminService.delete(id);
     }

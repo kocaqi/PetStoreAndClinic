@@ -26,13 +26,15 @@ public class DoctorController {
 
     //create doctor
     @PostMapping("/create")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<DoctorDTO> create(@Valid @RequestBody DoctorSaveDTO doctorSaveDTO) {
         return new ResponseEntity<>(doctorService.create(doctorSaveDTO), HttpStatus.CREATED);
     }
 
     //get all doctors
     @GetMapping
-    public List<DoctorDTO> getAll(@RequestParam String keyword, Principal principal) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<DoctorDTO> getAll(@RequestParam(required = false) String keyword, Principal principal) {
         return doctorService.getAll(keyword, principal);
     }
 
@@ -49,12 +51,14 @@ public class DoctorController {
 
     //update doctor
     @PutMapping("/update/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<DoctorDTO> update(@Valid @RequestBody DoctorSaveDTO doctorSaveDTO, @PathVariable(name = "id") long id) {
         return new ResponseEntity<>(doctorService.update(doctorSaveDTO, id), HttpStatus.OK);
     }
 
     //"delete" doctor
-    @PutMapping("/delete/{id}")
+    @PutMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public void delete(@PathVariable(name = "id") long id) {
         doctorService.delete(id);
     }

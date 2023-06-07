@@ -22,19 +22,22 @@ public class AppointmentController {
     }
 
     //get all appointments
-    @GetMapping("/")
-    public List<AppointmentDTO> getAll(@RequestParam String keyword, Principal principal) {
+    @GetMapping
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<AppointmentDTO> getAll(@RequestParam(required = false) String keyword, Principal principal) {
         return appointmentService.getAll(keyword, principal);
     }
 
     //book appointment
-    @PostMapping("/bookAppointment")
+    @PostMapping("/create")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<AppointmentDTO> book(@Valid @RequestBody AppointmentSaveDTO appointmentSaveDTO, Principal principal) {
         return new ResponseEntity<>(appointmentService.book(appointmentSaveDTO, principal), HttpStatus.CREATED);
     }
 
     //delete appointment
-    @PutMapping("/deleteAppointment/{id}")
+    @DeleteMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public void delete(@PathVariable(name = "id") long id, Principal principal) {
         appointmentService.delete(id, principal);
     }

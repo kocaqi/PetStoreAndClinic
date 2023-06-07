@@ -1,9 +1,7 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Doctor;
-import al.bytesquad.petstoreandclinic.entity.Manager;
-import al.bytesquad.petstoreandclinic.entity.Role;
-import al.bytesquad.petstoreandclinic.entity.User;
+import al.bytesquad.petstoreandclinic.entity.*;
+import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
@@ -13,6 +11,7 @@ import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundExceptio
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
@@ -51,6 +50,13 @@ public class DoctorService {
         this.managerRepository = managerRepository;
         this.passwordEncoder = passwordEncoder;
         this.shopRepository = shopRepository;
+
+        modelMapper.addMappings(new PropertyMap<Doctor, DoctorDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     @Transactional
@@ -77,12 +83,16 @@ public class DoctorService {
     }
 
     public List<DoctorDTO> getAll(String keyword, Principal principal) {
+        if(keyword == null)
+            return doctorRepository.findAllByEnabled(true).stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {
             String[] strings = s.split(":");
             pairs.put(strings[0], strings[1]);
         }
+        pairs.put("enabled", "1");
 
         List<Doctor> doctors = doctorRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

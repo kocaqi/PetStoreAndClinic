@@ -1,16 +1,19 @@
 package al.bytesquad.petstoreandclinic.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.Objects;
 
-@Table
-@Entity(name = "feedback")
+@Table(name = "feedback")
+@Entity
 @Getter
 @Setter
 @ToString
@@ -23,14 +26,20 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "shop_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
     private Shop shop;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
     private Doctor doctor;
 
     @Column(name = "message")

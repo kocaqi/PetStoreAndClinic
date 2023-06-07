@@ -21,13 +21,15 @@ public class FeedbackController {
         this.feedbackService = feedbackService;
     }
 
-    @PostMapping("/leaveFeedback")
+    @PostMapping("/create")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<FeedbackDTO> leaveFeedback(@Valid @RequestBody FeedbackSaveDTO feedbackSaveDTO, Principal principal) {
         return new ResponseEntity<>(feedbackService.create(feedbackSaveDTO, principal), HttpStatus.CREATED);
     }
 
-    @GetMapping("/")
-    public List<FeedbackDTO> getAll(@RequestParam String keyword, Principal principal) {
+    @GetMapping
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<FeedbackDTO> getAll(@RequestParam(required = false) String keyword, Principal principal) {
         return feedbackService.getAll(keyword, principal);
     }
 
@@ -36,7 +38,8 @@ public class FeedbackController {
         return new ResponseEntity<>(feedbackService.getById(id), HttpStatus.OK);
     }*/
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public void delete(@PathVariable(name = "id") long id) {
         feedbackService.delete(id);
     }

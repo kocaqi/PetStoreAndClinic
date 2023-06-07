@@ -14,6 +14,7 @@ import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundExceptio
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,6 +43,14 @@ public class AdminService {
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+
+        // Configure mapping for Admin to AdminDTO
+        modelMapper.addMappings(new PropertyMap<Admin, AdminDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
     @Transactional
@@ -99,12 +108,16 @@ public class AdminService {
     }
 
     public List<AdminDTO> getAll(String keyword) {
+        if(keyword == null)
+            return adminRepository.findEnabledAdmins().stream().map(admin -> modelMapper.map(admin, AdminDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {
             String[] strings = s.split(":");
             pairs.put(strings[0], strings[1]);
         }
+        pairs.put("enabled", "1");
 
         // Retrieve admins based on the specified criteria
         List<Admin> admins = adminRepository.findAll((root, query, criteriaBuilder) -> {

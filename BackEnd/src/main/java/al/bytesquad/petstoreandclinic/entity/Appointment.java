@@ -1,14 +1,17 @@
 package al.bytesquad.petstoreandclinic.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.Date;
 import java.util.Objects;
 
-@Table
-@Entity(name = "appointment")
+@Table(name = "appointment")
+@Entity
 @Getter
 @Setter
 @ToString
@@ -23,14 +26,20 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "pet_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
     private Pet pet;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
     private Doctor doctor;
 
     @Column(name = "start_time")
@@ -50,5 +59,9 @@ public class Appointment {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public long getId() {
+        return this.id;
     }
 }

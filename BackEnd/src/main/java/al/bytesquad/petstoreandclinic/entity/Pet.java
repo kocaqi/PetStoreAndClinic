@@ -3,19 +3,23 @@ package al.bytesquad.petstoreandclinic.entity;
 import al.bytesquad.petstoreandclinic.entity.petAttributes.Breed;
 import al.bytesquad.petstoreandclinic.entity.petAttributes.Gender;
 import al.bytesquad.petstoreandclinic.entity.petAttributes.Species;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-@Table
-@Entity(name = "pet")
+@Table(name = "pet")
+@Entity
 @Getter
 @Setter
 @ToString
@@ -31,6 +35,8 @@ public class Pet {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
     private Client owner;
 
     @Column(name = "species")
@@ -53,10 +59,8 @@ public class Pet {
 
     @OneToMany
     @ToString.Exclude
-    private List<Bill> bills;
-
-    @OneToMany
-    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
     private List<Appointment> appointments;
 
     @Override

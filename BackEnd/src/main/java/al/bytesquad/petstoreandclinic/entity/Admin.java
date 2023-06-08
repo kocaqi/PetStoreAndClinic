@@ -6,8 +6,8 @@ import org.hibernate.Hibernate;
 
 import java.util.Objects;
 
-@Table
-@Entity(name = "admin")
+@Table(name = "admin", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+@Entity
 @Getter
 @Setter
 @ToString
@@ -38,6 +38,10 @@ public class Admin {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    public long getId(){
+        return this.id;
+    }
 
     @Override
     public boolean equals(Object o) {

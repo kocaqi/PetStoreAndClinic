@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.PetDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.PetSaveDTO;
 import al.bytesquad.petstoreandclinic.service.PetService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,15 @@ public class PetController {
 
     //create pet
     @PostMapping("/create")
-    public ResponseEntity<PetDTO> create(@Valid @RequestBody PetSaveDTO petSaveDTO) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<PetDTO> create(@Valid @RequestBody String petSaveDTO) throws JsonProcessingException {
         return new ResponseEntity<>(petService.create(petSaveDTO), HttpStatus.CREATED);
     }
 
     //get all pets
     @GetMapping
-    public List<PetDTO> getAll(@RequestParam String keyword, Principal principal) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<PetDTO> getAll(@RequestParam(required = false) String keyword, Principal principal) {
         return petService.getAll(keyword, principal);
     }
 
@@ -48,14 +51,16 @@ public class PetController {
     }*/
 
     //update pet
-    @PutMapping("/update/{id}")
-    public ResponseEntity<PetDTO> update(@Valid @RequestBody PetSaveDTO petSaveDTO, @PathVariable(name = "id") long id) {
+    @PostMapping("/update/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<PetDTO> update(@Valid @RequestBody String petSaveDTO, @PathVariable(name = "id") long id) throws JsonProcessingException {
         return new ResponseEntity<>(petService.update(petSaveDTO, id), HttpStatus.OK);
     }
 
     //"delete" pet
-    @PutMapping("/delete/{id}")
-    public void delete(@PathVariable(name = "id") long id) {
-        petService.delete(id);
+    @DeleteMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public String delete(@PathVariable(name = "id") long id) {
+        return petService.delete(id);
     }
 }

@@ -11,15 +11,19 @@ import al.bytesquad.petstoreandclinic.repository.UserRepository;
 import al.bytesquad.petstoreandclinic.search.MySpecification;
 import al.bytesquad.petstoreandclinic.search.SearchCriteria;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -35,18 +39,29 @@ public class ManagerService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public ManagerService(ManagerRepository managerRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder,
-                          RoleRepository roleRepository, UserRepository userRepository) {
+                          RoleRepository roleRepository, UserRepository userRepository, ObjectMapper objectMapper) {
         this.managerRepository = managerRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.objectMapper = objectMapper;
+
+        modelMapper.addMappings(new PropertyMap<Manager, ManagerDTO>() {
+            @Override
+            protected void configure() {
+                map().setId(source.getId());
+            }
+        });
     }
 
-    public ManagerDTO create(ManagerSaveDTO managerSaveDTO) {
+    public ManagerDTO create(String jsonString) throws JsonProcessingException {
+        ManagerSaveDTO managerSaveDTO = objectMapper.readValue(jsonString, ManagerSaveDTO.class);
+
         Manager manager = modelMapper.map(managerSaveDTO, Manager.class);
         manager.setPassword(passwordEncoder.encode(managerSaveDTO.getPassword()));
         Role managerRole = roleRepository.findRoleByName("ROLE_MANAGER");
@@ -67,12 +82,16 @@ public class ManagerService {
     }
 
     public List<ManagerDTO> getAll(String keyword, Principal principal) {
+        if(keyword == null)
+            return managerRepository.findAllByEnabled(true).stream().map(manager -> modelMapper.map(manager, ManagerDTO.class)).collect(Collectors.toList());
+
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
         for (String s : keyValues) {
             String[] strings = s.split(":");
             pairs.put(strings[0], strings[1]);
         }
+        pairs.put("enabled", "1");
 
         List<Manager> managers = managerRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -114,20 +133,38 @@ public class ManagerService {
         return modelMapper.map(manager, ManagerDTO.class);
     }
 
-    public ManagerDTO update(ManagerSaveDTO managerSaveDTO, long id) {
+    @Transactional
+    public ManagerDTO update(String jsonString, long id) throws JsonProcessingException {
+        ManagerSaveDTO managerSaveDTO = objectMapper.readValue(jsonString, ManagerSaveDTO.class);
+
         Manager manager = managerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Manager", "id", id));
+        String email = manager.getEmail();
+        String password = manager.getPassword();
         manager.setFirstName(managerSaveDTO.getFirstName());
         manager.setLastName(managerSaveDTO.getLastName());
         manager.setEmail(managerSaveDTO.getEmail());
-        manager.setPassword(passwordEncoder.encode(managerSaveDTO.getPassword()));
+        manager.setPassword(passwordEncoder.encode(password));
         Manager updated = managerRepository.save(manager);
+
+        User user = userRepository.findByEmail(email);
+        user.setFirstName(managerSaveDTO.getFirstName());
+        user.setLastName(managerSaveDTO.getLastName());
+        user.setEmail(managerSaveDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+
         return modelMapper.map(updated, ManagerDTO.class);
     }
 
-    public void delete(long id) {
+    @Transactional
+    public String delete(long id) {
         Manager manager = managerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Manager", "id", id));
         manager.setEnabled(false);
         managerRepository.save(manager);
+        User user = userRepository.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        user.setEnabled(false);
+        userRepository.save(user);
+        return "User deleted successfully!";
     }
 
     public List<ManagerDTO> searchBy(String keyword) {

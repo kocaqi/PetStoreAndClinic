@@ -1,17 +1,23 @@
 package al.bytesquad.petstoreandclinic.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-@Table
-@Entity(name = "bill")
+@Table(name = "bill")
+@Entity
 @Getter
 @Setter
 @ToString
@@ -23,19 +29,28 @@ public class Bill {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;
+    @JoinColumn(name = "user_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "pet_id")
-    private Pet pet;
+    @JoinColumn(name = "client_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
+    private Client client;
+
+    @OneToMany
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
+    List<Article> articles;
 
     @Column(name = "amount")
     private double amount;
 
-    @ManyToMany
-    @ToString.Exclude
-    private List<Product> products;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @Override
     public boolean equals(Object o) {

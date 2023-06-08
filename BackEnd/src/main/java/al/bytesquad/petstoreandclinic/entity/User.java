@@ -10,8 +10,8 @@ import org.hibernate.Hibernate;
 import java.util.List;
 import java.util.Objects;
 
-@Table
-@Entity(name = "user")
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+@Entity
 @Getter
 @Setter
 @ToString
@@ -39,6 +39,8 @@ public class User {
 
     @ManyToMany
     @ToString.Exclude
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
     @Override
@@ -50,6 +52,7 @@ public class User {
     }
 
     @Override
+
     public int hashCode() {
         return getClass().hashCode();
     }

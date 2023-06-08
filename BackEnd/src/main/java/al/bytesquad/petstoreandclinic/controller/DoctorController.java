@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.service.DoctorService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +27,15 @@ public class DoctorController {
 
     //create doctor
     @PostMapping("/create")
-    public ResponseEntity<DoctorDTO> create(@Valid @RequestBody DoctorSaveDTO doctorSaveDTO) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<DoctorDTO> create(@Valid @RequestBody String doctorSaveDTO) throws JsonProcessingException {
         return new ResponseEntity<>(doctorService.create(doctorSaveDTO), HttpStatus.CREATED);
     }
 
     //get all doctors
     @GetMapping
-    public List<DoctorDTO> getAll(@RequestParam String keyword, Principal principal) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<DoctorDTO> getAll(@RequestParam(required = false) String keyword, Principal principal) {
         return doctorService.getAll(keyword, principal);
     }
 
@@ -48,15 +51,17 @@ public class DoctorController {
     }*/
 
     //update doctor
-    @PutMapping("/update/{id}")
-    public ResponseEntity<DoctorDTO> update(@Valid @RequestBody DoctorSaveDTO doctorSaveDTO, @PathVariable(name = "id") long id) {
+    @PostMapping("/update/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<DoctorDTO> update(@Valid @RequestBody String doctorSaveDTO, @PathVariable(name = "id") long id) throws JsonProcessingException {
         return new ResponseEntity<>(doctorService.update(doctorSaveDTO, id), HttpStatus.OK);
     }
 
     //"delete" doctor
-    @PutMapping("/delete/{id}")
-    public void delete(@PathVariable(name = "id") long id) {
-        doctorService.delete(id);
+    @GetMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public String delete(@PathVariable(name = "id") long id) {
+        return doctorService.delete(id);
     }
 
 }

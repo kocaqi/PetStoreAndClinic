@@ -1,14 +1,17 @@
 package al.bytesquad.petstoreandclinic.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.List;
 import java.util.Objects;
 
-@Table
-@Entity(name = "client")
+@Table(name = "client", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+@Entity
 @Getter
 @Setter
 @ToString
@@ -39,19 +42,33 @@ public class Client {
 
     @OneToMany
     @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
     private List<Pet> pets;
 
     @OneToMany
     @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
     private List<Bill> bills;
 
     @OneToMany
     @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
     private List<Appointment> appointments;
 
     @OneToMany
     @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
     private List<Feedback> feedbacks;
+
+    @OneToMany
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
+    private List<Article> articles;
 
     @Override
     public boolean equals(Object o) {
@@ -64,5 +81,9 @@ public class Client {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public Long getId() {
+        return this.id;
     }
 }

@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ClientDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ClientSaveDTO;
 import al.bytesquad.petstoreandclinic.service.ClientService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +25,15 @@ public class ClientController {
 
     //create client
     @PostMapping("/create")
-    public ResponseEntity<ClientDTO> create(@Valid @RequestBody ClientSaveDTO clientSaveDTO) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ClientDTO> create(@Valid @RequestBody String clientSaveDTO) throws JsonProcessingException {
         return new ResponseEntity<>(clientService.create(clientSaveDTO), HttpStatus.CREATED);
     }
 
     //get all clients
     @GetMapping
-    public List<ClientDTO> getAll(@RequestParam String keyword) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<ClientDTO> getAll(@RequestParam(required = false) String keyword) {
         return clientService.getAll(keyword);
     }
 
@@ -47,9 +50,9 @@ public class ClientController {
 
     //update client
     @PutMapping("/update/{id}")
-    public ResponseEntity<ClientDTO> update(@Valid @RequestBody ClientSaveDTO clientSaveDTO, @PathVariable(name = "id") long id) {
-        ClientDTO clientResponse = clientService.update(clientSaveDTO, id);
-        return new ResponseEntity<>(clientResponse, HttpStatus.OK);
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ClientDTO> update(@Valid @RequestBody String clientSaveDTO, @PathVariable(name = "id") long id) throws JsonProcessingException {
+        return new ResponseEntity<>(clientService.update(clientSaveDTO, id), HttpStatus.OK);
     }
 
 }

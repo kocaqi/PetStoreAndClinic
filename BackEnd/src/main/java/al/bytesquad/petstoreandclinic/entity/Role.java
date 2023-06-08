@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
-@Table
-@Entity(name = "role")
+@Table(name = "role", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Entity
 @Getter
 @Setter
 @ToString

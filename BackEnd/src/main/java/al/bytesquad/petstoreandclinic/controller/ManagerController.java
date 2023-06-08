@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ManagerDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ManagerSaveDTO;
 import al.bytesquad.petstoreandclinic.service.ManagerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,14 @@ public class ManagerController {
 
     //create manager
     @PostMapping("/create")
-    public ResponseEntity<ManagerDTO> create(@Valid @RequestBody ManagerSaveDTO managerSaveDTO) {
+    public ResponseEntity<ManagerDTO> create(@Valid @RequestBody String managerSaveDTO) throws JsonProcessingException {
         return new ResponseEntity<>(managerService.create(managerSaveDTO), HttpStatus.CREATED);
     }
 
     //get all managers
     @GetMapping
-    public List<ManagerDTO> getAll(@RequestParam String keyword, Principal principal) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<ManagerDTO> getAll(@RequestParam(required = false) String keyword, Principal principal) {
         return managerService.getAll(keyword, principal);
     }
 
@@ -48,15 +50,17 @@ public class ManagerController {
     }*/
 
     //update manager
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ManagerDTO> update(@Valid @RequestBody ManagerSaveDTO managerSaveDTO, @PathVariable(name = "id") long id) {
+    @PostMapping("/update/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ManagerDTO> update(@Valid @RequestBody String managerSaveDTO, @PathVariable(name = "id") long id) throws JsonProcessingException {
         return new ResponseEntity<>(managerService.update(managerSaveDTO, id), HttpStatus.OK);
     }
 
     //"delete" manager
-    @PutMapping("/delete/{id}")
-    public void delete(@PathVariable(name = "id") long id) {
-        managerService.delete(id);
+    @GetMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public String delete(@PathVariable(name = "id") long id) {
+        return managerService.delete(id);
     }
 
 }

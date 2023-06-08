@@ -3,6 +3,7 @@ package al.bytesquad.petstoreandclinic.controller;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AppointmentDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.AppointmentSaveDTO;
 import al.bytesquad.petstoreandclinic.service.AppointmentService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +23,23 @@ public class AppointmentController {
     }
 
     //get all appointments
-    @GetMapping("/")
-    public List<AppointmentDTO> getAll(@RequestParam String keyword, Principal principal) {
+    @GetMapping
+    @CrossOrigin(origins = "http://localhost:3000")
+    public List<AppointmentDTO> getAll(@RequestParam(required = false) String keyword, Principal principal) {
         return appointmentService.getAll(keyword, principal);
     }
 
     //book appointment
-    @PostMapping("/bookAppointment")
-    public ResponseEntity<AppointmentDTO> book(@Valid @RequestBody AppointmentSaveDTO appointmentSaveDTO, Principal principal) {
+    @PostMapping("/create")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<AppointmentDTO> book(@Valid @RequestBody String appointmentSaveDTO, Principal principal) throws JsonProcessingException {
         return new ResponseEntity<>(appointmentService.book(appointmentSaveDTO, principal), HttpStatus.CREATED);
     }
 
     //delete appointment
-    @PutMapping("/deleteAppointment/{id}")
-    public void delete(@PathVariable(name = "id") long id, Principal principal) {
-        appointmentService.delete(id, principal);
+    @GetMapping("/remove/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public String delete(@PathVariable(name = "id") long id, Principal principal) {
+        return appointmentService.delete(id, principal);
     }
 }

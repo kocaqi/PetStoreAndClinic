@@ -4,25 +4,25 @@ import { useEffect, useState, useRef } from "react"
 
 
 import { Container } from '../commons';
-import { ClientsListing } from './clientsListing';
-import { ClientSearchBar } from './clientSearchBar';
-import { AddClientForm } from './clientForm/addClientForm';
-import { ViewClientForm } from './clientForm/viewClientForm';
+import { ManagersListing } from './managersListing';
+import { ManagersSearchBar } from './managersSearchBar';
+import { AddManagerForm } from './managerForm/addManagerForm';
+import { ViewManagerForm } from './managerForm/viewManagerForm';
 import { getUserList } from './js/getUserList';
 
 
-export function Clients() {
+export function Managers() {
       
       const [currentOverlay, setcurrentOverlay] = useState("");
       const [UserList, setUserListState] = useState([]);
 
       var onAddClick = () => {
-            setcurrentOverlay(<AddClientForm onClose={closeOverlay} refresh={setUserList}/>)
+            setcurrentOverlay(<AddManagerForm onClose={closeOverlay} refresh={setUserList}/>)
       }
 
       var onOpenUserForm = (e, user_id, type="view") => {
 
-            setcurrentOverlay(<ViewClientForm onClose={closeOverlay} type={type} user_id={user_id}/>)
+            setcurrentOverlay(<ViewManagerForm onClose={closeOverlay} type={type} user_id={user_id}/>)
       }
 
       var closeOverlay = () => {
@@ -67,8 +67,8 @@ export function Clients() {
             <div>
                   <div>{currentOverlay}</div>
                   <Container>
-                    <ClientSearchBar onAddClick={onAddClick} onSearch={onSearch}/>
-                    <ClientsListing openCustomOverlay={openCustomOverlay} closeOverlay={closeOverlay} onOpenUserForm={onOpenUserForm} data={UserList}/>
+                    <ManagersSearchBar onAddClick={onAddClick} onSearch={onSearch}/>
+                    <ManagersListing openCustomOverlay={openCustomOverlay} closeOverlay={closeOverlay} onOpenUserForm={onOpenUserForm} data={UserList}/>
                   </Container>
             
             </div>

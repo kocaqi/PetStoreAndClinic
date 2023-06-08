@@ -10,7 +10,7 @@ export const getUserList = async (params= null) => {
 
     
 
-    return axios.get(process.env.REACT_APP_HOST+"clients"+(params && Object.keys(params).filter(x => params[x]!="").length ? "?keyword="+Object.keys(params).filter(x => params[x]!="").map(x => x+":"+params[x]).join(",") : "")) //template request
+    return axios.get(process.env.REACT_APP_HOST+"shops"+(params && Object.keys(params).filter(x => params[x]!="").length ? "?keyword="+Object.keys(params).filter(x => params[x]!="").map(x => x+":"+params[x]).join(",") : "")) //template request
     .then(data => {
         return data.data
     })

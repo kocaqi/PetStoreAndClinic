@@ -11,7 +11,7 @@ import { HoverButton } from '../../commons';
 import { UpdateUser } from '../js/UpdateUser';
 
 
-export function ClientInformation(props) {
+export function ShopInformation(props) {
 
 
     const effectRan = useRef(false)
@@ -47,17 +47,11 @@ export function ClientInformation(props) {
     
     const formik = useFormik({
         initialValues: {
-            username: "",
-            "password": null,
-            "email": "",
-            "firstName": "",
-            "lastName": "",
+            "name": "",
             "address": "",
             "city": "",
             "country": "",
-            "phone": "",
-            "aboutMe": "",
-            "occupation": ""
+            "managerId": null
         },
     });
 
@@ -66,87 +60,39 @@ export function ClientInformation(props) {
         <div>
             <div>
             <form>
-                <h6 style={BlockHeader}>User information</h6>
+                
+                <h6 style={BlockHeader}>Shop information</h6>
                 <div style={FormBlock}>
-                    <div style={FormRow}>
+                <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel} >Username</label>
+                                <label style={InputLabel}>Shop Name</label>
                                 {
                                     props.type=="view"
-                                    ? <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} readonly="true" />
-                                    : <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} />
-                                }
-                    
-                            </div>
-                        </div>
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel}>Email address</label>
-                                {
-                                    props.type=="view"
-                                    ? <input type="text" name="email"  placeholder={formik.values['First Name']+"@example.com"} value={formik.values['email']} onChange={formik.handleChange} style={FormInput} readonly="true" />
-                                    : <input type="text" name="email"  placeholder={formik.values['First Name']+"@example.com"} value={formik.values['email']} onChange={formik.handleChange} style={FormInput} />
+                                    ? <input name="name" placeholder="Shop Name" value={formik.values.name} onChange={formik.handleChange} type="text" style={FormInput} readonly="true"/>
+                                    : <input name="name" placeholder="Shop Name" value={formik.values.name} onChange={formik.handleChange} type="text" style={FormInput} />
                                 }
                             </div>
                         </div>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel}>Occupation</label>
+                                <label style={InputLabel}>Manager ID</label>
                                 {
                                     props.type=="view"
-                                    ? <input type="text" name="occupation" placeholder="Occupation" value={formik.values['occupation']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
-                                    : <input type="text" name="occupation" placeholder="Occupation" value={formik.values['occupation']} onChange={formik.handleChange} style={FormInput} />
-                                }
-                            </div>
-                        </div>
-                        {props.type=="self" ?
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel}>Password</label>
-                                {
-                                    props.type=="view"
-                                    ? <input type="text" name="password" placeholder="Password" value={formik.values['password'] ? formik.values['password'] : ""} onChange={formik.handleChange} style={FormInput} readonly="true"/>
-                                    : <input type="text" name="password" placeholder="Password" value={formik.values['password'] ? formik.values['password'] : ""} onChange={formik.handleChange} style={FormInput} />
-                                }
-                            </div>
-                        </div>
-                        : ""}
-                    </div>
-                    <div style={FormRow}>
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel}>First name</label>
-                                {
-                                    props.type=="view"
-                                    ? <input name="firstName" type="text" placeholder="First name" value={formik.values['firstName']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
-                                    : <input name="firstName" type="text" placeholder="First name" value={formik.values['firstName']} onChange={formik.handleChange} style={FormInput} />
-                                }
-                            </div>
-                        </div>
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel}>Last name</label>
-                                {
-                                    props.type=="view"
-                                    ? <input name="lastName" type="text" placeholder="Last name" value={formik.values['lastName']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
-                                    : <input name="lastName" type="text" placeholder="Last name" value={formik.values['lastName']} onChange={formik.handleChange} style={FormInput} />
+                                    ? <input name="managerId" placeholder="Manager ID" value={formik.values.managerId} onChange={formik.handleChange} type="text" style={FormInput} readonly="true"/>
+                                    : <input name="managerId" placeholder="Manager ID" value={formik.values.managerId} onChange={formik.handleChange} type="text" style={FormInput} />
                                 }
                             </div>
                         </div>
                     </div>
-                </div>
-                <hr />
-                <h6 style={BlockHeader}>Contact information</h6>
-                <div style={FormBlock}>
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <div>
                                 <label style={InputLabel}>Address</label>
                                 {
                                     props.type=="view"
-                                    ? <input name="address" placeholder="Home Address" value={formik.values.address} onChange={formik.handleChange} type="text" style={FormInput} readonly="true"/>
-                                    : <input name="address" placeholder="Home Address" value={formik.values.address} onChange={formik.handleChange} type="text" style={FormInput} />
+                                    ? <input name="address" placeholder="Shop Address" value={formik.values.address} onChange={formik.handleChange} type="text" style={FormInput} readonly="true"/>
+                                    : <input name="address" placeholder="Shop Address" value={formik.values.address} onChange={formik.handleChange} type="text" style={FormInput} />
                                 }
                             </div>
                         </div>
@@ -184,20 +130,7 @@ export function ClientInformation(props) {
                         </div>
                     </div>
                 </div>
-                <hr />
-                <h6 style={BlockHeader}>About me</h6>
-                <div style={FormBlock}>
-                    <div style={FormRow}>
-                        <div style={FormInputContainer}>
-                            <label style={InputLabel}>About Me</label>
-                            {
-                                props.type=="view"
-                                ? <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} readonly="true"></textarea>
-                                : <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} ></textarea>
-                            }
-                        </div>
-                    </div>
-                </div>
+                
                 {
                     props.type=="edit" || props.type=="self"
                     ? (<div style={FormBlock}>

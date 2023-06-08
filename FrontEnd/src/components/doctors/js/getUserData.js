@@ -10,7 +10,7 @@ export const getUserData = async (user_id) => {
 
     
 
-    return axios.get("./templates/userData"+user_id+".json") //template request
+    return axios.get(process.env.REACT_APP_HOST+"doctors?keyword=id:"+user_id) //template request
     .then(data => {
         return data.data
     })

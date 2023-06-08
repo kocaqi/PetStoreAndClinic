@@ -118,15 +118,13 @@ const thumbnailImage = {
 }
 
 const title = {
-    "display": "-webkit-box",
-    "display": "-ms-flexbox",
-    "display": "flex",
-    "-webkit-box-align": "center",
-    "-ms-flex-align": "center",
-    "align-items": "center",
-    "padding": "30px 0",
-    "vertical-align": "middle",
-    "margin-bottom": "5px",
+  "display": "flex",
+  "height": "100%",
+  "-webkit-box-align": "center",
+  "-ms-flex-align": "center",
+  "align-items": "center",
+  "vertical-align": "middle",
+  "padding": "20px 0",
 }
 const name = {
     "font-size": "16px",

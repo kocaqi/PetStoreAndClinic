@@ -5,12 +5,12 @@ import { useFormik } from "formik";
 
 import { HoverButton } from '../commons';
 
-export function ClientSearchBar(props) {
+export function ManagersSearchBar(props) {
     const [cookies, setCookie] = useCookies();
 
     const formik = useFormik({
         initialValues: {
-            "lastName": "",
+            "name": "",
             "id": ""
         },
     });
@@ -20,10 +20,10 @@ export function ClientSearchBar(props) {
             <div style={outerContainer}>
                   <div style={actionButtonContainer}>
                   <HoverButton text="BACK" HoverStyle={{...ActionButtonHover, "background": "#962B14"}} DefaultStyle={{...ActionButton, "background": "#D13C1D"}} onClick={() => window.location.href="/"} />
-                  {cookies.user.role.id==1 || cookies.user.role.id==4 ? <HoverButton text="ADD" HoverStyle={ActionButtonHover} DefaultStyle={ActionButton} onClick={props.onAddClick} /> : ""}
+                  {cookies.user.role.id==1 ? <HoverButton text="ADD" HoverStyle={ActionButtonHover} DefaultStyle={ActionButton} onClick={props.onAddClick} /> : ""}
                   </div>
                   <div style={searchNavContainer}>
-                    <input placeholder='Last Name' style={Input} name="lastName" value={formik.values.lastName} onChange={formik.handleChange} />
+                    <input placeholder='Name' style={Input} name="name" value={formik.values.lastName} onChange={formik.handleChange} />
                     <input placeholder='User ID' style={Input} name="id" value={formik.values.id} onChange={formik.handleChange} />
                     <HoverButton text="SEARCH" HoverStyle={SearchButtonHover} DefaultStyle={SearchButton} onClick={(e) => props.onSearch(e, formik.values)}/>
                   </div>

@@ -52,8 +52,8 @@ export function Menu(props) {
                 <div style={MenuInnerContainer}>
                     <MenuItem name="Clients" url="/clients" style={FirstItem}/>
                     <MenuItem name="Doctors" url="/doctors" />
-                    <MenuItem name="Clients" url="/clients" />
-                    <MenuItem name="Clients" url="/clients" />
+                    <MenuItem name="Shops" url="/shops" />
+                    <MenuItem name="Managers" url="/managers" />
                     <MenuItem name="Clients" url="/clients" style={SecondRow} />
                     <MenuItem name="Clients" url="/clients" style={SecondRow} />
                     <MenuItem name="My Info" url="#" style={SecondRow} />

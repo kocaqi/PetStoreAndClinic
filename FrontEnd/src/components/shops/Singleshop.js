@@ -11,7 +11,7 @@ import { MdFilterListAlt } from "react-icons/md";
 import { ConfirmationPage } from '../commons';
 import { removeUser } from './js/removeUser';
 
-export function SingleClient(props) {
+export function SingleShop(props) {
 
     const [hover, setHover] = useState(false);
     const [cookies, setCookie] = useCookies();
@@ -48,25 +48,24 @@ export function SingleClient(props) {
               <div>
                 <div>
                   <div>
-                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id)} user_id = {props.user_data.id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.firstName+" "+props.user_data.lastName}</a></h5>
+                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id)} user_id = {props.user_data.id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.name}</a></h5>
                   </div>
                   <div>
                     <ul style={list}>
-                      <li style={listItem}><MdFilterListAlt size="15"/>{props.user_data.Occupation}</li>
-                      <li style={listItem}><MdLocationOn size="15" />{props.user_data.Address}</li>
+                      <li style={listItem}><MdLocationOn size="15" />{props.user_data.address}</li>
                     </ul>
                   </div>
                 </div>
               </div>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>Client ID: {props.user_data.id}</span>
+              <span style={textFieldText}>Shop ID: {props.user_data.id}</span>
             </td>
             <td style={actions}>
               <ul style={actionList}>
                 <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id)} user_id = {props.user_data.id} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
-                {cookies.user.role.id==1 || cookies.user.role.id==4 ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id, "edit")} user_id = {props.user_data.id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
-                {cookies.user.role.id==1 || cookies.user.role.id==4 ? <li style={actionListItem}><a href="#"style={{"color": "#D13C1D"}} onClick={onDeleteClick}><AiFillDelete size="25"/></a></li> : ""}
+                {cookies.user.role.id==1 ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id, "edit")} user_id = {props.user_data.id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
+                {cookies.user.role.id==1 ? <li style={actionListItem}><a href="#"style={{"color": "#D13C1D"}} onClick={onDeleteClick}><AiFillDelete size="25"/></a></li> : ""}
               </ul>
             </td>
           </tr>

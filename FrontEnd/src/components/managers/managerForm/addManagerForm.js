@@ -12,7 +12,7 @@ import { generatePassword } from '../../commons';
 import { PostUser } from '../js/PostUser';
 
 
-export function AddDoctorForm(props) {
+export function AddManagerForm(props) {
 
     async function addUser(){
 
@@ -34,8 +34,7 @@ export function AddDoctorForm(props) {
             "country": "",
             "phone": "",
             "aboutMe": "",
-            "specialisation": "",
-            "shop": ""
+            "shopId": ""
         },
     });
 
@@ -63,7 +62,7 @@ export function AddDoctorForm(props) {
                                     <div>
                                         <label style={InputLabel}>Email address</label>
 
-                                        <input type="text" name="email"  placeholder={formik.values['First Name']+"@example.com"} value={formik.values['email']} onChange={formik.handleChange} style={FormInput} />
+                                        <input type="text" name="email"  placeholder={"name@example.com"} value={formik.values['email']} onChange={formik.handleChange} style={FormInput} />
                                         
                                     </div>
                                 </div>
@@ -77,7 +76,16 @@ export function AddDoctorForm(props) {
                                 </div>
                                 
                             </div>
+                            
                             <div style={FormRow}>
+                            <div style={FormInputContainer}>
+                                    <div>
+                                        <label style={InputLabel}>Shop ID</label>
+                                        
+                                        <input name="shopId" type="text" placeholder="Shop ID" value={formik.values['shopId']} onChange={formik.handleChange} style={FormInput} />
+                                        
+                                    </div>
+                                </div>
                                 <div style={FormInputContainer}>
                                     <div>
                                         <label style={InputLabel}>First name</label>
@@ -94,15 +102,7 @@ export function AddDoctorForm(props) {
                                         
                                     </div>
                                 </div>
-
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel}>specialisation</label>
-                                        
-                                        <input name="specialisation" type="text" placeholder="Last name" value={formik.values['specialisation']} onChange={formik.handleChange} style={FormInput} />
-                                        
-                                    </div>
-                                </div>
+                               
                             </div>
                         </div>
                         <hr />
@@ -114,14 +114,6 @@ export function AddDoctorForm(props) {
                                         <label style={InputLabel}>Address</label>
 
                                         <input name="address" placeholder="Home Address" value={formik.values.address} onChange={formik.handleChange} type="text" style={FormInput} />
-                                        
-                                    </div>
-                                </div>
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel}>shop_id</label>
-
-                                        <input name="shop" placeholder="Shop ID" value={formik.values.shop} onChange={formik.handleChange} type="text" style={FormInput} />
                                         
                                     </div>
                                 </div>

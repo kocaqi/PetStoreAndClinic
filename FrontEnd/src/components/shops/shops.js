@@ -4,25 +4,25 @@ import { useEffect, useState, useRef } from "react"
 
 
 import { Container } from '../commons';
-import { ClientsListing } from './clientsListing';
-import { ClientSearchBar } from './clientSearchBar';
-import { AddClientForm } from './clientForm/addClientForm';
-import { ViewClientForm } from './clientForm/viewClientForm';
+import { ShopListing } from './shopsListing';
+import { ShopSearchBar } from './shopsSearchBar';
+import { AddShopForm } from './shopForm/addShopForm';
+import { ViewShopForm } from './shopForm/viewShopForm';
 import { getUserList } from './js/getUserList';
 
 
-export function Clients() {
+export function Shops() {
       
       const [currentOverlay, setcurrentOverlay] = useState("");
       const [UserList, setUserListState] = useState([]);
 
       var onAddClick = () => {
-            setcurrentOverlay(<AddClientForm onClose={closeOverlay} refresh={setUserList}/>)
+            setcurrentOverlay(<AddShopForm onClose={closeOverlay} refresh={setUserList}/>)
       }
 
       var onOpenUserForm = (e, user_id, type="view") => {
 
-            setcurrentOverlay(<ViewClientForm onClose={closeOverlay} type={type} user_id={user_id}/>)
+            setcurrentOverlay(<ViewShopForm onClose={closeOverlay} type={type} user_id={user_id}/>)
       }
 
       var closeOverlay = () => {
@@ -67,8 +67,8 @@ export function Clients() {
             <div>
                   <div>{currentOverlay}</div>
                   <Container>
-                    <ClientSearchBar onAddClick={onAddClick} onSearch={onSearch}/>
-                    <ClientsListing openCustomOverlay={openCustomOverlay} closeOverlay={closeOverlay} onOpenUserForm={onOpenUserForm} data={UserList}/>
+                    <ShopSearchBar onAddClick={onAddClick} onSearch={onSearch}/>
+                    <ShopListing openCustomOverlay={openCustomOverlay} closeOverlay={closeOverlay} onOpenUserForm={onOpenUserForm} data={UserList}/>
                   </Container>
             
             </div>

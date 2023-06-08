@@ -8,27 +8,33 @@ import { useFormik } from "formik";
 
 import { getUserData } from '../js/getUserData';
 import { HoverButton } from '../../commons';
+import { generatePassword } from '../../commons';
+import { PostUser } from '../js/PostUser';
 
 
 export function AddClientForm(props) {
 
     async function addUser(){
+
+        await PostUser(formik.values)
+
         props.onClose()
-        await props.refresh()
+        //await props.refresh()
     }
     
     const formik = useFormik({
         initialValues: {
-            Username: "",
-            "Email Address": "",
-            "First Name": "",
-            "Last Name": "",
-            "Address": "",
-            "City": "",
-            "Country": "",
-            "Phone": "",
-            "About Me": "",
-            "Occupation": ""
+            username: "",
+            "password": generatePassword(7),
+            "email": "",
+            "firstName": "",
+            "lastName": "",
+            "address": "",
+            "city": "",
+            "country": "",
+            "phone": "",
+            "aboutMe": "",
+            "occupation": ""
         },
     });
 
@@ -48,7 +54,7 @@ export function AddClientForm(props) {
                                     <div>
                                         <label style={InputLabel} >Username</label>
 
-                                        <input type="text" placeholder="Username" name="Username" value={formik.values['Username']} onChange={formik.handleChange} style={FormInput} />
+                                        <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} />
                             
                                     </div>
                                 </div>
@@ -56,25 +62,26 @@ export function AddClientForm(props) {
                                     <div>
                                         <label style={InputLabel}>Email address</label>
 
-                                        <input type="text" name="Email Address"  placeholder={formik.values['First Name']+"@example.com"} value={formik.values['Email Address']} onChange={formik.handleChange} style={FormInput} />
+                                        <input type="text" name="email"  placeholder={formik.values['First Name']+"@example.com"} value={formik.values['email']} onChange={formik.handleChange} style={FormInput} />
                                         
                                     </div>
                                 </div>
                                 <div style={FormInputContainer}>
                                     <div>
-                                        <label style={InputLabel}>Occupation</label>
+                                        <label style={InputLabel}>Password</label>
+
+                                        <input type="text" name="password"  placeholder="Password" value={formik.values['password']} onChange={formik.handleChange} style={FormInput} />
                                         
-                                        <input type="text" name="Occupation" placeholder="Occupation" value={formik.values['Occupation']} onChange={formik.handleChange} style={FormInput} />
-            
                                     </div>
                                 </div>
+                                
                             </div>
                             <div style={FormRow}>
                                 <div style={FormInputContainer}>
                                     <div>
                                         <label style={InputLabel}>First name</label>
 
-                                        <input name="First Name" type="text" placeholder="First name" value={formik.values['First Name']} onChange={formik.handleChange} style={FormInput} />
+                                        <input name="firstName" type="text" placeholder="First name" value={formik.values['firstName']} onChange={formik.handleChange} style={FormInput} />
                             
                                     </div>
                                 </div>
@@ -82,7 +89,7 @@ export function AddClientForm(props) {
                                     <div>
                                         <label style={InputLabel}>Last name</label>
                                         
-                                        <input name="Last Name" type="text" placeholder="Last name" value={formik.values['Last Name']} onChange={formik.handleChange} style={FormInput} />
+                                        <input name="lastName" type="text" placeholder="Last name" value={formik.values['lastName']} onChange={formik.handleChange} style={FormInput} />
                                         
                                     </div>
                                 </div>
@@ -96,7 +103,7 @@ export function AddClientForm(props) {
                                     <div>
                                         <label style={InputLabel}>Address</label>
 
-                                        <input name="Address" placeholder="Home Address" value={formik.values.Address} onChange={formik.handleChange} type="text" style={FormInput} />
+                                        <input name="address" placeholder="Home Address" value={formik.values.address} onChange={formik.handleChange} type="text" style={FormInput} />
                                         
                                     </div>
                                 </div>
@@ -106,7 +113,7 @@ export function AddClientForm(props) {
                                     <div>
                                         <label style={InputLabel}>City</label>
 
-                                        <input name="City" type="text" placeholder="City" value={formik.values.City} onChange={formik.handleChange} style={FormInput} />
+                                        <input name="city" type="text" placeholder="City" value={formik.values.city} onChange={formik.handleChange} style={FormInput} />
                                         
                                     </div>
                                 </div>
@@ -114,7 +121,7 @@ export function AddClientForm(props) {
                                     <div>
                                         <label style={InputLabel}>Country</label>
 
-                                        <input name="Country" type="text" placeholder="Country" value={formik.values.Country} onChange={formik.handleChange} style={FormInput} />
+                                        <input name="country" type="text" placeholder="Country" value={formik.values.country} onChange={formik.handleChange} style={FormInput} />
                                         
                                     </div>
                                 </div>
@@ -122,7 +129,7 @@ export function AddClientForm(props) {
                                     <div>
                                         <label style={InputLabel}>Phone</label>
 
-                                        <input name="Phone" type="text" placeholder="Phone" value={formik.values.Phone} onChange={formik.handleChange} style={FormInput} />
+                                        <input name="phone" type="text" placeholder="Phone" value={formik.values.phone} onChange={formik.handleChange} style={FormInput} />
                                         
                                     </div>
                                 </div>
@@ -135,7 +142,7 @@ export function AddClientForm(props) {
                                 <div style={FormInputContainer}>
                                     <label style={InputLabel}>About Me</label>
 
-                                    <textarea name="About Me" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['About Me']} onChange={formik.handleChange} ></textarea>
+                                    <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} ></textarea>
                                     
                                 </div>
                             </div>

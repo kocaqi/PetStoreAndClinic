@@ -11,7 +11,7 @@ import { HoverButton } from '../../commons';
 import { UpdateUser } from '../js/UpdateUser';
 
 
-export function ClientInformation(props) {
+export function ManagerInformation(props) {
 
 
     const effectRan = useRef(false)
@@ -19,10 +19,16 @@ export function ClientInformation(props) {
     async function setUserData(user_id){
 
         const userData = (await getUserData(user_id))[0]
+
+        userData.shopId = userData["shop"]["id"]
+        
         
         Object.keys(formik.values).forEach(key => {
+
             formik.setFieldValue(key, userData[key], false)
+
         })
+        
 
         
     }
@@ -57,11 +63,11 @@ export function ClientInformation(props) {
             "country": "",
             "phone": "",
             "aboutMe": "",
-            "occupation": ""
+            "shopId": ""
         },
     });
 
-      return (
+     return (
         <div style={FormContainer}>
         <div>
             <div>
@@ -92,11 +98,11 @@ export function ClientInformation(props) {
                         </div>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel}>Occupation</label>
+                                <label style={InputLabel}>Shop ID</label>
                                 {
                                     props.type=="view"
-                                    ? <input type="text" name="occupation" placeholder="Occupation" value={formik.values['occupation']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
-                                    : <input type="text" name="occupation" placeholder="Occupation" value={formik.values['occupation']} onChange={formik.handleChange} style={FormInput} />
+                                    ? <input type="text" name="shopId" placeholder="Shop ID" value={formik.values['shopId']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                    : <input type="text" name="shopId" placeholder="Shop ID" value={formik.values['shopId']} onChange={formik.handleChange} style={FormInput} />
                                 }
                             </div>
                         </div>

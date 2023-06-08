@@ -6,11 +6,11 @@ import axios from 'axios';
 * Add request to back end.
 */
 
-export const getUserData = async (user_id) => {
+export const getShopData = async (user_id) => {
 
     
 
-    return axios.get(process.env.REACT_APP_HOST+"clients?keyword=id:"+user_id) //template request
+    return axios.get(process.env.REACT_APP_HOST+"shops?keyword=id:"+user_id) //template request
     .then(data => {
         return data.data
     })

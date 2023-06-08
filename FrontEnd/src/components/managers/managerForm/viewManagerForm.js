@@ -1,22 +1,19 @@
 import { useState } from "react"
 
-import { ClientInformation } from './clientInformation';
-import { PetInformation } from "./petInformation";
-import { BillingInformation } from "./billingInformation";
+import { ManagerInformation } from './ManagerInformation';
+import { ShopInformation } from "./shopInformation";
 
 function FormCurrentPage(props){
     if(props.current==1)
-        return (<ClientInformation type={props.props.type} user_id={props.props.user_id} onClose={props.props.onClose}/>)
+        return (<ManagerInformation type={props.props.type} user_id={props.props.user_id} onClose={props.props.onClose}/>)
 
     if(props.current==2)
-        return (<PetInformation type={props.props.type} user_id={props.props.user_id}/>)
+        return (<ShopInformation type={props.props.type} user_id={props.props.user_id}/>)
 
-    if(props.current==3)
-        return (<BillingInformation type={props.props.type} user_id={props.props.user_id}/>)
 }
 
 
-export function ViewClientForm(props) {
+export function ViewManagerForm(props) {
 
     const [currentTab, setCurrentTab] = useState(1);
 
@@ -27,9 +24,9 @@ export function ViewClientForm(props) {
                 <div style={Container}>
                     <div style={TabContainer}>
                         <ul style={TabList}>
-                            <li style={currentTab==1 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(1)}>Client Information</li>
-                            <li style={currentTab==2 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(2)}>Pet Information</li>
-                            <li style={currentTab==3 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(3)}>Billing Information</li>
+                            <li style={currentTab==1 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(1)}>Manager Information</li>
+                            <li style={currentTab==2 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(2)}>Shop Information</li>
+                            
                         </ul>
                     </div>
                     <FormCurrentPage props={props} current={currentTab}/>

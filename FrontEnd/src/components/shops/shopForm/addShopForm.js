@@ -12,7 +12,7 @@ import { generatePassword } from '../../commons';
 import { PostUser } from '../js/PostUser';
 
 
-export function AddDoctorForm(props) {
+export function AddShopForm(props) {
 
     async function addUser(){
 
@@ -24,18 +24,10 @@ export function AddDoctorForm(props) {
     
     const formik = useFormik({
         initialValues: {
-            username: "",
-            "password": generatePassword(7),
-            "email": "",
-            "firstName": "",
-            "lastName": "",
+            "name": "",
             "address": "",
             "city": "",
             "country": "",
-            "phone": "",
-            "aboutMe": "",
-            "specialisation": "",
-            "shop": ""
         },
     });
 
@@ -48,80 +40,25 @@ export function AddDoctorForm(props) {
                 <div>
                     <div>
                     <form>
-                        <h6 style={BlockHeader}>User information</h6>
+                        
+                        <h6 style={BlockHeader}>Shop information</h6>
                         <div style={FormBlock}>
-                            <div style={FormRow}>
+                        <div style={FormRow}>
                                 <div style={FormInputContainer}>
                                     <div>
-                                        <label style={InputLabel} >Username</label>
+                                        <label style={InputLabel}>Name</label>
 
-                                        <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} />
-                            
-                                    </div>
-                                </div>
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel}>Email address</label>
-
-                                        <input type="text" name="email"  placeholder={formik.values['First Name']+"@example.com"} value={formik.values['email']} onChange={formik.handleChange} style={FormInput} />
-                                        
-                                    </div>
-                                </div>
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel}>Password</label>
-
-                                        <input type="text" name="password"  placeholder="Password" value={formik.values['password']} onChange={formik.handleChange} style={FormInput} />
-                                        
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            <div style={FormRow}>
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel}>First name</label>
-
-                                        <input name="firstName" type="text" placeholder="First name" value={formik.values['firstName']} onChange={formik.handleChange} style={FormInput} />
-                            
-                                    </div>
-                                </div>
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel}>Last name</label>
-                                        
-                                        <input name="lastName" type="text" placeholder="Last name" value={formik.values['lastName']} onChange={formik.handleChange} style={FormInput} />
-                                        
-                                    </div>
-                                </div>
-
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel}>specialisation</label>
-                                        
-                                        <input name="specialisation" type="text" placeholder="Last name" value={formik.values['specialisation']} onChange={formik.handleChange} style={FormInput} />
+                                        <input name="name" placeholder="Shop Name" value={formik.values.name} onChange={formik.handleChange} type="text" style={FormInput} />
                                         
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <hr />
-                        <h6 style={BlockHeader}>Contact information</h6>
-                        <div style={FormBlock}>
                             <div style={FormRow}>
                                 <div style={FormInputContainer}>
                                     <div>
                                         <label style={InputLabel}>Address</label>
 
-                                        <input name="address" placeholder="Home Address" value={formik.values.address} onChange={formik.handleChange} type="text" style={FormInput} />
-                                        
-                                    </div>
-                                </div>
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel}>shop_id</label>
-
-                                        <input name="shop" placeholder="Shop ID" value={formik.values.shop} onChange={formik.handleChange} type="text" style={FormInput} />
+                                        <input name="address" placeholder="Shop Address" value={formik.values.address} onChange={formik.handleChange} type="text" style={FormInput} />
                                         
                                     </div>
                                 </div>
@@ -153,18 +90,7 @@ export function AddDoctorForm(props) {
                                 </div>
                             </div>
                         </div>
-                        <hr />
-                        <h6 style={BlockHeader}>About me</h6>
-                        <div style={FormBlock}>
-                            <div style={FormRow}>
-                                <div style={FormInputContainer}>
-                                    <label style={InputLabel}>About Me</label>
-
-                                    <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} ></textarea>
-                                    
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div style={FormBlock}>
                             <div style={SaveButtonContainer}>
                                 <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} onClick={addUser}/>

@@ -24,7 +24,6 @@ export function AddClientForm(props) {
     
     const formik = useFormik({
         initialValues: {
-            username: "",
             "password": generatePassword(7),
             "email": "",
             "firstName": "",
@@ -33,7 +32,7 @@ export function AddClientForm(props) {
             "city": "",
             "country": "",
             "phone": "",
-            "aboutMe": "",
+            "about": "",
             "occupation": ""
         },
     });
@@ -50,19 +49,12 @@ export function AddClientForm(props) {
                         <h6 style={BlockHeader}>User information</h6>
                         <div style={FormBlock}>
                             <div style={FormRow}>
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel} >Username</label>
-
-                                        <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} />
-                            
-                                    </div>
-                                </div>
+                                
                                 <div style={FormInputContainer}>
                                     <div>
                                         <label style={InputLabel}>Email address</label>
 
-                                        <input type="text" name="email"  placeholder={formik.values['First Name']+"@example.com"} value={formik.values['email']} onChange={formik.handleChange} style={FormInput} />
+                                        <input type="text" name="email"  placeholder={"example@example.com"} value={formik.values['email']} onChange={formik.handleChange} style={FormInput} />
                                         
                                     </div>
                                 </div>
@@ -74,7 +66,14 @@ export function AddClientForm(props) {
                                         
                                     </div>
                                 </div>
+
+                                <div style={FormInputContainer}>
+                            <div>
+                                <label style={InputLabel}>Occupation</label>
+                                <input type="text" name="occupation" placeholder="Occupation" value={formik.values['occupation']} onChange={formik.handleChange} style={FormInput} />
                                 
+                            </div>
+                        </div>
                             </div>
                             <div style={FormRow}>
                                 <div style={FormInputContainer}>
@@ -142,7 +141,7 @@ export function AddClientForm(props) {
                                 <div style={FormInputContainer}>
                                     <label style={InputLabel}>About Me</label>
 
-                                    <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} ></textarea>
+                                    <textarea name="about" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['about']} onChange={formik.handleChange} ></textarea>
                                     
                                 </div>
                             </div>

@@ -8,7 +8,7 @@ function FormCurrentPage(props){
         return (<ManagerInformation type={props.props.type} user_id={props.props.user_id} onClose={props.props.onClose}/>)
 
     if(props.current==2)
-        return (<ShopInformation type={props.props.type} user_id={props.props.user_id}/>)
+        return (<ShopInformation type={props.props.type} user_id={props.props.user_id} onClose={props.props.onClose}/>)
 
 }
 

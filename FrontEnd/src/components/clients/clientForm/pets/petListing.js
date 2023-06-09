@@ -13,8 +13,7 @@ export function PetListing(props) {
     const effectRan = useRef(false)
 
     async function setPetList(){
-
-        setPetListState(await getPetList())
+        setPetListState(await getPetList({"client": props.user_id}))
     }
 
 

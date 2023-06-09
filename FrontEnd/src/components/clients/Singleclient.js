@@ -52,8 +52,8 @@ export function SingleClient(props) {
                   </div>
                   <div>
                     <ul style={list}>
-                      <li style={listItem}><MdFilterListAlt size="15"/>{props.user_data.Occupation}</li>
-                      <li style={listItem}><MdLocationOn size="15" />{props.user_data.Address}</li>
+                      <li style={listItem}><MdFilterListAlt size="15"/>{props.user_data.occupation}</li>
+                      <li style={listItem}><MdLocationOn size="15" />{props.user_data.address}</li>
                     </ul>
                   </div>
                 </div>
@@ -65,8 +65,8 @@ export function SingleClient(props) {
             <td style={actions}>
               <ul style={actionList}>
                 <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id)} user_id = {props.user_data.id} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
-                {cookies.user.role.id==1 || cookies.user.role.id==4 ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id, "edit")} user_id = {props.user_data.id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
-                {cookies.user.role.id==1 || cookies.user.role.id==4 ? <li style={actionListItem}><a href="#"style={{"color": "#D13C1D"}} onClick={onDeleteClick}><AiFillDelete size="25"/></a></li> : ""}
+                {cookies.user.role.id==1 || cookies.user.role.id==4 || cookies.user.role.id==2 ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id, "edit")} user_id = {props.user_data.id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
+                {cookies.user.role.id==1 || cookies.user.role.id==4 || cookies.user.role.id==2 ? <li style={actionListItem}><a href="#"style={{"color": "#D13C1D"}} onClick={onDeleteClick}><AiFillDelete size="25"/></a></li> : ""}
               </ul>
             </td>
           </tr>

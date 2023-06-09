@@ -10,7 +10,8 @@ function MainPage(props){
     return (
         <div style={Container}>
 
-            <PetListing type={props.props.type} onPageChange={props.onPageChange} onClose={props.onClose}/>
+
+            <PetListing type={props.props.type} onPageChange={props.onPageChange} onClose={props.onClose} user_id={props.props.user_id}/>
 
             {props.props.type=="edit" || props.props.type=="self"
             ? <div style={actionButtonContainer}>

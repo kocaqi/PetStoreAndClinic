@@ -47,7 +47,6 @@ export function ClientInformation(props) {
     
     const formik = useFormik({
         initialValues: {
-            username: "",
             "password": null,
             "email": "",
             "firstName": "",
@@ -56,7 +55,7 @@ export function ClientInformation(props) {
             "city": "",
             "country": "",
             "phone": "",
-            "aboutMe": "",
+            "about": "",
             "occupation": ""
         },
     });
@@ -69,17 +68,7 @@ export function ClientInformation(props) {
                 <h6 style={BlockHeader}>User information</h6>
                 <div style={FormBlock}>
                     <div style={FormRow}>
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel} >Username</label>
-                                {
-                                    props.type=="view"
-                                    ? <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} readonly="true" />
-                                    : <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} />
-                                }
-                    
-                            </div>
-                        </div>
+                        
                         <div style={FormInputContainer}>
                             <div>
                                 <label style={InputLabel}>Email address</label>
@@ -192,8 +181,8 @@ export function ClientInformation(props) {
                             <label style={InputLabel}>About Me</label>
                             {
                                 props.type=="view"
-                                ? <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} readonly="true"></textarea>
-                                : <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} ></textarea>
+                                ? <textarea name="about" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['about']} onChange={formik.handleChange} readonly="true"></textarea>
+                                : <textarea name="about" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['about']} onChange={formik.handleChange} ></textarea>
                             }
                         </div>
                     </div>

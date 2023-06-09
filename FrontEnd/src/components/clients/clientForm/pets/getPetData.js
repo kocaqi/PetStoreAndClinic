@@ -6,11 +6,11 @@ import axios from 'axios';
 * Add request to back end.
 */
 
-export const getPetData = async (pet_id) => {
+export const getPetData = async (user_id) => {
 
     
 
-    return axios.get("./templates/petData"+pet_id+".json") //template request
+    return axios.get(process.env.REACT_APP_HOST+"pets?keyword=id:"+user_id) //template request
     .then(data => {
         return data.data
     })

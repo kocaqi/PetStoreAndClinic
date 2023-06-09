@@ -5,12 +5,17 @@ import { useNavigate } from "react-router-dom";
 
 
 import { HoverButton } from "../commons";
+import { PostLogin } from "./js/PostLogin";
+import { SelectRole } from "./selectRole";
 
 import axios from 'axios';
 
 
 
+
 export function Login() {
+
+    const [currentOverlay, setcurrentOverlay] = useState("");
 
     const navigate = useNavigate()
 
@@ -35,6 +40,15 @@ export function Login() {
     };
 
 
+    var OpenSelectRole = (roles, email, password) => {
+        setcurrentOverlay(<SelectRole roles={roles} email={email} password={password} onClose={closeOverlay}/>)
+  }
+
+  var closeOverlay = () => {
+    setcurrentOverlay("")
+}
+
+
 
     /*
     *
@@ -46,26 +60,25 @@ export function Login() {
     const onSubmit = async () => {
         setError("");
 
-        var login_data = await axios.get("./templates/userLoginSuccess.json") //template request
+        var loginData = await PostLogin(formik.values) //template request
             
-        if(login_data.data.status == 200){
+        if(loginData.status == 200){
 
-            handleCookies([{
-                    cookie_name: "access_token",
-                    cookie_value: login_data.data.access_token,
-                    cookie_path: "/"
-                },
+            handleCookies([
                 {
                     cookie_name: "session_id",
-                    cookie_value: login_data.data.session_id,
+                    cookie_value: loginData.sessionId,
                     cookie_path: "/"
                 }
             ])
             
             window.location.href = "/"
         }
-        else if(login_data.data.status){
-            setError(login_data.data.message)
+        else if(loginData.status == 300){
+            OpenSelectRole(loginData.roles, formik.values.email, formik.values.password)
+        }
+        else if(loginData.status){
+            setError(loginData.message)
             setButtonDisable(true)
         }
 
@@ -87,59 +100,62 @@ export function Login() {
 
     const formik = useFormik({
         initialValues: {
-            username: "",
+            email: "",
             password: "",
+            roleId: null
         },
         onSubmit,
     });
     
 
     return (
+        <div>
+            <div>{currentOverlay}</div>
+            <form style={LoginForm} onSubmit={formik.handleSubmit}>
+                <div>
+                </div>
+                <h1 style={Header}>Login</h1>
+
+                <div style={ErrorContainer}>
+                    <p style={error ? Error : {}}>{error}</p>
+                </div>
+
+
+                <div style={OuterInputContainer}>
+
+                    <div style={InputContainer}>
+                        <input
+                        style={Input}
+                        name="email"
+                        value={formik.values.email}
+                        onChange={InputOnChange}
+                        placeholder="EMAIL"
+                        size="large"
+                        />
+                    </div>
+
+                    <div style={InputContainer}>
+                        <input
+                        style={Input}
+                        name="password"
+                        value={formik.values.password}
+                        onChange={InputOnChange}
+                        placeholder="PASSWORD"
+                        size="large"
+                        type="password"
+                        />
+                    </div>
+
+                </div>
         
-        <form style={LoginForm} onSubmit={formik.handleSubmit}>
-            <div>
-            </div>
-            <h1 style={Header}>Login</h1>
+                <div style={ButtonContainer}>
 
-            <div style={ErrorContainer}>
-                <p style={error ? Error : {}}>{error}</p>
-            </div>
+                    <HoverButton type="submit" disabled={buttonDisable} text="Login" HoverStyle={ButtonHover} DefaultStyle={Button} />
 
-
-            <div style={OuterInputContainer}>
-
-                <div style={InputContainer}>
-                    <input
-                    style={Input}
-                    name="username"
-                    value={formik.values.username}
-                    onChange={InputOnChange}
-                    placeholder="USERNAME"
-                    size="large"
-                    />
                 </div>
 
-                <div style={InputContainer}>
-                    <input
-                    style={Input}
-                    name="password"
-                    value={formik.values.password}
-                    onChange={InputOnChange}
-                    placeholder="PASSWORD"
-                    size="large"
-                    type="password"
-                    />
-                </div>
-
-            </div>
-    
-            <div style={ButtonContainer}>
-
-                <HoverButton type="submit" disabled={buttonDisable} text="Login" HoverStyle={ButtonHover} DefaultStyle={Button} />
-
-            </div>
-
-        </form>
+            </form>
+        </div>
     );
 }
 

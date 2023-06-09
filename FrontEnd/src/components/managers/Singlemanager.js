@@ -48,7 +48,7 @@ export function SingleManager(props) {
               <div>
                 <div>
                   <div>
-                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id)} user_id = {props.user_data.id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.name}</a></h5>
+                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id)} user_id = {props.user_data.id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.firstName+" "+props.user_data.lastName}</a></h5>
                   </div>
                   <div>
                     <ul style={list}>
@@ -59,7 +59,7 @@ export function SingleManager(props) {
               </div>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>Shop ID: {props.user_data.id}</span>
+              <span style={textFieldText}>Manager ID: {props.user_data.id}</span>
             </td>
             <td style={actions}>
               <ul style={actionList}>

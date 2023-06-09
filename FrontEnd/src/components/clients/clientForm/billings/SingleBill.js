@@ -10,6 +10,7 @@ import { MdFilterListAlt } from "react-icons/md";
 
 import { HoverButton } from '../../../commons';
 import { ConfirmationPage } from '../../../commons';
+import { removeTransaction } from './removeTransaction';
 
 
 
@@ -24,7 +25,9 @@ export function SingleBill(props) {
         setHover(false)
     }
 
-    function onDeleteConfirm(){
+    async function onDeleteConfirm(){
+
+      await removeTransaction(props.bill_data["id"])
       props.onClose()
     }
 
@@ -45,36 +48,33 @@ export function SingleBill(props) {
                 <div >
                   <div>
                     <div>
-                      <h5 style={name}><a style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.bill_data["Product Name"]}</a></h5>
+                      <h5 style={name}><a style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.bill_data["productName"]}</a></h5>
                     </div>
                   </div>
                 </div>
               </div>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>{`Bill ID: ${props.bill_data["id"]}`}</span>
+              <span style={textFieldText}>{`Transaction ID: ${props.bill_data["id"]}`}</span>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>{`Product ID: ${props.bill_data["product_id"]}`}</span>
+              <span style={textFieldText}>{`Price: $${props.bill_data["pricePerUnit"]}`}</span>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>{`Price: $${props.bill_data["Product Price"]}`}</span>
+              <span style={textFieldText}>{`Quantity: ${props.bill_data["quantity"]}`}</span>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>{`Quantity: ${props.bill_data["Quantity"]}`}</span>
-            </td>
-            <td style={textField}>
-              <span style={name}>{`Total: $${props.bill_data["Total"]}`}</span>
+              <span style={name}>{`Total: ${props.bill_data["total"]} ALL`}</span>
             </td>
             <td style={StatusField}>
-              <span style={props.bill_data["Status"] ? {...Status, "background": "#2d3b55"} : {...Status, "background": "#D13C1D"}}>{props.bill_data["Status"] ? "Paid" : "Not Paid"}</span>
+              <span style={props.bill_data["paid"] ? {...Status, "background": "#2d3b55"} : {...Status, "background": "#D13C1D"}}>{props.bill_data["paid"] ? "Paid" : "Not Paid"}</span>
             </td>
 
             <td style={actions}>
               <ul style={actionList}>
-                {props.type=="edit" ? <li style={actionListItem}><a href="#" onClick={onDeleteClick} style={{"color": "#D13C1D"}}><AiFillDelete size="25"/></a></li> : ""}
-                {props.type=="self" && !props.bill_data["Status"] ? <HoverButton text="PAY" HoverStyle={ActionButtonHover} DefaultStyle={ActionButton} /> : ""}
+                {props.type=="edit" && !props.bill_data["paid"] ? <li style={actionListItem}><a href="#" onClick={onDeleteClick} style={{"color": "#D13C1D"}}><AiFillDelete size="25"/></a></li> : ""}
               </ul>
+              
             </td>
           </tr>
           

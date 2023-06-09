@@ -34,6 +34,11 @@ export function Doctors() {
             setcurrentOverlay(component)
       }
 
+      var onSearch = async (e, params=null) => {
+            setUserListState(await getUserList(params))
+      }
+
+
 
 
 
@@ -63,7 +68,7 @@ export function Doctors() {
             <div>
                   <div>{currentOverlay}</div>
                   <Container>
-                    <DoctorSearchBar onAddClick={onAddClick}/>
+                    <DoctorSearchBar onAddClick={onAddClick} onSearch={onSearch}/>
                     <DoctorListing openCustomOverlay={openCustomOverlay} closeOverlay={closeOverlay} onOpenUserForm={onOpenUserForm} data={UserList}/>
                   </Container>
             

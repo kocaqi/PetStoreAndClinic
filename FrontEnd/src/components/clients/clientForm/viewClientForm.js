@@ -29,7 +29,7 @@ export function ViewClientForm(props) {
                         <ul style={TabList}>
                             <li style={currentTab==1 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(1)}>Client Information</li>
                             <li style={currentTab==2 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(2)}>Pet Information</li>
-                            <li style={currentTab==3 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(3)}>Billing Information</li>
+                            <li style={currentTab==3 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(3)}>Billing History</li>
                         </ul>
                     </div>
                     <FormCurrentPage props={props} current={currentTab}/>

@@ -1,31 +1,17 @@
-import axios from 'axios';
-/*
-*
-* NEED TO REWORK
-* 
-* Add request to back end.
-*/
+import axios from "axios";
 
-export const authenticateUser = async (session_id) => {
 
-    if(session_id=="session_id_template"){
+export const authenticateUser = async (body) => {
 
-        return axios.get("./templates/userAuthSuccess.json") //template request
-        .then(data => {
-            return data.data
-        })
-        .catch(error => {
-            alert(error.message)
-        });
-    }
-    else{
-        return axios.get("./templates/userAuthFail.json") //template request
-        .then(data => {
-            return data.data
-        })
-        .catch(error => {
-            alert(error.message)
-        });
-    }
+    
+
+    return axios.get(process.env.REACT_APP_HOST+"auth?sessionId="+body) //template request
+    .then(data => {
+        return data.data
+    })
+    .catch(error => {
+        alert(error.message)
+    });
+    
 
 }

@@ -10,6 +10,7 @@ import { MdFilterListAlt } from "react-icons/md";
 
 import { PetForm } from './viewPetForm';
 import { ConfirmationPage } from '../../../commons';
+import { removePet } from './removePet';
 
 
 
@@ -25,8 +26,10 @@ export function SinglePet(props) {
     }
     
 
-    function onDeleteConfirm(){
+    async function onDeleteConfirm(){
+      await removePet(props.pet_data.id)
       props.onClose()
+      
     }
 
     function onDeleteDecline(){
@@ -43,23 +46,20 @@ export function SinglePet(props) {
           <tr style={hover ? {...pet, ...petHover} : pet} onMouseOver={MouseOver} onMouseOut={MouseOut}>
             <td style={textField}>
               <div style={title}>
-                <div style={thumbnail}>
-                  <img src={props.pet_data.ImageURL+(props.custom_key+1)+".png"} alt="" style={thumbnailImage}/>
-                </div>
                 <div >
                   <div>
                     <div>
-                      <h5 style={name}><a href="#" onClick={(e) => props.onPageChange(e , <PetForm pet_id={props.pet_data.pet_id} type={props.type} onClose={props.onClose}/>)} user_id = {props.pet_data.pet_id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.pet_data.Name}</a></h5>
+                      <h5 style={name}><a href="#" onClick={(e) => props.onPageChange(e , <PetForm pet_id={props.pet_data.id} type={props.type} onClose={props.onClose}/>)} user_id = {props.pet_data.id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.pet_data.name}</a></h5>
                     </div>
                   </div>
                 </div>
               </div>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>{props.pet_data.Type}</span>
+              <span style={textFieldText}>Pet ID: {props.pet_data.id}</span>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>{props.pet_data.pet_id}</span>
+              <span style={textFieldText}>Species: {props.pet_data.species}</span>
             </td>
 
             <td style={actions}>
@@ -98,6 +98,7 @@ const title = {
     "align-items": "center",
     "vertical-align": "middle",
     "padding": "20px 0",
+    "margin-left": "15px"
 
     
 }

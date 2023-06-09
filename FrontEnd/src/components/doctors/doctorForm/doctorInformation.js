@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 
 import { getUserData } from '../js/getUserData';
 import { HoverButton } from '../../commons';
+import { UpdateUser } from '../js/UpdateUser';
 
 
 export function DoctorInformation(props) {
@@ -17,13 +18,25 @@ export function DoctorInformation(props) {
 
     async function setUserData(user_id){
 
-        const userData = await getUserData(user_id)
+        const userData = (await getUserData(user_id))[0]
+
+        userData.shopId = userData["shop"]["id"]
+        
         
         Object.keys(formik.values).forEach(key => {
+
             formik.setFieldValue(key, userData[key], false)
+
         })
+        
 
         
+    }
+
+    async function updateUser(){
+        await UpdateUser(props.user_id, formik.values)
+
+        props.onClose()
     }
 
 
@@ -40,23 +53,22 @@ export function DoctorInformation(props) {
     
     const formik = useFormik({
         initialValues: {
-            "user_id": "",
+            username: "",
+            "password": null,
+            "email": "",
             "firstName": "",
             "lastName": "",
-            "fullName": "",
-            "email": "",
-            "specialisation": "",
             "address": "",
-            "city": "e",
+            "city": "",
             "country": "",
-            "status": "",
-            "ImageURL": "",
             "phone": "",
-            "aboutMe": ""
+            "about": "",
+            "shopId": "",
+            "specialisation": ""
         },
     });
 
-      return (
+     return (
         <div style={FormContainer}>
         <div>
             <div>
@@ -77,14 +89,26 @@ export function DoctorInformation(props) {
                         </div>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel}>Specialisation</label>
+                                <label style={InputLabel}>Shop ID</label>
                                 {
                                     props.type=="view"
-                                    ? <input type="text" name="specialisation" placeholder="Specialisation" value={formik.values['specialisation']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
-                                    : <input type="text" name="specialisation" placeholder="Specialisation" value={formik.values['specialisation']} onChange={formik.handleChange} style={FormInput} />
+                                    ? <input type="text" name="shopId" placeholder="Shop ID" value={formik.values['shopId']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                    : <input type="text" name="shopId" placeholder="Shop ID" value={formik.values['shopId']} onChange={formik.handleChange} style={FormInput} />
                                 }
                             </div>
                         </div>
+                        {props.type=="self" ?
+                        <div style={FormInputContainer}>
+                            <div>
+                                <label style={InputLabel}>Password</label>
+                                {
+                                    props.type=="view"
+                                    ? <input type="text" name="password" placeholder="Password" value={formik.values['password'] ? formik.values['password'] : ""} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                    : <input type="text" name="password" placeholder="Password" value={formik.values['password'] ? formik.values['password'] : ""} onChange={formik.handleChange} style={FormInput} />
+                                }
+                            </div>
+                        </div>
+                        : ""}
                     </div>
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
@@ -158,15 +182,15 @@ export function DoctorInformation(props) {
                     </div>
                 </div>
                 <hr />
-                <h6 style={BlockHeader}>About Me</h6>
+                <h6 style={BlockHeader}>About me</h6>
                 <div style={FormBlock}>
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <label style={InputLabel}>About Me</label>
                             {
                                 props.type=="view"
-                                ? <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} readonly="true"></textarea>
-                                : <textarea name="aboutMe" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['aboutMe']} onChange={formik.handleChange} ></textarea>
+                                ? <textarea name="about" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['about']} onChange={formik.handleChange} readonly="true"></textarea>
+                                : <textarea name="about" rows="4" placeholder="A few words about you ..." style={FormTextArea} value ={formik.values['about']} onChange={formik.handleChange} ></textarea>
                             }
                         </div>
                     </div>
@@ -175,7 +199,7 @@ export function DoctorInformation(props) {
                     props.type=="edit" || props.type=="self"
                     ? (<div style={FormBlock}>
                             <div style={SaveButtonContainer}>
-                                <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} />
+                                <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} onClick={updateUser}/>
                             </div>
                         </div>)
                     : ""

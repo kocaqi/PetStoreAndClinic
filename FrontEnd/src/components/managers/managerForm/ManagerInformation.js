@@ -53,7 +53,6 @@ export function ManagerInformation(props) {
     
     const formik = useFormik({
         initialValues: {
-            username: "",
             "password": null,
             "email": "",
             "firstName": "",
@@ -75,17 +74,7 @@ export function ManagerInformation(props) {
                 <h6 style={BlockHeader}>User information</h6>
                 <div style={FormBlock}>
                     <div style={FormRow}>
-                        <div style={FormInputContainer}>
-                            <div>
-                                <label style={InputLabel} >Username</label>
-                                {
-                                    props.type=="view"
-                                    ? <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} readonly="true" />
-                                    : <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} />
-                                }
-                    
-                            </div>
-                        </div>
+                        
                         <div style={FormInputContainer}>
                             <div>
                                 <label style={InputLabel}>Email address</label>

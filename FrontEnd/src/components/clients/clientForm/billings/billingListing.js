@@ -2,19 +2,19 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react"
 
-import { getBillingList } from './getBillingList';
+import { getTransactionList } from './getTransactionList';
 import { SingleBill } from './SingleBill';
 
 
 export function BillingListing(props) {
 
-    const [BillingList, setBillingListState] = useState({"Billing History": []});
+    const [BillingList, setBillingListState] = useState([]);
 
     const effectRan = useRef(false)
 
     async function setBillingList(){
 
-        setBillingListState(await getBillingList(props.user_id))
+        setBillingListState(await getTransactionList({client: props.user_id}))
     }
 
 
@@ -31,13 +31,11 @@ export function BillingListing(props) {
       return (
         <div style={container1}>
             
-            <div style={Balance}>{BillingList.Balance ? `Balance: $${BillingList.Balance}` : ""}</div>
-
             <div style={container2}>
                 <table style={table}>
                 <tbody>
                     
-                    {BillingList["Billing History"].map((bill, index) => {
+                    {BillingList.map((bill, index) => {
                         return <SingleBill key={index} bill_data={bill} type={props.type} refresh={setBillingList} onClose={props.onClose} onPageChange={props.onPageChange}/>;
                     })}
                 

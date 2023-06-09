@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from "react"
 import { useFormik } from "formik";
 
 import { HoverButton } from '../../../commons';
+import { PostTransaction } from './PostTransaction';
 
 
 export function AddBillForm(props) {
@@ -16,12 +17,18 @@ export function AddBillForm(props) {
     const effectRan = useRef(false)
 
 
+    async function addTransaction(){
+        await PostTransaction(formik.values)
+        props.onClose()
+    }
+
     
     const formik = useFormik({
         initialValues: {
-            "user_id": props.user_id,
-            "product_id": "",
-            "Quantity": "",
+            "clientId": props.user_id,
+            "productId": "",
+            "petId": "",
+            "quantity": "",
         },
     });
 
@@ -36,8 +43,16 @@ export function AddBillForm(props) {
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel} >user_id</label>
-                                <input type="text" placeholder="user_id" name="user_id" value={formik.values['user_id']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                <label style={InputLabel} >Client ID</label>
+                                <input type="text" placeholder="Client ID" name="clientId" value={formik.values['clientId']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                
+                    
+                            </div>
+                        </div>
+                        <div style={FormInputContainer}>
+                            <div>
+                                <label style={InputLabel} >Pet ID</label>
+                                <input type="text" placeholder="Pet ID" name="petId" value={formik.values['petId']} onChange={formik.handleChange} style={FormInput} />
                                 
                     
                             </div>
@@ -45,17 +60,18 @@ export function AddBillForm(props) {
                     </div>
                     <div style={FormRow}>
                        
-                        <div style={FormInputContainer}>
+                    <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel}>product_id</label>
-                                <input name="product_id" type="text" placeholder="product_id" value={formik.values['product_id']} onChange={formik.handleChange} style={FormInput}/>
+                                <label style={InputLabel} >Product ID</label>
+                                <input type="text" placeholder="Product ID" name="productId" value={formik.values['productId']} onChange={formik.handleChange} style={FormInput} />
                                 
+                    
                             </div>
                         </div>
                         <div style={FormInputContainer}>
                             <div>
                                 <label style={InputLabel}>Quantity</label>
-                                <input name="Quantity" type="text" placeholder="Quantity" value={formik.values['Quantity']} onChange={formik.handleChange} style={FormInput}/>
+                                <input name="quantity" type="text" placeholder="Quantity" value={formik.values['quantity']} onChange={formik.handleChange} style={FormInput} />
                                 
                             </div>
                         </div>
@@ -66,7 +82,7 @@ export function AddBillForm(props) {
                 
                 <div style={FormBlock}>
                     <div style={SaveButtonContainer}>
-                        <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} />
+                        <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} onClick={addTransaction}/>
                     </div>
                 </div>
                 

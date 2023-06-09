@@ -1,11 +1,19 @@
 import { useCookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+
 
 import { HoverButton } from '../commons';
 
 export function DoctorSearchBar(props) {
     const [cookies, setCookie] = useCookies();
 
+    const formik = useFormik({
+        initialValues: {
+            "lastName": "",
+            "id": ""
+        },
+    });
 
       return (
             <div style={outerContainer}>
@@ -14,9 +22,9 @@ export function DoctorSearchBar(props) {
                   {cookies.user.role.id==1 || cookies.user.role.id==2 ? <HoverButton text="ADD" HoverStyle={ActionButtonHover} DefaultStyle={ActionButton} onClick={props.onAddClick} /> : ""}
                   </div>
                   <div style={searchNavContainer}>
-                    <input placeholder='First Name or Last Name' style={Input}/>
-                    <input placeholder='User ID' style={Input}/>
-                    <HoverButton text="SEARCH" HoverStyle={SearchButtonHover} DefaultStyle={SearchButton} />
+                    <input placeholder='Last Name' style={Input} name="lastName" value={formik.values.lastName} onChange={formik.handleChange}/>
+                    <input placeholder='User ID' style={Input} name="id" value={formik.values.id} onChange={formik.handleChange}/>
+                    <HoverButton text="SEARCH" HoverStyle={SearchButtonHover} DefaultStyle={SearchButton} onClick={(e) => props.onSearch(e, formik.values)} />
                   </div>
             
             </div>

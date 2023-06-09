@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import { HoverButton } from '../../../commons';
 
 import { authenticateUser } from '../../../../util/authenticateUser';
+import { PostUser } from './PostUser';
 
 
 export function AddFeedblackForm(props) {
@@ -22,8 +23,14 @@ export function AddFeedblackForm(props) {
 
         const userData = await authenticateUser(cookies.session_id)
 
-        formik.setFieldValue("author_id", userData.userData.user_id, false) 
+        formik.setFieldValue("clientId", Number(userData.userId), false) 
 
+    }
+
+
+    async function addFeedback(){
+        await PostUser(formik.values)
+        props.onClose()
     }
 
 
@@ -41,10 +48,11 @@ export function AddFeedblackForm(props) {
     
     const formik = useFormik({
         initialValues: {
-            "author_id": "",
-            "doctor_id": props.user_id,
-            "title": "",
-            "description": ""
+            "clientId": "",
+            "doctorId": props.user_id,
+            "shopId": null,
+            "message": "",
+            "title": ""
         },
     });
 
@@ -59,8 +67,8 @@ export function AddFeedblackForm(props) {
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel} >author_id</label>
-                                <input type="text" placeholder="author_id" name="author_id" value={formik.values['author_id']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                <label style={InputLabel} >Client ID</label>
+                                <input type="text" placeholder="Author ID" name="clientId" value={formik.values['clientId']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
                                 
                     
                             </div>
@@ -69,8 +77,8 @@ export function AddFeedblackForm(props) {
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel} >doctor_id</label>
-                                <input type="text" placeholder="doctor_id" name="doctor_id" value={formik.values['doctor_id']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                <label style={InputLabel} >Doctor ID</label>
+                                <input type="text" placeholder="Doctor ID" name="doctorId" value={formik.values['doctorId']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
                                 
                     
                             </div>
@@ -88,9 +96,9 @@ export function AddFeedblackForm(props) {
                     </div>
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
-                            <label style={InputLabel}>Description</label>
+                            <label style={InputLabel}>Message</label>
                             
-                            <textarea name="description" rows="4" placeholder="A few words about your experience ..." style={FormTextArea} value ={formik.values['description']} onChange={formik.handleChange} ></textarea>
+                            <textarea name="message" rows="4" placeholder="A few words about your experience ..." style={FormTextArea} value ={formik.values['message']} onChange={formik.handleChange} ></textarea>
                             
                         </div>
                     </div>
@@ -100,7 +108,7 @@ export function AddFeedblackForm(props) {
                 
                 <div style={FormBlock}>
                     <div style={SaveButtonContainer}>
-                        <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} />
+                        <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} onClick={addFeedback}/>
                     </div>
                 </div>
                 

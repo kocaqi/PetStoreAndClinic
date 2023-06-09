@@ -21,15 +21,21 @@ export function SecureRoute(props){
 
         const userInfo = await authenticateUser(cookies.session_id)
 
+        userInfo.LoggedIn = userInfo.status==200
+
         //Update User info
 
-        setCookie("user", userInfo.userData, {
+        setCookie("user", {
+            role: userInfo.role,
+            user_id: userInfo.userId
+        }, 
+        {
             path: "/"
         });
 
         /******************************* */
 
-        if(userInfo.LoggedIn && !props.roles.includes(userInfo.userData.role.id)){ //User is logged in but it's role doesn't match the specified ones
+        if(userInfo.LoggedIn && !props.roles.includes(userInfo.role.id)){ //User is logged in but it's role doesn't match the specified ones
             navigate("/not-authorized")
         }
 

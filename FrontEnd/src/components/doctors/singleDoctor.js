@@ -41,12 +41,12 @@ export function SingleDoctor(props) {
           <tr style={hover ? {...doctor, ...doctorHover} : doctor} onMouseOver={MouseOver} onMouseOut={MouseOut}>
             <td style={title}>
               <div style={thumbnail}>
-                <img src={props.user_data.ImageURL+(props.custom_key+1)+".png"} alt="" style={thumbnailImage}/>
+                <img src={"https://bootdey.com/img/Content/avatar/avatar"+(Number(props.user_data.id%8)+1)+".png"} alt="" style={thumbnailImage}/>
               </div>
               <div>
                 <div>
                   <div>
-                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id)} user_id = {props.user_data.user_id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.fullName}</a></h5>
+                    <h5 style={name}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id)} user_id = {props.user_data.id} style={{"text-decoration": "none", "color": "#2d3b55"}}>{props.user_data.firstName+" "+props.user_data.lastName}</a></h5>
                   </div>
                   <div>
                     <ul style={list}>
@@ -58,12 +58,12 @@ export function SingleDoctor(props) {
               </div>
             </td>
             <td style={textField}>
-              <span style={textFieldText}>{props.user_data.status}</span>
+              <span style={textFieldText}>{"Doctor ID: "+props.user_data.id}</span>
             </td>
             <td style={actions}>
               <ul style={actionList}>
-                <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id)} user_id = {props.user_data.user_id} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
-                {cookies.user.role.id==1 || cookies.user.role.id==2 ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.user_id, "edit")} user_id = {props.user_data.user_id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
+                <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id)} user_id = {props.user_data.id} style={{"color": "#2d3b55"}}><AiFillEye size="25"/></a></li>
+                {cookies.user.role.id==1 || cookies.user.role.id==2 ? <li style={actionListItem}><a href="#" onClick={(e) => props.onOpenUserForm(e, props.user_data.id, "edit")} user_id = {props.user_data.id} style={{"color": "#60C656"}}><AiFillEdit size="25"/></a></li> : ""}
                 {cookies.user.role.id==1 || cookies.user.role.id==2 ? <li style={actionListItem}><a href="#"style={{"color": "#D13C1D"}} onClick={onDeleteClick}><AiFillDelete size="25"/></a></li> : ""}
               </ul>
             </td>

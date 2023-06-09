@@ -10,7 +10,7 @@ export const getFeedbackList = async (user_id) => {
 
     
 
-    return axios.get("./templates/FeedbackList"+user_id+".json") //template request
+    return axios.get(process.env.REACT_APP_HOST+"feedback?keyword=doctor:"+user_id) //template request
     .then(data => {
         return data.data
     })

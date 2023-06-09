@@ -7,7 +7,7 @@ export function generatePassword(length) {
 
     const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    let result = ' ';
+    let result = '';
     const charactersLength = characters.length;
     for ( let i = 0; i < length; i++ ) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -103,7 +103,7 @@ export const ConfirmationPage = (props) => {
         <div style={ConfirmContainer}>
             <div style={TextContainer}>
                 <div style={{"width": "fit-content","margin": "auto"}}>
-                    <span style={Text}>Are You Sure?</span>
+                    <span style={Text}>{!props.text ? "Are You Sure?" : props.text}</span>
                 </div>
             </div>
             <div style={ButtonOuterContainer}>

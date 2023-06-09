@@ -1,18 +1,15 @@
 import { useState } from "react"
 
 import { ShopInformation } from './shopInformation';
-import { PetInformation } from "./petInformation";
-import { BillingInformation } from "./billingInformation";
+import { FeedbackInformation } from "./feedbackInformation";
 
 function FormCurrentPage(props){
     if(props.current==1)
         return (<ShopInformation type={props.props.type} user_id={props.props.user_id} onClose={props.props.onClose}/>)
 
     if(props.current==2)
-        return (<PetInformation type={props.props.type} user_id={props.props.user_id}/>)
+        return (<FeedbackInformation type={props.props.type} user_id={props.props.user_id}/>)
 
-    if(props.current==3)
-        return (<BillingInformation type={props.props.type} user_id={props.props.user_id}/>)
 }
 
 
@@ -28,8 +25,7 @@ export function ViewShopForm(props) {
                     <div style={TabContainer}>
                         <ul style={TabList}>
                             <li style={currentTab==1 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(1)}>Shop Information</li>
-                            <li style={currentTab==2 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(2)}>Pet Information</li>
-                            <li style={currentTab==3 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(3)}>Billing Information</li>
+                            <li style={currentTab==2 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(2)}>FeedBack Information</li>
                         </ul>
                     </div>
                     <FormCurrentPage props={props} current={currentTab}/>

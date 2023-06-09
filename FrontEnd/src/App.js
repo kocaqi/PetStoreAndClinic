@@ -7,6 +7,9 @@ import { Login } from "./components/login/login";
 import { SecureRoute } from "./util/secureRoute"; //Custom secure route
 import { NotAuthorized } from "./components/notAuthorized/notAuthorized";
 import { Managers } from "./components/managers/managers";
+import { Products } from "./components/products/products";
+import { Pets } from "./components/pets/pets";
+import { Receptionists } from "./components/receptionists/receptionists";
 
 
 function App() {
@@ -30,7 +33,7 @@ function App() {
       />
 
       <Route path="/doctors" element={
-        <SecureRoute Route = {<Doctors />} LoggedIn={true} roles={[5, 2, 1]} Redirect="/" />} 
+        <SecureRoute Route = {<Doctors />} LoggedIn={true} roles={[5, 4, 2, 1]} Redirect="/" />} 
       />
 
       <Route path="/shops" element={
@@ -40,6 +43,17 @@ function App() {
       <Route path="/managers" element={
         <SecureRoute Route = {<Managers />} LoggedIn={true} roles={[5, 2, 1]} Redirect="/" />} 
       />  
+
+      <Route path="/products" element={
+        <SecureRoute Route = {<Products />} LoggedIn={true} roles={[5, 3, 4, 2, 1]} Redirect="/" />} 
+      />  
+
+      <Route path="/pets" element={
+        <SecureRoute Route = {<Pets />} LoggedIn={true} roles={[3, 4, 2, 1]} Redirect="/" />} 
+      />
+      <Route path="/receptionists" element={
+        <SecureRoute Route = {<Receptionists />} LoggedIn={true} roles={[5, 2, 1]} Redirect="/" />} 
+      />
       
       <Route path="/not-authorized" element={<NotAuthorized />} />
 

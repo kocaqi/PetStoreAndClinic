@@ -9,16 +9,21 @@ import { useFormik } from "formik";
 import { getShopData } from '../js/getShopData';
 import { HoverButton } from '../../commons';
 import { UpdateShop } from '../js/UpdateShop';
-
+import { getUserData } from '../js/getUserData';
 
 export function ShopInformation(props) {
+
+
+    const [UserDataState, setUserData] = useState([]);
 
 
     const effectRan = useRef(false)
 
     async function setShopData(user_id){
 
-        const shopData = (await getShopData(user_id))[0]
+        const UserData = await getUserData(user_id)
+        setUserData(UserData)
+        const shopData = (await getShopData(UserData[0].shop.id))[0]
         
         Object.keys(formik.values).forEach(key => {
             formik.setFieldValue(key, shopData[key], false)
@@ -28,7 +33,7 @@ export function ShopInformation(props) {
     }
 
     async function updateShop(){
-        await UpdateShop(props.user_id, formik.values)
+        await UpdateShop(UserDataState[0].shop.id, formik.values)
 
         props.onClose()
     }

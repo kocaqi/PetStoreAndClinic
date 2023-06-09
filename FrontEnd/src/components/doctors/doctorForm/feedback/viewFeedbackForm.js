@@ -18,7 +18,11 @@ export function FeedbackForm(props) {
 
     async function setUserData(feedback_id){
 
-        const feedbackData = await getFeedbackData(feedback_id)
+
+        const feedbackData = (await getFeedbackData(feedback_id))[0]
+
+        feedbackData.clientId = feedbackData.client.id
+        feedbackData.doctorId = feedbackData.doctor.id
         
         Object.keys(formik.values).forEach(key => {
             formik.setFieldValue(key, feedbackData[key], false)
@@ -41,10 +45,10 @@ export function FeedbackForm(props) {
     
     const formik = useFormik({
         initialValues: {
-            "author_id": "",
-            "doctor_id": "",
+            "clientId": "",
+            "doctorId": "",
             "title": "",
-            "description": ""
+            "message": ""
         },
     });
 
@@ -59,22 +63,22 @@ export function FeedbackForm(props) {
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel} >author_id</label>
+                                <label style={InputLabel} >Client ID</label>
                                 {
-                                    formik.values['author_id']==cookies.user.user_id
-                                    ? <input type="text" placeholder="author_id" name="author_id" value={formik.values['author_id']} onChange={formik.handleChange} style={FormInput} readonly="true" />
-                                    : <input type="text" placeholder="author_id" name="author_id" value={formik.values['author_id']} onChange={formik.handleChange} style={FormInput} readonly="true" />
+                                    formik.values['clientId']==cookies.user.user_id
+                                    ? <input type="text" placeholder="Client ID" name="clientId" value={formik.values['clientId']} onChange={formik.handleChange} style={FormInput} readonly="true" />
+                                    : <input type="text" placeholder="Client ID" name="clientId" value={formik.values['clientId']} onChange={formik.handleChange} style={FormInput} readonly="true" />
                                 }
                     
                             </div>
                         </div>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel}>doctor_id</label>
+                                <label style={InputLabel}>Doctor ID</label>
                                 {
-                                    formik.values['author_id']==cookies.user.user_id
-                                    ? <input type="text" name="doctor_id"  placeholder={"doctor_id"} value={formik.values['doctor_id']} onChange={formik.handleChange} style={FormInput} readonly="true" />
-                                    : <input type="text" name="doctor_id"  placeholder={"doctor_id"} value={formik.values['doctor_id']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
+                                    formik.values['clientId']==cookies.user.user_id
+                                    ? <input type="text" name="doctorId"  placeholder={"Doctor ID"} value={formik.values['doctorId']} onChange={formik.handleChange} style={FormInput} readonly="true" />
+                                    : <input type="text" name="doctorId"  placeholder={"Doctor ID"} value={formik.values['doctorId']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
                                 }
                             </div>
                         </div>
@@ -84,8 +88,8 @@ export function FeedbackForm(props) {
                             <div>
                                 <label style={InputLabel}>Title</label>
                                 {
-                                    formik.values['author_id']==cookies.user.user_id
-                                    ? <input name="title" type="text" placeholder="Title" value={formik.values['title']} onChange={formik.handleChange} style={FormInput} />
+                                    formik.values['clientId']==cookies.user.user_id
+                                    ? <input name="title" type="text" placeholder="Title" value={formik.values['title']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
                                     : <input name="title" type="text" placeholder="Title" value={formik.values['title']} onChange={formik.handleChange} style={FormInput} readonly="true"/>
                                 }
                             </div>
@@ -94,11 +98,11 @@ export function FeedbackForm(props) {
                     <div style={FormRow}>
                         <div style={FormInputContainer}>
                             <div>
-                                <label style={InputLabel}>Description</label>
+                                <label style={InputLabel}>Message</label>
                                 {
-                                    formik.values['author_id']==cookies.user.user_id
-                                    ? <textarea name="description" rows="4" placeholder="A few words about your experince ..." style={FormTextArea} value ={formik.values['description']} onChange={formik.handleChange}></textarea>
-                                    : <textarea name="description" rows="4" placeholder="A few words about your experince ..." style={FormTextArea} value ={formik.values['description']} onChange={formik.handleChange} readonly="true"></textarea>
+                                    formik.values['clientId']==cookies.user.user_id
+                                    ? <textarea name="message" rows="4" placeholder="A few words about your experince ..." style={FormTextArea} value ={formik.values['message']} onChange={formik.handleChange} readonly="true"></textarea>
+                                    : <textarea name="message" rows="4" placeholder="A few words about your experince ..." style={FormTextArea} value ={formik.values['message']} onChange={formik.handleChange} readonly="true"></textarea>
                                 }
                             </div>
                         </div>
@@ -106,15 +110,6 @@ export function FeedbackForm(props) {
                 </div>
                 <hr />
                
-                {
-                    formik.values['author_id']==cookies.user.user_id
-                    ? (<div style={FormBlock}>
-                            <div style={SaveButtonContainer}>
-                                <HoverButton text="SAVE" HoverStyle={SaveButtonHover} DefaultStyle={SaveButton} />
-                            </div>
-                        </div>)
-                    : ""
-                }
                 
             </form>
             </div>

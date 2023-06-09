@@ -24,7 +24,6 @@ export function AddManagerForm(props) {
     
     const formik = useFormik({
         initialValues: {
-            username: "",
             "password": generatePassword(7),
             "email": "",
             "firstName": "",
@@ -50,14 +49,7 @@ export function AddManagerForm(props) {
                         <h6 style={BlockHeader}>User information</h6>
                         <div style={FormBlock}>
                             <div style={FormRow}>
-                                <div style={FormInputContainer}>
-                                    <div>
-                                        <label style={InputLabel} >Username</label>
-
-                                        <input type="text" placeholder="Username" name="username" value={formik.values['username']} onChange={formik.handleChange} style={FormInput} />
-                            
-                                    </div>
-                                </div>
+                                
                                 <div style={FormInputContainer}>
                                     <div>
                                         <label style={InputLabel}>Email address</label>

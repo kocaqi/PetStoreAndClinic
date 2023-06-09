@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react"
 
 import { Menu } from '../menu/menu';
 import { Container } from '../commons';
-
+import { HoverButton } from '../commons';
 
 
 import { ViewClientForm } from '../clients/clientForm/viewClientForm';
@@ -33,14 +33,6 @@ export function Home() {
 
 
       //SignOut function
-
-      const handleSignOut = () => {
-            removeCookie('user');
-            removeCookie('session_id');
-            removeCookie('access_token');
-            navigate("/login")
-
-      }
       
 
       return (
@@ -53,3 +45,5 @@ export function Home() {
             </div>
       );
 }
+
+

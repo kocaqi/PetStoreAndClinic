@@ -3,16 +3,20 @@ import { useState } from "react"
 import { DoctorInformation } from './doctorInformation';
 import { ShopInformation } from "./shopInformation";
 import { FeedbackInformation } from "./feedbackInformation";
+import { AppointmentInformation } from "./appintmentsnformation";
 
 function FormCurrentPage(props){
     if(props.current==1)
-        return (<DoctorInformation type={props.props.type} user_id={props.props.user_id}/>)
+        return (<DoctorInformation type={props.props.type} user_id={props.props.user_id} onClose={props.props.onClose} />)
 
     if(props.current==2)
-        return (<ShopInformation type={props.props.type} user_id={props.props.user_id}/>)
+        return (<ShopInformation type={props.props.type} user_id={props.props.user_id} onClose={props.props.onClose} />)
 
     if(props.current==3)
         return (<FeedbackInformation type={props.props.type} user_id={props.props.user_id}/>)
+
+    if(props.current==4)
+        return (<AppointmentInformation type={props.props.type} user_id={props.props.user_id}/>)
 }
 
 
@@ -30,6 +34,7 @@ export function ViewDoctorForm(props) {
                             <li style={currentTab==1 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(1)}>Doctor Information</li>
                             <li style={currentTab==2 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(2)}>Shop Information</li>
                             <li style={currentTab==3 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(3)}>FeedBack Information</li>
+                            <li style={currentTab==4 ? {...Tab, ...ActiveTab} : Tab} onClick={() => setCurrentTab(4)}>Appointment Information</li>
                         </ul>
                     </div>
                     <FormCurrentPage props={props} current={currentTab}/>

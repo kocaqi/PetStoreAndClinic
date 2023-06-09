@@ -1,9 +1,7 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.UserDTO;
 import al.bytesquad.petstoreandclinic.repository.UserRepository;
 import jakarta.persistence.criteria.Path;
@@ -41,7 +39,7 @@ public class UserService {
     }
 
     public List<UserDTO> get(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return userRepository.findAllByEnabled(true).stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));

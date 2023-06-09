@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface ManagerRepository extends JpaRepository<Manager, Long>, JpaSpecificationExecutor<Manager> {
     Manager findByEmail(String loggedInEmail);
+
     List<Manager> findAllByEnabled(Boolean enabled);
 }

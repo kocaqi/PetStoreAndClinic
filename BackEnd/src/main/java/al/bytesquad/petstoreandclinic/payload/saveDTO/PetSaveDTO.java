@@ -1,9 +1,6 @@
 package al.bytesquad.petstoreandclinic.payload.saveDTO;
 
 import al.bytesquad.petstoreandclinic.entity.Client;
-import al.bytesquad.petstoreandclinic.entity.petAttributes.Breed;
-import al.bytesquad.petstoreandclinic.entity.petAttributes.Gender;
-import al.bytesquad.petstoreandclinic.entity.petAttributes.Species;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -12,10 +9,10 @@ import java.time.LocalDate;
 public class PetSaveDTO {
 
     private String name;
-    private Client owner;
-    private Species species;
-    private Breed breed;
-    private Gender gender;
+    private Long clientId;
+    private String species;
+    private String breed;
+    private String gender;
     private LocalDate dateOfBirth;
     private String colour;
 

@@ -21,20 +21,10 @@ import java.util.List;
 @SpringBootApplication
 public class PetStoreAndClinicApplication implements CommandLineRunner {
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(PetStoreAndClinicApplication.class, args);
-    }
-
     private final PasswordEncoder passwordEncoder;
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
     public PetStoreAndClinicApplication(PasswordEncoder passwordEncoder, AdminRepository adminRepository,
                                         UserRepository userRepository,
                                         RoleRepository roleRepository,
@@ -43,6 +33,15 @@ public class PetStoreAndClinicApplication implements CommandLineRunner {
         this.adminRepository = adminRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(PetStoreAndClinicApplication.class, args);
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
     @Override

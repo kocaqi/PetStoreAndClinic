@@ -29,8 +29,20 @@ public class Shop {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "location")
-    private String location;
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "about")
+    private String about;
 
     @Column(name = "enabled")
     private boolean enabled = true;

@@ -7,6 +7,7 @@ import al.bytesquad.petstoreandclinic.payload.entityDTO.ManagerDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ManagerSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ManagerRepository;
 import al.bytesquad.petstoreandclinic.repository.RoleRepository;
+import al.bytesquad.petstoreandclinic.repository.ShopRepository;
 import al.bytesquad.petstoreandclinic.repository.UserRepository;
 import al.bytesquad.petstoreandclinic.search.MySpecification;
 import al.bytesquad.petstoreandclinic.search.SearchCriteria;
@@ -19,8 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,17 +36,19 @@ public class ManagerService {
 
     private final ManagerRepository managerRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final ShopRepository shopRepository;
 
     @Autowired
     public ManagerService(ManagerRepository managerRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder,
-                          RoleRepository roleRepository, UserRepository userRepository, ObjectMapper objectMapper) {
+                          RoleRepository roleRepository, UserRepository userRepository, ObjectMapper objectMapper,
+                          ShopRepository shopRepository) {
         this.managerRepository = managerRepository;
         this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = new BCryptPasswordEncoder();
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.objectMapper = objectMapper;
@@ -57,6 +59,7 @@ public class ManagerService {
                 map().setId(source.getId());
             }
         });
+        this.shopRepository = shopRepository;
     }
 
     public ManagerDTO create(String jsonString) throws JsonProcessingException {
@@ -66,6 +69,8 @@ public class ManagerService {
         manager.setPassword(passwordEncoder.encode(managerSaveDTO.getPassword()));
         Role managerRole = roleRepository.findRoleByName("ROLE_MANAGER");
         manager.setRole(managerRole);
+        if (managerSaveDTO.getShopId() != null)
+            manager.setShop(shopRepository.findById(managerSaveDTO.getShopId()).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", managerSaveDTO.getShopId())));
         Manager newManager = managerRepository.save(manager);
 
         User user = new User();
@@ -76,13 +81,14 @@ public class ManagerService {
         List<Role> roles = new ArrayList<>();
         roles.add(managerRole);
         user.setRoles(roles);
+        user.setSecondId(manager.getId());
         userRepository.save(user);
 
         return modelMapper.map(newManager, ManagerDTO.class);
     }
 
     public List<ManagerDTO> getAll(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return managerRepository.findAllByEnabled(true).stream().map(manager -> modelMapper.map(manager, ManagerDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));
@@ -102,7 +108,7 @@ public class ManagerService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
 
-        List<Manager> filteredManagers;
+        /*List<Manager> filteredManagers;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInEmail = principal.getName();
@@ -124,8 +130,8 @@ public class ManagerService {
             filteredManagers = null;
 
         if (filteredManagers == null)
-            return null;
-        return filteredManagers.stream().map(manager -> modelMapper.map(manager, ManagerDTO.class)).collect(Collectors.toList());
+            return null;*/
+        return managers.stream().map(manager -> modelMapper.map(manager, ManagerDTO.class)).collect(Collectors.toList());
     }
 
     public ManagerDTO getById(long id) {

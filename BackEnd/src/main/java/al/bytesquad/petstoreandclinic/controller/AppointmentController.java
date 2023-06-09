@@ -1,7 +1,6 @@
 package al.bytesquad.petstoreandclinic.controller;
 
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AppointmentDTO;
-import al.bytesquad.petstoreandclinic.payload.saveDTO.AppointmentSaveDTO;
 import al.bytesquad.petstoreandclinic.service.AppointmentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;

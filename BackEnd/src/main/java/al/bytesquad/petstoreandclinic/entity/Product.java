@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.entity;
 
-import al.bytesquad.petstoreandclinic.entity.productAttributes.Type;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,7 +35,7 @@ public class Product {
     private double stock;
 
     @Column(name = "type")
-    private Type type;
+    private String type;
 
     @Column(name = "enabled")
     private boolean enabled = true;

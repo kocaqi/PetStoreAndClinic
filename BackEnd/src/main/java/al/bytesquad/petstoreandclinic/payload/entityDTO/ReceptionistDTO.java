@@ -12,4 +12,9 @@ public class ReceptionistDTO {
     private String email;
     private Role role;
     private Shop shop;
+    private String address;
+    private String city;
+    private String country;
+    private String phone;
+    private String about;
 }

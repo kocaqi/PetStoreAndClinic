@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ReceptionistRepository extends JpaRepository<Receptionist, Long>, JpaSpecificationExecutor<Receptionist> {
     List<Receptionist> findAllByEnabled(Boolean enabled);
+
+    Receptionist findByEmail(String loggedInEmail);
 }

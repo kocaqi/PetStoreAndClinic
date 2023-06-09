@@ -1,8 +1,6 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Admin;
 import al.bytesquad.petstoreandclinic.entity.Role;
-import al.bytesquad.petstoreandclinic.payload.entityDTO.AdminDTO;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.RoleDTO;
 import al.bytesquad.petstoreandclinic.repository.RoleRepository;
 import org.modelmapper.ModelMapper;
@@ -31,7 +29,7 @@ public class RoleService {
 
     public RoleDTO create(String roleName) {
         Role role = new Role();
-        roleName = "ROLE_"+roleName.toUpperCase();
+        roleName = "ROLE_" + roleName.toUpperCase();
         role.setName(roleName);
         return modelMapper.map(role, RoleDTO.class);
     }

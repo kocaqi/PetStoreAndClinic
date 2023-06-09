@@ -1,8 +1,6 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.Shop;
-import al.bytesquad.petstoreandclinic.entity.User;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ShopDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ShopSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ManagerRepository;
@@ -16,8 +14,6 @@ import jakarta.persistence.criteria.Predicate;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -53,6 +49,7 @@ public class ShopService {
 
     public ShopDTO create(String jsonString) throws JsonProcessingException {
         ShopSaveDTO shopSaveDTO = objectMapper.readValue(jsonString, ShopSaveDTO.class);
+        shopSaveDTO.setManagerId(null);
         Shop shop = modelMapper.map(shopSaveDTO, Shop.class);
         return modelMapper.map(shopRepository.save(shop), ShopDTO.class);
     }
@@ -61,8 +58,11 @@ public class ShopService {
         ShopSaveDTO shopSaveDTO = objectMapper.readValue(jsonString, ShopSaveDTO.class);
         Shop shop = shopRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", id));
         shop.setName(shopSaveDTO.getName());
-        shop.setLocation(shopSaveDTO.getLocation());
-        shop.setManager(shopSaveDTO.getManager());
+        shop.setAddress(shopSaveDTO.getAddress());
+        shop.setCity(shopSaveDTO.getCity());
+        shop.setCountry(shopSaveDTO.getCountry());
+        if (shopSaveDTO.getManagerId() != null)
+            shop.setManager(managerRepository.findById(shopSaveDTO.getManagerId()).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", id)));
         return modelMapper.map(shopRepository.save(shop), ShopDTO.class);
     }
 
@@ -74,7 +74,7 @@ public class ShopService {
     }
 
     public List<ShopDTO> get(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return shopRepository.findAllByEnabled(true).stream().map(shop -> modelMapper.map(shop, ShopDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));
@@ -94,7 +94,7 @@ public class ShopService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
 
-        List<Shop> filtered;
+        /*List<Shop> filtered;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInEmail = principal.getName();
@@ -114,10 +114,10 @@ public class ShopService {
             filtered = shops;
         else if (selectedRole.equals("manager"))
             filtered = shops.stream().filter(shop -> shop.getManager().equals(managerRepository.findByEmail(loggedInEmail))).collect(Collectors.toList());
-        else filtered = null;
+        else filtered = null;*/
 
-        if (filtered == null)
-            return null;
-        return filtered.stream().map(shop -> modelMapper.map(shop, ShopDTO.class)).collect(Collectors.toList());
+        /*if (filtered == null)
+            return null;*/
+        return shops.stream().map(shop -> modelMapper.map(shop, ShopDTO.class)).collect(Collectors.toList());
     }
 }

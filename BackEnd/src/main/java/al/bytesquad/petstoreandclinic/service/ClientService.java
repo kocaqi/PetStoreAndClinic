@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,7 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
@@ -44,7 +45,7 @@ public class ClientService {
                          UserRepository userRepository, ObjectMapper objectMapper) {
         this.clientRepository = clientRepository;
         this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = new BCryptPasswordEncoder();
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.objectMapper = objectMapper;
@@ -66,6 +67,7 @@ public class ClientService {
         client.setPassword(passwordEncoder.encode(clientSaveDTO.getPassword()));
         Role clientRole = roleRepository.findRoleByName("ROLE_CLIENT");
         client.setRole(clientRole);
+        client.setEnabled(true);
         Client newClient = clientRepository.save(client);
 
         User user = new User();
@@ -73,6 +75,7 @@ public class ClientService {
         user.setLastName(clientSaveDTO.getLastName());
         user.setEmail((clientSaveDTO.getEmail()));
         user.setPassword(passwordEncoder.encode(clientSaveDTO.getPassword()));
+        user.setEnabled(true);
         List<Role> roles = new ArrayList<>();
         roles.add(clientRole);
         user.setRoles(roles);
@@ -83,8 +86,8 @@ public class ClientService {
     }
 
     public List<ClientDTO> getAll(String keyword) {
-        if(keyword == null)
-            return clientRepository.findAll().stream().map(client -> modelMapper.map(client, ClientDTO.class)).collect(Collectors.toList());
+        if (keyword == null)
+            return clientRepository.findAllByEnabled(true).stream().map(client -> modelMapper.map(client, ClientDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));
         HashMap<String, String> pairs = new HashMap<>();
@@ -101,7 +104,7 @@ public class ClientService {
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
-
+        System.out.println(passwordEncoder.encode("albi"));
         return clients.stream().map(client -> modelMapper.map(client, ClientDTO.class)).collect(Collectors.toList());
     }
 
@@ -115,12 +118,20 @@ public class ClientService {
         ClientSaveDTO clientSaveDTO = objectMapper.readValue(jsonString, ClientSaveDTO.class);
 
         Client client = clientRepository.findClientById(id).orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
+
         String email = client.getEmail();
         String password = client.getPassword();
         client.setFirstName(clientSaveDTO.getFirstName());
         client.setLastName(clientSaveDTO.getLastName());
         client.setEmail(clientSaveDTO.getEmail());
         client.setPassword(passwordEncoder.encode(password));
+        client.setEnabled(true);
+        client.setOccupation(clientSaveDTO.getOccupation());
+        client.setAddress(clientSaveDTO.getAddress());
+        client.setCity(clientSaveDTO.getCity());
+        client.setCountry(clientSaveDTO.getCountry());
+        client.setPhone(clientSaveDTO.getPhone());
+        client.setAbout(clientSaveDTO.getAbout());
         Client updatedClient = clientRepository.save(client);
 
         User user = userRepository.findByEmail(email);
@@ -128,6 +139,13 @@ public class ClientService {
         user.setLastName(clientSaveDTO.getLastName());
         user.setEmail(clientSaveDTO.getEmail());
         user.setPassword(passwordEncoder.encode(password));
+        user.setEnabled(true);
+        user.setAddress(clientSaveDTO.getAddress());
+        user.setCity(clientSaveDTO.getCity());
+        user.setCountry(clientSaveDTO.getCountry());
+        user.setPhone(clientSaveDTO.getPhone());
+        user.setAbout(clientSaveDTO.getAbout());
+        user.setSecondId(client.getId());
         userRepository.save(user);
 
         return modelMapper.map(updatedClient, ClientDTO.class);
@@ -142,5 +160,12 @@ public class ClientService {
                 .where(specifyByFirstName).and(specifyByLastName).and(specifyByEmail));
 
         return clients.stream().map(client -> modelMapper.map(client, ClientDTO.class)).collect(Collectors.toList());
+    }
+
+    public String delete(long id) {
+        Client client = clientRepository.findClientById(id).orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
+        client.setEnabled(false);
+        clientRepository.save(client);
+        return "Client deleted successfully!";
     }
 }

@@ -1,7 +1,6 @@
 package al.bytesquad.petstoreandclinic.controller;
 
 import al.bytesquad.petstoreandclinic.payload.entityDTO.FeedbackDTO;
-import al.bytesquad.petstoreandclinic.payload.saveDTO.FeedbackSaveDTO;
 import al.bytesquad.petstoreandclinic.service.FeedbackService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;

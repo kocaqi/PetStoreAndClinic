@@ -12,6 +12,7 @@ public class FeedbackDTO {
     private Client client;
     private Shop shop;
     private Doctor doctor;
+    private String title;
     private String message;
 
 }

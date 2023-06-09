@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.payload.entityDTO;
 
-import al.bytesquad.petstoreandclinic.entity.productAttributes.Type;
 import lombok.Data;
 
 @Data
@@ -9,5 +8,5 @@ public class ProductDTO {
     private String name;
     private double pricePerUnit;
     private double stock;
-    private Type type;
+    private String type;
 }

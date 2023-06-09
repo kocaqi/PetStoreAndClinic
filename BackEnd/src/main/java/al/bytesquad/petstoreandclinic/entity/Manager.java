@@ -38,6 +38,21 @@ public class Manager {
     @Column(name = "enabled")
     private boolean enabled = true;
 
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "about")
+    private String about;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

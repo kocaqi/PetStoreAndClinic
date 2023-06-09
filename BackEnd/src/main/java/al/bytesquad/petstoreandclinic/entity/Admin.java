@@ -39,7 +39,7 @@ public class Admin {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public long getId(){
+    public long getId() {
         return this.id;
     }
 

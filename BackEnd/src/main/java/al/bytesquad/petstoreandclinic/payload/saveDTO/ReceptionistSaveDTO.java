@@ -11,5 +11,10 @@ public class ReceptionistSaveDTO {
     private String email;
     private String password;
     private Role role;
-    private Shop shop;
+    private Long shopId;
+    private String address;
+    private String city;
+    private String country;
+    private String phone;
+    private String about;
 }

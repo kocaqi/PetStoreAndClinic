@@ -42,6 +42,9 @@ public class Feedback {
     @JsonBackReference
     private Doctor doctor;
 
+    @Column(name = "title", nullable = false)
+    private String title;
+
     @Column(name = "message")
     private String message;
 

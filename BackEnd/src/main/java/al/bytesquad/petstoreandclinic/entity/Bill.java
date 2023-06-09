@@ -44,7 +44,7 @@ public class Bill {
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
-    List<Article> articles;
+    List<Transaction> transactions;
 
     @Column(name = "amount")
     private double amount;

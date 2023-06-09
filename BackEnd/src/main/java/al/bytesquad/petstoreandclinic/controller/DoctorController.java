@@ -1,7 +1,6 @@
 package al.bytesquad.petstoreandclinic.controller;
 
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
-import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.service.DoctorService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;

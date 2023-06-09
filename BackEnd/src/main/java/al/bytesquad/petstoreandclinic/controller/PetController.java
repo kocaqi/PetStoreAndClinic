@@ -1,7 +1,6 @@
 package al.bytesquad.petstoreandclinic.controller;
 
 import al.bytesquad.petstoreandclinic.payload.entityDTO.PetDTO;
-import al.bytesquad.petstoreandclinic.payload.saveDTO.PetSaveDTO;
 import al.bytesquad.petstoreandclinic.service.PetService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class PetController {
     }
 
     //"delete" pet
-    @DeleteMapping("/remove/{id}")
+    @GetMapping("/remove/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
     public String delete(@PathVariable(name = "id") long id) {
         return petService.delete(id);

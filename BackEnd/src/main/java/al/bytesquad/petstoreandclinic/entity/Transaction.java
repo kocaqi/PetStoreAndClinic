@@ -7,18 +7,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "article")
+@Table(name = "transaction")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Article {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -35,6 +37,16 @@ public class Article {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonBackReference
     private Client client;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonBackReference
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Column(name = "product_name")
     private String productName;
@@ -57,12 +69,16 @@ public class Article {
     @Column(name = "is_paid")
     private boolean isPaid = false;
 
+    @Column(name = "time")
+    @CreationTimestamp
+    private Date time;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Article article = (Article) o;
-        return id != null && Objects.equals(id, article.id);
+        Transaction transaction = (Transaction) o;
+        return id != null && Objects.equals(id, transaction.id);
     }
 
     @Override

@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Objects;
 
 @Table(name = "role", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})

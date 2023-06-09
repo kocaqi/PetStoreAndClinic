@@ -36,6 +36,27 @@ public class Client {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "occupation")
+    private String occupation;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "about")
+    private String about;
+
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
@@ -68,7 +89,7 @@ public class Client {
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
-    private List<Article> articles;
+    private List<Transaction> transactions;
 
     @Override
     public boolean equals(Object o) {

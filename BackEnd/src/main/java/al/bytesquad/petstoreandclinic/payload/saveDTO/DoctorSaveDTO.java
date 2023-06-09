@@ -10,6 +10,11 @@ public class DoctorSaveDTO {
     private String lastName;
     private String email;
     private String password;
-    private Shop shop;
+    private Long shopId;
+    private String address;
+    private String city;
+    private String country;
+    private String phone;
+    private String about;
 
 }

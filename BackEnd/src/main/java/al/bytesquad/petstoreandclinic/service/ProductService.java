@@ -3,7 +3,6 @@ package al.bytesquad.petstoreandclinic.service;
 import al.bytesquad.petstoreandclinic.entity.Product;
 import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
-import al.bytesquad.petstoreandclinic.entity.productAttributes.Type;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ProductDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ProductSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.ProductRepository;
@@ -73,7 +72,7 @@ public class ProductService {
     }
 
     public List<ProductDTO> get(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return productRepository.findAllByEnabled(true).stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));
@@ -93,7 +92,7 @@ public class ProductService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
 
-        List<Product> filteredProducts;
+        /*List<Product> filteredProducts;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInEmail = principal.getName();
@@ -109,15 +108,21 @@ public class ProductService {
             selectedRole = selectedRole.substring("ROLE_".length()).toLowerCase();
         }
 
-        if(selectedRole.equals("doctor"))
-            filteredProducts = products.stream().filter(product -> product.getType().equals(Type.MEDICAL)).collect(Collectors.toList());
+        if (selectedRole.equals("doctor"))
+            filteredProducts = products.stream().filter(product -> product.getType().equalsIgnoreCase("medical")).collect(Collectors.toList());
         else if (!selectedRole.equals("client"))
             filteredProducts = products;
         else
             filteredProducts = null;
 
         if (filteredProducts == null)
-            return null;
-        return filteredProducts.stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+            return null;*/
+        return products.stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    public ProductDTO addStock(long id, double imported) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+        product.setStock(product.getStock()+imported);
+        return modelMapper.map(productRepository.save(product), ProductDTO.class);
     }
 }

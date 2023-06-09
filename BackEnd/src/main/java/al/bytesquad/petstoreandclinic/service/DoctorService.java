@@ -1,6 +1,9 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.*;
+import al.bytesquad.petstoreandclinic.entity.Doctor;
+import al.bytesquad.petstoreandclinic.entity.Manager;
+import al.bytesquad.petstoreandclinic.entity.Role;
+import al.bytesquad.petstoreandclinic.entity.User;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.DoctorDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.DoctorSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +39,7 @@ public class DoctorService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ManagerRepository managerRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final ShopRepository shopRepository;
     private final ObjectMapper objectMapper;
 
@@ -50,7 +54,7 @@ public class DoctorService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.managerRepository = managerRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = new BCryptPasswordEncoder();
         this.shopRepository = shopRepository;
         this.objectMapper = objectMapper;
 
@@ -81,6 +85,7 @@ public class DoctorService {
         List<Role> roles = new ArrayList<>();
         roles.add(doctorRole);
         user.setRoles(roles);
+        user.setSecondId(doctor.getId());
         userRepository.save(user);
 
         //convert entity to DTO
@@ -88,7 +93,7 @@ public class DoctorService {
     }
 
     public List<DoctorDTO> getAll(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return doctorRepository.findAllByEnabled(true).stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));
@@ -108,7 +113,7 @@ public class DoctorService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
 
-        List<Doctor> filteredDoctors;
+        /*List<Doctor> filteredDoctors;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInEmail = principal.getName();
@@ -134,8 +139,8 @@ public class DoctorService {
             filteredDoctors = null;
 
         if (filteredDoctors == null)
-            return null;
-        return filteredDoctors.stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
+            return null;*/
+        return doctors.stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).collect(Collectors.toList());
     }
 
     public DoctorDTO getById(long id) {

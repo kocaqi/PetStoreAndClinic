@@ -5,10 +5,7 @@ import al.bytesquad.petstoreandclinic.entity.Role;
 import al.bytesquad.petstoreandclinic.entity.User;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.ReceptionistDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.ReceptionistSaveDTO;
-import al.bytesquad.petstoreandclinic.repository.ManagerRepository;
-import al.bytesquad.petstoreandclinic.repository.ReceptionistRepository;
-import al.bytesquad.petstoreandclinic.repository.RoleRepository;
-import al.bytesquad.petstoreandclinic.repository.UserRepository;
+import al.bytesquad.petstoreandclinic.repository.*;
 import al.bytesquad.petstoreandclinic.service.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +16,7 @@ import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,19 +32,21 @@ public class ReceptionistService {
 
     private final ReceptionistRepository receptionistRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ManagerRepository managerRepository;
     private final RoleRepository roleRepository;
     private final ObjectMapper objectMapper;
+    private final ShopRepository shopRepository;
 
     @Autowired
     public ReceptionistService(ReceptionistRepository receptionistRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserRepository userRepository,
                                ManagerRepository managerRepository,
-                               RoleRepository roleRepository, ObjectMapper objectMapper) {
+                               RoleRepository roleRepository, ObjectMapper objectMapper,
+                               ShopRepository shopRepository) {
         this.receptionistRepository = receptionistRepository;
         this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = new BCryptPasswordEncoder();
         this.userRepository = userRepository;
         this.managerRepository = managerRepository;
         this.roleRepository = roleRepository;
@@ -58,6 +58,7 @@ public class ReceptionistService {
                 map().setId(source.getId());
             }
         });
+        this.shopRepository = shopRepository;
     }
 
     public ReceptionistDTO create(String jsonString) throws JsonProcessingException {
@@ -91,13 +92,14 @@ public class ReceptionistService {
         receptionist.setEmail(receptionistSaveDTO.getEmail());
         receptionist.setPassword(passwordEncoder.encode(receptionistSaveDTO.getPassword()));
         receptionist.setRole(receptionistSaveDTO.getRole());
-        receptionist.setShop(receptionistSaveDTO.getShop());
+        receptionist.setShop(shopRepository.findById(receptionistSaveDTO.getShopId()).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", id)));
 
         User user = userRepository.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         user.setFirstName(receptionistSaveDTO.getFirstName());
         user.setLastName(receptionistSaveDTO.getLastName());
         user.setEmail(receptionistSaveDTO.getEmail());
         user.setPassword(passwordEncoder.encode(receptionistSaveDTO.getPassword()));
+        user.setSecondId(receptionist.getId());
         userRepository.save(user);
 
         return modelMapper.map(receptionistRepository.save(receptionist), ReceptionistDTO.class);
@@ -115,7 +117,7 @@ public class ReceptionistService {
     }
 
     public List<ReceptionistDTO> get(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return receptionistRepository.findAllByEnabled(true).stream().map(receptionist -> modelMapper.map(receptionist, ReceptionistDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));
@@ -135,7 +137,7 @@ public class ReceptionistService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
 
-        List<Receptionist> filtered;
+        /*List<Receptionist> filtered;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInEmail = principal.getName();
@@ -158,7 +160,7 @@ public class ReceptionistService {
         else filtered = null;
 
         if (filtered == null)
-            return null;
-        return filtered.stream().map(receptionist -> modelMapper.map(receptionist, ReceptionistDTO.class)).collect(Collectors.toList());
+            return null;*/
+        return receptionists.stream().map(receptionist -> modelMapper.map(receptionist, ReceptionistDTO.class)).collect(Collectors.toList());
     }
 }

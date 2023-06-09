@@ -1,8 +1,5 @@
 package al.bytesquad.petstoreandclinic.entity;
 
-import al.bytesquad.petstoreandclinic.entity.petAttributes.Breed;
-import al.bytesquad.petstoreandclinic.entity.petAttributes.Gender;
-import al.bytesquad.petstoreandclinic.entity.petAttributes.Species;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -34,19 +31,19 @@ public class Pet {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "client_id")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonBackReference
-    private Client owner;
+    private Client client;
 
     @Column(name = "species")
-    private Species species;
+    private String species;
 
     @Column(name = "breed")
-    private Breed breed;
+    private String breed;
 
     @Column(name = "gender")
-    private Gender gender;
+    private String gender;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;

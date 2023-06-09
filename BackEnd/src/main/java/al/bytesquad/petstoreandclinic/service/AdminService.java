@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class AdminService {
     private final AdminRepository adminRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ObjectMapper objectMapper;
@@ -75,6 +75,7 @@ public class AdminService {
         List<Role> roles = new ArrayList<>();
         roles.add(adminRole);
         user.setRoles(roles);
+        user.setSecondId(admin.getId());
         userRepository.save(user);
 
         return modelMapper.map(newAdmin, AdminDTO.class);
@@ -132,7 +133,7 @@ public class AdminService {
     }
 
     public List<AdminDTO> getAll(String keyword) {
-        if(keyword == null)
+        if (keyword == null)
             return adminRepository.findEnabledAdmins().stream().map(admin -> modelMapper.map(admin, AdminDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));

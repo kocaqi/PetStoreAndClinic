@@ -9,9 +9,10 @@ import java.util.Date;
 @Data
 public class AppointmentSaveDTO {
 
-    private Pet pet;
-    private Doctor doctor;
-    private Date startTime;
-    private Date finishTime;
+    private Long petId;
+    private Long doctorId;
+    private Long clientId;
+    private String startTime;
+    private String finishTime;
 
 }

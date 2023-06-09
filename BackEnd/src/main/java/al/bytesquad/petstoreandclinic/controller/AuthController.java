@@ -2,6 +2,7 @@ package al.bytesquad.petstoreandclinic.controller;
 
 import al.bytesquad.petstoreandclinic.payload.JWTAuthResponse;
 import al.bytesquad.petstoreandclinic.payload.LoginDTO;
+import al.bytesquad.petstoreandclinic.payload.StatusResponse;
 import al.bytesquad.petstoreandclinic.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,14 @@ public class AuthController {
 
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDTO loginDTO) throws Exception{
+    public ResponseEntity<StatusResponse> authenticateUser(@RequestBody String loginDTO) throws Exception {
         return authService.authenticate(loginDTO);
+    }
+
+    @GetMapping
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<StatusResponse> auth(@RequestParam String sessionId){
+        return authService.auth(sessionId);
     }
 
     @GetMapping("/refreshToken")

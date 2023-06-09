@@ -1,6 +1,9 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.*;
+import al.bytesquad.petstoreandclinic.entity.Client;
+import al.bytesquad.petstoreandclinic.entity.Feedback;
+import al.bytesquad.petstoreandclinic.entity.Role;
+import al.bytesquad.petstoreandclinic.entity.User;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.FeedbackDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.FeedbackSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
@@ -32,11 +35,13 @@ public class FeedbackService {
     private final ManagerRepository managerRepository;
     private final DoctorRepository doctorRepository;
     private final ObjectMapper objectMapper;
+    private final ShopRepository shopRepository;
 
     public FeedbackService(FeedbackRepository feedbackRepository, ModelMapper modelMapper,
                            ClientRepository clientRepository, UserRepository userRepository, RoleRepository roleRepository,
                            ManagerRepository managerRepository,
-                           DoctorRepository doctorRepository, ObjectMapper objectMapper) {
+                           DoctorRepository doctorRepository, ObjectMapper objectMapper,
+                           ShopRepository shopRepository) {
         this.feedbackRepository = feedbackRepository;
         this.modelMapper = modelMapper;
         this.clientRepository = clientRepository;
@@ -52,15 +57,25 @@ public class FeedbackService {
                 map().setId(source.getId());
             }
         });
+        this.shopRepository = shopRepository;
     }
 
     public FeedbackDTO create(String jsonString, Principal principal) throws JsonProcessingException {
         FeedbackSaveDTO feedbackSaveDTO = objectMapper.readValue(jsonString, FeedbackSaveDTO.class);
-
-        Feedback feedback = modelMapper.map(feedbackSaveDTO, Feedback.class);
-        String loggedInEmail = principal.getName();
+        Feedback feedback = new Feedback();
+        feedback.setClient(clientRepository.findClientById(feedbackSaveDTO.getClientId()).orElseThrow(() -> new ResourceNotFoundException("Client", "id", feedbackSaveDTO.getClientId())));
+        if(feedbackSaveDTO.getShopId()!=null)
+            feedback.setShop(shopRepository.findById(feedbackSaveDTO.getShopId()).orElseThrow(() -> new ResourceNotFoundException("Shop", "id", feedbackSaveDTO.getShopId())));
+        else feedback.setShop(null);
+        if(feedbackSaveDTO.getDoctorId()!=null)
+            feedback.setDoctor(doctorRepository.findDoctorById(feedbackSaveDTO.getDoctorId()).orElseThrow(() -> new ResourceNotFoundException("Feedback", "id", feedbackSaveDTO.getDoctorId())));
+        else feedback.setDoctor(null);
+        feedback.setMessage(feedbackSaveDTO.getMessage());
+        feedback.setTitle(feedbackSaveDTO.getTitle());
+        //Feedback feedback = modelMapper.map(feedbackSaveDTO, Feedback.class);
+        /*String loggedInEmail = principal.getName();
         Client client = clientRepository.findByEmail(loggedInEmail);
-        feedback.setClient(client);
+        feedback.setClient(client);*/
         return modelMapper.map(feedbackRepository.save(feedback), FeedbackDTO.class);
     }
 
@@ -76,7 +91,7 @@ public class FeedbackService {
     }
 
     public List<FeedbackDTO> getAll(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return feedbackRepository.findAll().stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));
@@ -95,7 +110,7 @@ public class FeedbackService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
 
-        List<Feedback> filteredFeedbacks;
+        /*List<Feedback> filteredFeedbacks;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInEmail = principal.getName();
@@ -128,7 +143,7 @@ public class FeedbackService {
         else filteredFeedbacks = null;
 
         if (filteredFeedbacks == null)
-            return null;
-        return filteredFeedbacks.stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).collect(Collectors.toList());
+            return null;*/
+        return feedbacks.stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).collect(Collectors.toList());
     }
 }

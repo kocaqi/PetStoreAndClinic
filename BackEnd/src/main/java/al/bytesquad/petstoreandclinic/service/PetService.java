@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,11 +51,19 @@ public class PetService {
                 map().setId(source.getId());
             }
         });
+
+        modelMapper.addMappings(new PropertyMap<PetSaveDTO, Pet>() {
+            @Override
+            protected void configure() {
+                map().setName(source.getName());
+            }
+        });
     }
 
     public PetDTO create(String jsonString) throws JsonProcessingException {
         PetSaveDTO petSaveDTO = objectMapper.readValue(jsonString, PetSaveDTO.class);
         Pet pet = modelMapper.map(petSaveDTO, Pet.class);
+        pet.setClient(clientRepository.findClientById(petSaveDTO.getClientId()).orElseThrow(() -> new ResourceNotFoundException("Client", "id", petSaveDTO.getClientId())));
         return modelMapper.map(petRepository.save(pet), PetDTO.class);
     }
 
@@ -63,7 +72,7 @@ public class PetService {
 
         Pet pet = petRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pet", "id", id));
         pet.setName(petSaveDTO.getName());
-        pet.setOwner(petSaveDTO.getOwner());
+        pet.setClient(clientRepository.findClientById(petSaveDTO.getClientId()).orElseThrow(() -> new ResourceNotFoundException("Client", "id", id)));
         pet.setSpecies(petSaveDTO.getSpecies());
         pet.setBreed(petSaveDTO.getBreed());
         pet.setGender(petSaveDTO.getGender());
@@ -80,7 +89,7 @@ public class PetService {
     }
 
     public List<PetDTO> getAll(String keyword, Principal principal) {
-        if(keyword == null)
+        if (keyword == null)
             return petRepository.findAllByEnabled(true).stream().map(pet -> modelMapper.map(pet, PetDTO.class)).collect(Collectors.toList());
 
         List<String> keyValues = List.of(keyword.split(","));
@@ -100,7 +109,7 @@ public class PetService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
 
-        List<Pet> filteredPets;
+        /*List<Pet> filteredPets;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInEmail = principal.getName();
@@ -120,9 +129,9 @@ public class PetService {
             filteredPets = pets;
         else
             filteredPets = pets.stream()
-                    .filter(pet -> pet.getOwner().equals(clientRepository.findByEmail(loggedInEmail)))
-                    .collect(Collectors.toList());
+                    .filter(pet -> pet.getClient().equals(clientRepository.findByEmail(loggedInEmail)))
+                    .collect(Collectors.toList());*/
 
-        return filteredPets.stream().map(pet -> modelMapper.map(pet, PetDTO.class)).collect(Collectors.toList());
+        return pets.stream().map(pet -> modelMapper.map(pet, PetDTO.class)).collect(Collectors.toList());
     }
 }

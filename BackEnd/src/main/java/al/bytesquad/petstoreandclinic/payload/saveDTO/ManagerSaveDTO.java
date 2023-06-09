@@ -1,6 +1,5 @@
 package al.bytesquad.petstoreandclinic.payload.saveDTO;
 
-import al.bytesquad.petstoreandclinic.entity.Shop;
 import lombok.Data;
 
 @Data
@@ -10,6 +9,11 @@ public class ManagerSaveDTO {
     private String lastName;
     private String email;
     private String password;
-    private Shop shop;
+    private Long shopId;
+    private String address;
+    private String city;
+    private String country;
+    private String phone;
+    private String about;
 
 }

@@ -1,9 +1,6 @@
 package al.bytesquad.petstoreandclinic.service;
 
-import al.bytesquad.petstoreandclinic.entity.Appointment;
-import al.bytesquad.petstoreandclinic.entity.Client;
-import al.bytesquad.petstoreandclinic.entity.Role;
-import al.bytesquad.petstoreandclinic.entity.User;
+import al.bytesquad.petstoreandclinic.entity.*;
 import al.bytesquad.petstoreandclinic.payload.entityDTO.AppointmentDTO;
 import al.bytesquad.petstoreandclinic.payload.saveDTO.AppointmentSaveDTO;
 import al.bytesquad.petstoreandclinic.repository.*;
@@ -35,13 +32,17 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final ManagerRepository managerRepository;
     private final ObjectMapper objectMapper;
+    private final PetRepository petRepository;
+    private final ProductRepository productRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository, ModelMapper modelMapper,
                               ClientRepository clientRepository,
                               UserRepository userRepository,
                               RoleRepository roleRepository,
                               DoctorRepository doctorRepository,
-                              ManagerRepository managerRepository, ObjectMapper objectMapper) {
+                              ManagerRepository managerRepository, ObjectMapper objectMapper,
+                              PetRepository petRepository,
+                              ProductRepository productRepository) {
         this.appointmentRepository = appointmentRepository;
         this.modelMapper = modelMapper;
         this.clientRepository = clientRepository;
@@ -57,15 +58,23 @@ public class AppointmentService {
                 map().setId(source.getId());
             }
         });
+        this.petRepository = petRepository;
+        this.productRepository = productRepository;
     }
 
     public AppointmentDTO book(String jsonString, Principal principal) throws JsonProcessingException {
         AppointmentSaveDTO appointmentSaveDTO = objectMapper.readValue(jsonString, AppointmentSaveDTO.class);
 
         Appointment appointment = modelMapper.map(appointmentSaveDTO, Appointment.class);
-        String email = principal.getName();
-        Client client = clientRepository.findByEmail(email);
+        Client client = clientRepository.findClientById(appointmentSaveDTO.getClientId()).orElseThrow(() -> new ResourceNotFoundException("Client", "id", appointmentSaveDTO.getClientId()));
+        Doctor doctor = doctorRepository.findDoctorById(appointmentSaveDTO.getDoctorId()).orElseThrow(() -> new ResourceNotFoundException("Doctor", "id", appointmentSaveDTO.getDoctorId()));
+        Pet pet = petRepository.findById(appointmentSaveDTO.getPetId()).orElseThrow(() -> new ResourceNotFoundException("Pet", "id", appointmentSaveDTO.getPetId()));
         appointment.setClient(client);
+        appointment.setDoctor(doctor);
+        appointment.setPet(pet);
+        /*String email = principal.getName();
+        Client client = clientRepository.findByEmail(email);
+        appointment.setClient(client);*/
         Appointment newAppointment = appointmentRepository.save(appointment);
         return modelMapper.map(newAppointment, AppointmentDTO.class);
     }
@@ -100,7 +109,7 @@ public class AppointmentService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
 
-        List<Appointment> filteredList;
+        /*List<Appointment> filteredList;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInEmail = principal.getName();
@@ -135,7 +144,7 @@ public class AppointmentService {
         }
 
         if (filteredList == null)
-            return null;
-        return filteredList.stream().map(appointment -> modelMapper.map(appointment, AppointmentDTO.class)).collect(Collectors.toList());
+            return null;*/
+        return appointments.stream().map(appointment -> modelMapper.map(appointment, AppointmentDTO.class)).collect(Collectors.toList());
     }
 }
